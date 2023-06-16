@@ -6,6 +6,7 @@ import { Web3Provider } from "@ethersproject/providers";
 
 import './i18n'
 import "./assets/css/style.scss";
+import "tailwindcss/tailwind.css"
 import { ContextProvider } from "./reducer";
 import Layout from "./components/Layout";
 import Home from "pages/Home";

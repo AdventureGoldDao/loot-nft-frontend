@@ -14,7 +14,6 @@ import { ReactComponent as SvgIns } from "assets/img/sidebar/ins.svg"
 import { ReactComponent as SvgTg } from "assets/img/sidebar/telegram.svg"
 import { ReactComponent as SvgTw } from "assets/img/sidebar/twitter.svg"
 import { ReactComponent as SvgDs } from "assets/img/sidebar/discord.svg"
-import hot from 'assets/img/topic/hot_red.svg'
 import { useList } from "../../../src/services/topic"
  
 export const LanguageBox = () => {
@@ -161,10 +160,6 @@ const Sidebar = ({ currentRoute }) => {
               {
                 list.map((item, index) => (
                   <div className={`text_hidden_1 ${styles.topic_item}`} onClick={()=>{changeTopic(item.topic)}}>
-                    {
-                      index<3 &&
-                      <img src={hot}></img>
-                    }
                     <span className={`pl8 ${index>2?'fw500':'fw700'} `}>{item.topic}</span>
                   </div>
                 ))
