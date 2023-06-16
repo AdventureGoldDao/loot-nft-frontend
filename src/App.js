@@ -9,6 +9,7 @@ import "./assets/css/style.scss";
 import { ContextProvider } from "./reducer";
 import Layout from "./components/Layout";
 import Home from "pages/Home";
+import Explore from "pages/Explore";
 
 
 function getLibrary(provider) {
@@ -19,7 +20,10 @@ function getLibrary(provider) {
 
 const routeArr = [
   {
-    component: Home, path: '/', parent: 'home', cache: true
+    component: Home, path: '/', parent: 'home'
+  },
+  {
+    component: Explore, path: '/explore', parent: 'explore'
   },
 ]
 

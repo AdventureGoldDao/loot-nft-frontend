@@ -304,11 +304,8 @@ const Header = ({ currentRoute }) => {
           <div className={styles.box}>
             <div className="df aic">
               <Link to="/"><img className={styles.logo} src={logoFull} /></Link>
-              <a href="https://definekr.io/" style={{ width: 54 }} className={styles.nav}>Feed</a>
-              <Link to="/badgeEntry" style={{ width: 54 }} className={styles.nav}>Badge</Link>
-              <Link to="/marketplace" style={{ width: 56 }} className={styles.nav}>Market</Link>
-              {/* <Link to="/nftplus" style={{ width: 41 }} className={styles.nav}>NFT+</Link> */}
-              <Link to="/vote" style={{ width: 100 }} className={styles.nav}>Governance</Link>
+              <Link to="/" style={{ width: 54 }} className={styles.nav}>Home</Link>
+              <Link to="/explore" style={{ width: 56 }} className={styles.nav}>Explore</Link>
             </div>
 
             <div className="df aic">
@@ -422,41 +419,10 @@ const Header = ({ currentRoute }) => {
             <img className={styles.nav_footer_img} src={currentRoute.parent === 'home' ? homeB : home} />
             <span className={styles.nav_footer_text}>Home</span>
           </Link>
-          {/* {
-          currentRoute.parent === 'home' ?
-            <span onClick={handleEventShow} className={styles.nav_footer_item}>
-              <img className={styles.nav_footer_img} src={events} />
-              <span className={styles.nav_footer_text}>Event</span>
-            </span> :
-            <Link to="/" className={styles.nav_footer_item}>
-              <img className={styles.nav_footer_img} src={currentRoute.parent === 'home' ? wowB : wow} />
-              <span className={styles.nav_footer_text}>Home</span>
-            </Link>
-        } */}
-          <a href="https://definekr.io/" className={styles.nav_footer_item}>
-            <img className={styles.nav_footer_img} src={currentRoute.parent === 'feed' ? feedB : feed} />
-            <span className={styles.nav_footer_text}>Feed</span>
-          </a>
-          <Link to="/badgeEntry" className={styles.nav_footer_item}>
-            <img className={styles.nav_footer_img} src={currentRoute.parent === 'badge' ? badgeB : badge} />
-            <span className={styles.nav_footer_text}>Badge</span>
+          <Link to="/explore" className={styles.nav_footer_item}>
+            <img className={styles.nav_footer_img} src={currentRoute.parent === 'explore' ? marketB : market} />
+            <span className={styles.nav_footer_text}>Explore</span>
           </Link>
-          <Link to="/marketplace" className={styles.nav_footer_item}>
-            <img className={styles.nav_footer_img} src={currentRoute.parent === 'market' ? marketB : market} />
-            <span className={styles.nav_footer_text}>Market</span>
-          </Link>
-          {/* <Link to="/nftplus" className={styles.nav_footer_item}>
-          <img className={styles.nav_footer_img} src={currentRoute.parent === 'nftPlus' ? nftPlusB : nftPlus} />
-          <span className={styles.nav_footer_text}>NFT+</span>
-        </Link> */}
-          <Link to="/vote" className={`${styles.nav_footer_item} wp24`}>
-            <img className={styles.nav_footer_img} src={currentRoute.parent === 'dao' ? daoB : dao} />
-            <span className={styles.nav_footer_text}>DAO</span>
-          </Link>
-          {/* <Link to="/wow" className={`${styles.nav_footer_item} wp24`}>
-            <img className={styles.nav_footer_img} src={currentRoute.parent === 'message' ? wowB : wow} />
-            <span className={styles.nav_footer_text}>Message</span>
-          </Link> */}
         </div>
 
         {
