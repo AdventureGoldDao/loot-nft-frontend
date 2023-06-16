@@ -1,0 +1,33 @@
+@import "assets/css/_variables.scss";
+
+.footer_box {
+  margin-top: 70px;
+  height: 58px;
+  background: rgba(234, 218, 255, 0.4);
+  color: #845DA4;
+}
+.column {
+  border-right: 1px solid #845DA4;
+  height: 27px;
+  margin: 0 16px;
+}
+.email {
+  color: #845DA4;
+  margin: 0 8px;
+  &:hover {
+    color: #845DA4;
+  }
+}
+.email_img {
+  width: 18px;
+  margin-right: 8px;
+}
+.selectWrap {
+  width: 116px;
+}
+
+@media #{$smWidth} {
+  .footer_box {
+    display: none;
+  }
+}

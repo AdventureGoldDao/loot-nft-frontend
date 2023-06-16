@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组 3备份 2</title>
+    <g id="Web" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Switch-Network" transform="translate(-1305.000000, -152.000000)">
+            <g id="编组-3备份-2" transform="translate(1305.000000, 152.000000)">
+                <circle id="椭圆形" stroke="#F2F2F2" fill="#FFFFFF" cx="15" cy="15" r="14.5"></circle>
+                <g id="编组备份" transform="translate(8.076923, 5.769231)" fill-rule="nonzero">
+                    <polygon id="Fill-1" fill="#8C8C8C" points="6.34615385 0 0.321862348 9.52226721 6.34615385 6.91821862"></polygon>
+                    <polygon id="Fill-2" fill="#383838" points="0.321862348 9.54675205 6.34615385 12.8259109 6.34615385 6.99595142"></polygon>
+                    <polygon id="Fill-3" fill="#8C8C8C" points="6.34615385 18.4615385 6.34615385 13.7732919 0.321862348 10.2995951"></polygon>
+                    <polygon id="Fill-4" fill="#343434" points="6.34615385 0 6.34615385 6.91821862 12.3704453 9.52226721"></polygon>
+                    <polygon id="Fill-5" fill="#141414" points="6.34615385 12.8259109 12.3704453 9.54675205 6.34615385 6.99595142"></polygon>
+                    <polygon id="Fill-6" fill="#343434" points="6.34615385 13.7732919 6.34615385 18.4615385 12.3704453 10.2995951"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,15 @@
+@import "assets/css/_variables.scss";
+
+.easter_img {
+  cursor: pointer;
+  position: fixed;
+  right: 20px;
+  bottom: 30px;
+}
+
+@media #{$smWidth} {
+  .easter_img {
+    bottom: 100px;
+    width: 80px;
+  }
+}

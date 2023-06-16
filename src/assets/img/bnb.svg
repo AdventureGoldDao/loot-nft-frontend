@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>BSC</title>
+    <g id="Web" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Switch-Network" transform="translate(-1305.000000, -215.000000)">
+            <g id="BSC" transform="translate(1305.000000, 215.000000)">
+                <rect id="矩形备份-10" fill="#212121" x="0" y="0" width="30" height="30" rx="15"></rect>
+                <g id="编组-19" transform="translate(5.400000, 5.400000)" fill="#EFBA2F" fill-rule="nonzero">
+                    <polygon id="矩形" transform="translate(9.600000, 9.248352) rotate(45.000000) translate(-9.600000, -9.248352) " points="7.84175833 7.49010992 11.3582418 7.49010992 11.3582418 11.0065934 7.84175833 11.0065934"></polygon>
+                    <polygon id="矩形备份" transform="translate(2.567033, 9.282178) rotate(45.000000) translate(-2.567033, -9.282178) " points="0.808791239 7.52393647 4.32527476 7.52393647 4.32527476 11.04042 0.808791239 11.04042"></polygon>
+                    <polygon id="矩形备份-6" transform="translate(7.841758, 4.149451) rotate(45.000000) translate(-7.841758, -4.149451) " points="6.08351657 0.105494542 9.60000009 0.105494542 9.60000009 8.19340663 6.08351657 8.19340663"></polygon>
+                    <polygon id="矩形备份-7" transform="translate(11.148591, 4.183277) scale(-1, 1) rotate(-135.000000) translate(-11.148591, -4.183277) " points="9.39034945 0.139321077 12.9068329 0.139321077 12.9068329 8.22723317 9.39034945 8.22723317"></polygon>
+                    <polygon id="矩形备份-10" transform="translate(11.148591, 14.732728) rotate(-135.000000) translate(-11.148591, -14.732728) " points="9.39034958 10.6887717 12.9068331 10.6887717 12.9068331 18.7766837 9.39034958 18.7766837"></polygon>
+                    <polygon id="矩形备份-11" transform="translate(7.841758, 14.698901) scale(-1, 1) rotate(45.000000) translate(-7.841758, -14.698901) " points="6.08351647 10.6549451 9.59999999 10.6549451 9.59999999 18.7428572 6.08351647 18.7428572"></polygon>
+                    <polygon id="矩形备份-2" transform="translate(16.632967, 9.282178) rotate(45.000000) translate(-16.632967, -9.282178) " points="14.8747254 7.52393632 18.3912089 7.52393632 18.3912089 11.0404198 14.8747254 11.0404198"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
