@@ -298,14 +298,14 @@ const Header = ({ currentRoute }) => {
         <div
           className={`${styles.main} ${(currentRoute.headerTheme === 'dark' || (currentRoute.headerTheme === 'h5-dark' && !isPc)) ? styles.dark : ''}`}
           style={{
-            background: (currentRoute.headerTheme === 'dark' || (currentRoute.headerTheme === 'h5-dark' && !isPc)) ? `rgba(0, 0, 0, ${bgOpacity})` : `rgba(255, 255, 255, ${bgOpacity})`
+            background: `rgba(19, 19, 19, ${bgOpacity})`
           }}
         >
           <div className={styles.box}>
             <div className="df aic">
               <Link to="/"><img className={styles.logo} src={logoFull} /></Link>
-              <Link to="/" style={{ width: 54 }} className={styles.nav}>Home</Link>
-              <Link to="/explore" style={{ width: 56 }} className={styles.nav}>Explore</Link>
+              <Link to="/" style={{ width: 54 }} className={`${styles.nav} ${currentRoute.parent === 'home' ? styles.nav_active : ''}`}>Home</Link>
+              <Link to="/explore" style={{ width: 56 }} className={`${styles.nav} ${currentRoute.parent === 'explore' ? styles.nav_active : ''}`}>Explore</Link>
             </div>
 
             <div className="df aic">

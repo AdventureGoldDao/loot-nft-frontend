@@ -1,15 +1,9 @@
 @import "assets/css/_variables.scss";
 
 body {
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
-  background-color: #F5EFFF;
+  background-color: #131313;
 }
 .main {
-  // max-width: $contentMaxWidth;
-  padding-top: $headerHeight;
-  margin: 0 auto;
   display: flex;
   min-height: 100%;
 }

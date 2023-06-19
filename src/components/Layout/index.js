@@ -68,9 +68,9 @@ const Layout = ({ children, routeArr }) => {
         <Siderbar currentRoute={currentRoute} />
         <div className={`${styles.content} ${currentRoute.navList ? styles.addMargin : ''}`}>{children}</div>
       </div>
-      {
+      {/* {
         !currentRoute.alonePage && <Footer />
-      }
+      } */}
       <WalletConnect visible={state.showConnectModal} />
     </>
   )

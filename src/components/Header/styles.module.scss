@@ -82,9 +82,14 @@
 .nav {
   margin-left: 60px;
   font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
   &:hover {
-    font-weight: 600;
+    color: #A5FFBE;
   }
+}
+.nav_active {
+  color: #A5FFBE;
 }
 .avatar {
   cursor: pointer;
