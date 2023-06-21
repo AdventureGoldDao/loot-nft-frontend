@@ -174,8 +174,8 @@
 .c_red {
   color: #E84444;
 }
-.c_purple {
-  color: #6F4293;
+.c_green {
+  color: #A5FFBE;
 }
 
 .bg_f9 {
@@ -315,6 +315,12 @@
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.text_hidden_3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
   overflow: hidden;
 }
 .color_text {
