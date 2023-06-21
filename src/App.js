@@ -26,6 +26,12 @@ const routeArr = [
   {
     component: Explore, path: '/explore', parent: 'explore'
   },
+  {
+    component: Explore, path: '/bridge', parent: 'bridge'
+  },
+  {
+    component: Explore, path: '/collector'
+  },
 ]
 
 function App() {

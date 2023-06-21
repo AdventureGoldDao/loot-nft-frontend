@@ -23,7 +23,7 @@ import { mainContext } from "../../reducer";
 import { HANDLE_SHOW_CONNECT_MODAL, HANDLE_HIDE_EVENT_MODAL, HANDLE_NOTICE_NUM } from "../../const";
 import styles from "./styles.module.scss";
 import logo from "assets/img/logo.png";
-import logoFull from "assets/img/logoFull.png";
+import logoFull from "assets/img/logoFull.svg";
 import copyIcon from "assets/img/header/copy.svg";
 import wallet from "assets/img/header/wallet.svg";
 // import stake from "assets/img/header/stake.svg";
@@ -56,7 +56,6 @@ import events from "assets/img/header/events.svg";
 import hot from "assets/img/header/hot.svg";
 import switchSvg from "assets/img/header/switch.svg";
 import notifications from "assets/img/message/notifcations.svg";
-import Avatar from "components/Avatar";
 import { rgba } from "@react-spring/shared";
 
 
@@ -126,7 +125,8 @@ const Header = ({ currentRoute }) => {
     });
   }
 
-  const handleSwitchChain = (chain) => {
+  const handleSwitchChain = (event) => {
+    const chain = event.target.value;
     if (tronChainId && !chainId && chain !== 'TRX') {
       dispatch({
         type: HANDLE_SHOW_CONNECT_MODAL, showConnectModal: true
@@ -304,26 +304,18 @@ const Header = ({ currentRoute }) => {
           <div className={styles.box}>
             <div className="df aic">
               <Link to="/"><img className={styles.logo} src={logoFull} /></Link>
-              <Link to="/" style={{ width: 54 }} className={`${styles.nav} ${currentRoute.parent === 'home' ? styles.nav_active : ''}`}>Home</Link>
-              <Link to="/explore" style={{ width: 56 }} className={`${styles.nav} ${currentRoute.parent === 'explore' ? styles.nav_active : ''}`}>Explore</Link>
+              <Link to="/" className={`${styles.nav} ml60 ${currentRoute.parent === 'home' ? styles.nav_active : ''}`}>Home</Link>
+              <Link to="/explore" className={`${styles.nav} ml60 ${currentRoute.parent === 'explore' ? styles.nav_active : ''}`}>Explore</Link>
+              <Link to="/bridge" className={`${styles.nav} ml60 ${currentRoute.parent === 'bridge' ? styles.nav_active : ''}`}>Bridge</Link>
             </div>
 
             <div className="df aic">
-              <div className={styles.notice} onClick={goWow}>
-                <img width={24} src={wow}></img>
-                {
-                  (state.noticeNum.nftactivitynum > 0 || state.noticeNum.commentnum > 0 || state.noticeNum.likemenum > 0) &&
-                  <span className={styles.notice_num}>{state.noticeNum.nftactivitynum + state.noticeNum.commentnum + state.noticeNum.likemenum}</span>
-                }
-              </div>
               {
                 (active || tronActive) &&
                 <Select
                   onChange={handleSwitchChain}
                   value={chainName}
-                  className={styles.select_box}
-                  getPopupContainer={triggerNode => triggerNode.parentElement}
-                  dropdownClassName={styles.select_option}
+                  className={`${styles.select_box} mr16`}
                 >
                   {
                     chainArr.map(item => (
@@ -344,32 +336,17 @@ const Header = ({ currentRoute }) => {
                         type: HANDLE_SHOW_CONNECT_MODAL, showConnectModal: true
                       });
                     }}
-                    size="large"
                     className="btn_multicolour"
-                    style={{ border: 'none' }}
-                  >{t('connect_wallet')}</Button>
-                  : <Popover
-                    open={showPop}
-                    onClose={handleVisibleChange}
-                    overlayClassName={styles.pop}
-                    placement="bottomRight"
-                    content={content}
-                    trigger="click"
-                  >
-                    <div>
-
-                      <Avatar isOwnedNft={userInfo.avatarFromOwnedNft} url={userInfo.avatar} size={36} tagSize={34} leftP={1}></Avatar>
-                    </div>
-                    {/* <img className={styles.avatar} src={userInfo.avatar} /> */}
-                  </Popover>
+                  >connect wallet</Button>
+                  : <Link className={styles.account_box} to="/collector">{abbrTxHash(account || tronAccount, 5, 4)}</Link>
               }
             </div>
           </div>
 
           <div className={styles.box_h5}>
-            <Link onClick={cancel} to="/"><img className={styles.logo} src={logo} /></Link>
+            <Link onClick={cancel} to="/"><img className={styles.logo} src={logoFull} /></Link>
             <div className="df aic">
-              {
+              {/* {
                 (active || tronActive) &&
                 <Select
                   onChange={handleSwitchChain}
@@ -385,7 +362,7 @@ const Header = ({ currentRoute }) => {
                     ))
                   }
                 </Select>
-              }
+              } */}
               {/* <div className={styles.notice} onClick={goToMessage}>
               <img width={14} src={notifications}></img>
               {
@@ -393,28 +370,14 @@ const Header = ({ currentRoute }) => {
                 <span className={styles.notice_tip}></span>
               }
             </div> */}
-              {
-                !(active || tronActive)
-                  ? <Button
-                    onClick={() => {
-                      dispatch({
-                        type: HANDLE_SHOW_CONNECT_MODAL, showConnectModal: true
-                      });
-                    }}
-                    className="btn_multicolour"
-                    style={{ border: 'none' }}
-                  >{t('connect_wallet')}</Button>
-                  : <div className="df">
-                    <Avatar onClick={() => { setShowBox(oldStr => oldStr === 'mine' ? '' : 'mine') }} isOwnedNft={userInfo.avatarFromOwnedNft} url={userInfo.avatar} size={36} tagSize={34} leftP={1}></Avatar>
-                    {/* <img onClick={() => { setShowBox(oldStr => oldStr === 'mine' ? '' : 'mine') }} className={styles.avatar} src={userInfo.avatar} /> */}
-                    <img onClick={() => { setShowBox(oldStr => oldStr === 'about' ? '' : 'about') }} className={styles.more} src={(currentRoute.headerTheme === 'dark' || (currentRoute.headerTheme === 'h5-dark' && !isPc)) ? moreG : more} />
-                  </div>
-              }
+              <div className="df">
+                <img onClick={() => { setShowBox(oldStr => oldStr === 'about' ? '' : 'about') }} className={styles.more} src={moreG} />
+              </div>
             </div>
           </div>
         </div>
 
-        <div className={styles.nav_footer}>
+        {/* <div className={styles.nav_footer}>
           <Link to="/" className={styles.nav_footer_item}>
             <img className={styles.nav_footer_img} src={currentRoute.parent === 'home' ? homeB : home} />
             <span className={styles.nav_footer_text}>Home</span>
@@ -423,25 +386,52 @@ const Header = ({ currentRoute }) => {
             <img className={styles.nav_footer_img} src={currentRoute.parent === 'explore' ? marketB : market} />
             <span className={styles.nav_footer_text}>Explore</span>
           </Link>
-        </div>
+        </div> */}
 
         {
           showBox && <div className={styles.nav_h5_body}>
-            <div style={{ margin: "16px 24px" }}>
-              <BackButton onClick={cancel} />
+            <div className={styles.pop_my_box}>
+              <div className={styles.pop_my_item}>
+                <Link onClick={cancel} to="/" className={`${styles.nav} ${currentRoute.parent === 'home' ? styles.nav_active : ''}`}>Home</Link>
+              </div>
+              <div className={styles.pop_my_item}>
+                <Link onClick={cancel} to="/explore" className={`${styles.nav} ${currentRoute.parent === 'explore' ? styles.nav_active : ''}`}>Explore</Link>
+              </div>
+              <div className={styles.pop_my_item}>
+                <Link onClick={cancel} to="/bridge" className={`${styles.nav} ${currentRoute.parent === 'bridge' ? styles.nav_active : ''}`}>Bridge</Link>
+              </div>
             </div>
-            <div>
+            {
+              (active || tronActive) &&
+              <div className={styles.pop_my_box}>
+                <Select
+                  onChange={handleSwitchChain}
+                  value={chainName}
+                  className={styles.select_box}
+                >
+                  {
+                    chainArr.map(item => (
+                      <MenuItem key={item.name} value={item.name}>
+                        <img className={styles.option_img} src={item.icon} alt={item.name} />
+                        <span className={styles.option_name}>{item.name}</span>
+                      </MenuItem>
+                    ))
+                  }
+                </Select>
+              </div>
+            }
+            <div className={styles.pop_my_box}>
               {
-                showBox === 'mine'
-                  ? <div className={styles.nav_h5_my}>{content}</div>
-                  : <div>
-                    <div className={styles.nav_h5_about}>
-                      <AboutBox styleType="h5" />
-                    </div>
-                    <div className={styles.nav_h5_language}>
-                      <LanguageBox />
-                    </div>
-                  </div>
+                !(active || tronActive)
+                  ? <Button
+                    onClick={() => {
+                      dispatch({
+                        type: HANDLE_SHOW_CONNECT_MODAL, showConnectModal: true
+                      });
+                    }}
+                    className="btn_multicolour"
+                  >connect wallet</Button>
+                  : <Link onClick={cancel} className={styles.account_box} to="/collector">{abbrTxHash(account || tronAccount, 5, 4)}</Link>
               }
             </div>
           </div>

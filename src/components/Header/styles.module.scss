@@ -11,6 +11,17 @@
   margin: 0 auto;
   // background: rgba(234, 218, 255, 0.4);
 }
+.account_box {
+  display: inline-block;
+  text-decoration: none;
+  color: #A5FFBE;
+  height: 28px;
+  padding: 0 18px;
+  text-align: center;
+  line-height: 28px;
+  background-color: rgba(165, 255, 190, 0.1);
+  border-radius: 50px;
+}
 .create_btn {
   cursor: pointer;
   height: 36px;
@@ -32,7 +43,7 @@
 .box {
   height: 100%;
   // max-width: $contentMaxWidth;
-  padding: 0 80px;
+  padding: 0 60px;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -77,10 +88,9 @@
   display: none;
 }
 .logo {
-  height: 28px;
+  height: 22px;
 }
 .nav {
-  margin-left: 60px;
   font-size: 16px;
   font-weight: 600;
   text-decoration: none;
@@ -135,25 +145,12 @@
   margin-right: 8px;
 }
 .pop_my_box {
-  padding-bottom: 10px;
+  padding: 20px;
+  text-align: center;
   .pop_my_item {
-    width: 100%;
-    text-align: center;
     height: 50px;
     line-height: 50px;
     font-size: 16px;
-
-    a {
-      display: inline-block;
-      width: 140px;
-      text-align: left;
-    }
-  }
-  .pop_my_item:hover {
-    background: #f4f4f4;
-  }
-  .h5_noShow {
-    display: block;
   }
 }
 .pop_footer {
@@ -196,7 +193,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: #fff;
+  background-color: #131313;
 }
 .nav_h5_my {
   .pop_body {
@@ -236,8 +233,8 @@
   margin: 40px auto 0;
 }
 .select_box {
-  width: 134px;
-  margin-right: 10px;
+  // width: 130px;
+  // margin-right: 16px;
 }
 .select_option {
   border-radius: 4px;
@@ -249,6 +246,7 @@
 }
 .option_name {
   margin-left: 8px;
+  font-size: 14px;
 }
 
 @media #{$smWidth} {

@@ -200,19 +200,12 @@
 
 .btn_multicolour {
   background: $multicolour;
-  color: #fff;
-  font-weight: 600;
+  color: #213425 !important;
+  font-weight: 700 !important;
   box-shadow: none;
-  border-color: #fff;
-
-  &:hover,
-  &:focus,
-  &:active {
-    background: $multicolour;
-    color: #fff;
-    font-weight: 600;
-    border-color: #fff;
-  }
+  text-transform: none !important;
+  font-family: 'Inconsolata', 'Bai Jamjuree', sans-serif, Poppins !important;
+  padding: 7px 40px !important;
 }
 
 .btn_multicolour[disabled] {
@@ -705,7 +698,42 @@
   white-space: nowrap
 }
 
+MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-focused styles_select_box__164Ba css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root
+MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-focused styles_select_box__164Ba css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root
 .wwbw {
   word-wrap: break-word;
   word-break: break-all
 }
+
+.css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root {
+  background-color: rgba(165, 255, 190, 0.1);
+  border-radius: 50px !important;
+  color: #fff !important;
+  height: 28px;
+  line-height: 28px !important;
+  .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+    & > img {
+      position: relative;
+      top: 2px;
+    }
+  }
+  .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon {
+    color: #A5FFBE;
+  }
+  .css-bpeome-MuiSvgIcon-root-MuiSelect-icon {
+    color: #A5FFBE;
+  }
+}
+.css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #7FB093 !important;
+}
+.css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  color: #7FB093 !important;
+
+  .css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root.Mui-selected {
+    background: none;
+    color: #fff;
+  }
+}
+

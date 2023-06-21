@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Skeleton, Row, Col } from "@mui/material";
+import { Select, MenuItem } from "@mui/material";
 import { useHistory, Link } from 'react-router-dom';
 
 
@@ -26,10 +26,16 @@ import styles from "./styles.module.scss";
 import { getBannerList, getMedium } from '../../services/home.js'
 import BadgeCard from "components/BadgeCard";
 
+const typesArr = [
+  { value: 'all', label: 'All NFTs' },
+  { value: 'ongoing', label: 'Ongoing' },
+  { value: 'upcoming', label: 'Upcoming' },
+]
+
 export default function Explore() {
   const [pageNo, setPageNo] = useState(1)
   const [loading, setLoading] = useState(false)
-  const { list, total } = useBadgeProjectList(pageNo, 4, setLoading, '', '', '')
+  const { list, total } = useBadgeProjectList(pageNo, 50, setLoading, '', '', '')
   const { collectionList } = useCollectionList(1, 6, '', '', '', '')
   const { collectionList: gameList } = useCollectionList(1, 6, '', 'game', '', '')
   const [gameShow, setGameShow] = useState(true)
@@ -39,6 +45,7 @@ export default function Explore() {
   const history = useHistory()
   const [bannerList, setBannerList] = useState([])
   const [articlesList, setArticlesList] = useState([])
+  const [nftType, setNftType] = useState('all')
   const { needSign } = useNeedSign();
 
   const queryBanners = async () => {
@@ -74,6 +81,10 @@ export default function Explore() {
     let res = await getMedium()
     setArticlesList(res)
   }
+  const handleSwitchNftType = (event) => {
+    setNftType(event.target.value)
+  }
+
   useEffect(() => {
     if (document.body.clientWidth < 800) {
       setIsPc(false)
@@ -90,30 +101,27 @@ export default function Explore() {
   }, [])
   return (
     <div className={`${styles.home}`}>
-      <div className={`mt20 ${styles.recent_badge}`}>
-        <div className={`space-between-center ${styles.mb30_h5}`}>
-          <div className='df'>
-            <Iconhot className={styles.title_icon}></Iconhot>
-            {/* <img className={styles.title_icon} src={iconhot}></img> */}
-            <span className={`${styles.title} pl10`}>Recent Badges</span>
-          </div>
-          <div className='cp' onClick={gotoBades}>
-            <span>View All <img src={iconviewAll}></img></span>
-          </div>
-        </div>
-        <div className={styles.list_box}>
+      <div className="space-between-center">
+        <div className={styles.title}>Explore</div>
+        <Select
+          onChange={handleSwitchNftType}
+          value={nftType}
+          className={styles.select_box}
+        >
           {
-            loading ?
-              loadingList.map(v => (
-                <div key={v} className={styles.loading_skeleton}>
-                  <Skeleton />
-                </div>
-              )) :
-              list.map(item => (
-                <BadgeCard key={item.project} item={item} />
-              ))
+            typesArr.map(item => (
+              <MenuItem key={item.value} value={item.value}>{item.label}</MenuItem>
+            ))
           }
-        </div>
+        </Select>
+      </div>
+
+      <div className={styles.content}>
+        {
+          list.map(item => (
+            <BadgeCard key={item.project} item={item} />
+          ))
+        }
       </div>
     </div>
   )

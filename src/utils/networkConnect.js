@@ -19,9 +19,10 @@ import baseCom from "assets/img/chain/com_base.svg";
 import opCom from "assets/img/chain/com_op.svg";
 import arbCom from "assets/img/chain/com_arb.svg";
 import zkCom from "assets/img/chain/com_zk.svg";
+import loot from "assets/img/chain/loot.svg";
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 10, 56, 97, 137, 280, 324, 420, 1001, 42161, 8217, 80001, 84531, 421613]
+  supportedChainIds: [1, 3, 4, 5, 10, 56, 97, 137, 280, 324, 420, 1001, 42161, 8217, 80001, 84531, 421613, 9088912]
 });
 
 export const symbolImgObj = {
@@ -110,36 +111,38 @@ export const chains = env.ENV === 'development' ? [
 
 export const chainArr = [
   { name: 'Ethereum', icon: eth },
-  { name: 'Base Goerli', icon: base },
-  { name: 'Optimism', icon: op },
-  { name: 'Arbitrum', icon: arb },
-  { name: 'zkSync Era', icon: zk },
-  { name: 'BSC', icon: bnb },
-  { name: 'Polygon', icon: polygon },
-  { name: 'Klaytn', icon: klaytn },
-  { name: 'Tron', icon: tron }
+  { name: 'Loot', icon: loot },
+  // { name: 'Base Goerli', icon: base },
+  // { name: 'Optimism', icon: op },
+  // { name: 'Arbitrum', icon: arb },
+  // { name: 'zkSync Era', icon: zk },
+  // { name: 'BSC', icon: bnb },
+  // { name: 'Polygon', icon: polygon },
+  // { name: 'Klaytn', icon: klaytn },
+  // { name: 'Tron', icon: tron }
 ]
 
 export const chainTxtObj = {
   mainnet: "Ethereum",
-  basegoerli: "Base Goerli",
-  optimism: "Optimism",
-  optimisticgoerli: "Optimism",
-  arbitrum: "Arbitrum",
-  nitrogoerli: "Arbitrum",
-  zksyncera: "zkSync Era",
-  zksynceratest: "zkSync Era",
-  ropsten: "Ethereum",
-  rinkeby: "Ethereum",
-  goerli: "Ethereum",
-  bsc: "BSC",
-  bsctestnet: "BSC",
-  polygon: "Polygon",
-  mumbai: "Polygon",
-  klaytn: "Klaytn",
-  baobab: "Klaytn",
-  tron: "Tron",
-  shasta: "Tron"
+  loot: "Loot",
+  // basegoerli: "Base Goerli",
+  // optimism: "Optimism",
+  // optimisticgoerli: "Optimism",
+  // arbitrum: "Arbitrum",
+  // nitrogoerli: "Arbitrum",
+  // zksyncera: "zkSync Era",
+  // zksynceratest: "zkSync Era",
+  // ropsten: "Ethereum",
+  // rinkeby: "Ethereum",
+  // goerli: "Ethereum",
+  // bsc: "BSC",
+  // bsctestnet: "BSC",
+  // polygon: "Polygon",
+  // mumbai: "Polygon",
+  // klaytn: "Klaytn",
+  // baobab: "Klaytn",
+  // tron: "Tron",
+  // shasta: "Tron"
 }
 
 export const handleHistoryAddress = (chainType, address) => {
@@ -288,6 +291,46 @@ export const setupEthMainnet = async (chainId) => {
         params: [{
           chainId: `0x1`,
         }]
+      })
+      return true
+    })
+  } catch (err) {
+    console.log(err)
+    return false
+  }
+}
+
+export const setupLootMainnet = async (chainId) => {
+  if (chainId === 9088912) {
+    return;
+  }
+  try {
+    await injected.getProvider().then(provider => {
+      provider.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{
+          chainId: `0x8aaf90`
+        }]
+      }).catch(err => {
+        if (err.code !== 4902) {
+          return;
+        }
+        provider.request({
+          method: 'wallet_addEthereumChain',
+          params: [{
+            chainId: `0x8aaf90`,
+            chainName: 'loot',
+            nativeCurrency: {
+              name: 'AGLD',
+              symbol: 'AGLD',
+              decimals: 18,
+            },
+            rpcUrls: [
+              "https://loot.calderachain.xyz/http"
+            ],
+            blockExplorerUrls: ['https://loot.calderaexplorer.xyz/']
+          }]
+        })
       })
       return true
     })
@@ -590,6 +633,7 @@ export const chainFun = {
   'Klaytn': setupKlaytnMainnet,
   'Polygon': setupPolygonMainnet,
   'mumbai': setupMumbai,
+  'Loot': setupLootMainnet,
   'Tron': null
 }
 
