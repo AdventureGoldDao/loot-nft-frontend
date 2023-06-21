@@ -265,6 +265,7 @@ export const WalletConnect = ({ visible }) => {
         footer={null}
       >
         <Box sx={{ ...style }}>
+          <div className={styles.title}>Connect a wallet</div>
           <div className={styles.walletItem} onClick={() => { onConnect('MetaMask') }}>
             <div className={styles.walletIcon} >
               <img src={isImToken ? imTokenIcon : metaMaskIcon} alt="" />

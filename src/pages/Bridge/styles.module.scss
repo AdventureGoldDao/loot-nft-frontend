@@ -1,0 +1,33 @@
+@import "assets/css/_variables.scss";
+
+.home {
+  min-height: 100vh;
+  padding: 120px 100px;
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-image: url(../../assets/img/explore_bg.svg);
+
+  .title {
+    font-size: 48px;
+    font-weight: 600;
+  }
+
+  .select_box {
+    background-color: #000;
+    padding: 14px 10px 14px 20px;
+  }
+
+  .content {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px -10px;
+  }
+}
+
+@media #{$smWidth} {
+  .home {
+    width: 100%;
+    padding: 16px;
+
+  }
+}

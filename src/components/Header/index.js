@@ -337,7 +337,7 @@ const Header = ({ currentRoute }) => {
                       });
                     }}
                     className="btn_multicolour"
-                  >connect wallet</Button>
+                  >Connect Wallet</Button>
                   : <Link className={styles.account_box} to="/collector">{abbrTxHash(account || tronAccount, 5, 4)}</Link>
               }
             </div>
@@ -430,7 +430,7 @@ const Header = ({ currentRoute }) => {
                       });
                     }}
                     className="btn_multicolour"
-                  >connect wallet</Button>
+                  >Connect Wallet</Button>
                   : <Link onClick={cancel} className={styles.account_box} to="/collector">{abbrTxHash(account || tronAccount, 5, 4)}</Link>
               }
             </div>

@@ -11,6 +11,8 @@ import { ContextProvider } from "./reducer";
 import Layout from "./components/Layout";
 import Home from "pages/Home";
 import Explore from "pages/Explore";
+import Collector from "pages/Collector";
+import Bridge from "pages/Bridge";
 
 
 function getLibrary(provider) {
@@ -27,10 +29,10 @@ const routeArr = [
     component: Explore, path: '/explore', parent: 'explore'
   },
   {
-    component: Explore, path: '/bridge', parent: 'bridge'
+    component: Bridge, path: '/bridge', parent: 'bridge'
   },
   {
-    component: Explore, path: '/collector'
+    component: Collector, path: '/collector'
   },
 ]
 

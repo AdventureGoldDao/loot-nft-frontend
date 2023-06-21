@@ -742,4 +742,21 @@ MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-focused st
     color: #fff;
   }
 }
+.MuiModal-root {
+  .MuiBox-root {
+    border: 1px solid #4B5954;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid #4B5954;
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+  }
+}
+
+@media #{$smWidth} {
+  .MuiModal-root {
+    .MuiBox-root {
+      width: 90%;
+    }
+  }
+}
 

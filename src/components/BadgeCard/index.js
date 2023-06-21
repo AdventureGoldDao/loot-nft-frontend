@@ -78,7 +78,7 @@ export default function BadgeCard({ item, type }) {
                   <CountDown onEnd={dealTime} time={time / 1000} type="word" />
                 </div>
               ) : (
-                time && (
+                !!time && (
                   <div className={styles.item_foreshow}>
                     <span>Start at </span>
                     {new Date(time).toLocaleString()}

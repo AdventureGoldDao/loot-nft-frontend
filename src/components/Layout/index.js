@@ -15,6 +15,9 @@ import { useActiveTronWeb } from "hooks/activeTronWeb";
 import { HANDLE_SHOW_EASTER_MODAL } from "../../const";
 import eggLink from "assets/img/easter/egg_link.png";
 import bg from "assets/img/home/home-bg.png"
+import {
+  FailedTransactionModal, TransactionModal, WaitingWalletConfirmModal
+} from '../Modals'
 
 const Layout = ({ children, routeArr }) => {
   const [currentRoute, setCurrentRoute] = useState({})
@@ -71,6 +74,9 @@ const Layout = ({ children, routeArr }) => {
       {/* {
         !currentRoute.alonePage && <Footer />
       } */}
+      <WaitingWalletConfirmModal visible={state.showWaitingWalletConfirmModal.show} />
+      <FailedTransactionModal visible={state.showFailedTransactionModal} />
+      <TransactionModal visible={state.showTransactionModal} />
       <WalletConnect visible={state.showConnectModal} />
     </>
   )
