@@ -124,10 +124,10 @@ export const WalletConnect = ({ visible }) => {
             console.log('message', message)
           })
 
-          window.ethereum.on('chainChanged', message => {
-            window.location.reload()
-            console.log('chainChanged', message)
-          })
+          // window.ethereum.on('chainChanged', message => {
+          //   window.location.reload()
+          //   console.log('chainChanged', message)
+          // })
 
         }
       })

@@ -7,27 +7,83 @@
   background-position: center top;
   background-image: url(../../assets/img/explore_bg.svg);
 
-  .title {
-    font-size: 48px;
+  .box {
+    margin: 0 auto;
+    width: 522px;
+    border-radius: 20px;
+    border: 1px solid #FDFFAC;
+    background: #242926;
+    text-align: center;
     font-weight: 600;
+    padding: 2px 38px 36px;
+  }
+
+  .title {
+    font-size: 24px;
+    color: #A5FFBE;
+    margin: 27px;
   }
 
   .select_box {
-    background-color: #000;
-    padding: 14px 10px 14px 20px;
+    width: 100%;
+    height: 70px;
+    border-radius: 12px !important;
+    border: 1px solid #4B5954;
+    background: linear-gradient(180deg, #242926 0%, #0E110F 100%);
+    box-shadow: 0 0 0 6px #2A312D;
   }
 
-  .content {
+  .switch_btn {
+    margin: 0 auto;
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    border: 1px solid #A5FFBE;
+    background: #151815;
     display: flex;
-    flex-wrap: wrap;
-    margin: 20px -10px;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    position: relative;
+    cursor: pointer;
   }
+
+  .select_nft {
+    height: 160px;
+    border-radius: 12px;
+    border: 1px solid #3C5141;
+    background: #1A1E1B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 23px 0 40px;
+    color: #A5FFBE;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  .confirm_btn {
+    width: 100%;
+    height: 50px;
+    border-radius: 8px;
+    font-size: 20px;
+  }
+}
+
+.option_img {
+  display: inline-block;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+}
+
+.option_name {
+  margin-left: 19px;
+  font-size: 20px;
 }
 
 @media #{$smWidth} {
   .home {
     width: 100%;
     padding: 16px;
-
   }
 }

@@ -205,7 +205,6 @@
   box-shadow: none;
   text-transform: none !important;
   font-family: 'Inconsolata', 'Bai Jamjuree', sans-serif, Poppins !important;
-  padding: 7px 40px !important;
 }
 
 .btn_multicolour[disabled] {
@@ -718,10 +717,8 @@ MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-focused st
   height: 28px;
   line-height: 28px !important;
   .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
-    & > img {
-      position: relative;
-      top: 2px;
-    }
+    display: flex;
+    align-items: center;
   }
   .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon {
     color: #A5FFBE;

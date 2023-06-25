@@ -64,7 +64,7 @@ const Header = ({ currentRoute }) => {
   const [showPop, setShowPop] = useState(false);
   const [showBox, setShowBox] = useState('');
   const [symbol, setSymbol] = useState('ETH')
-  const [chainName, setChainName] = useState('Ethereum')
+  const [chainName, setChainName] = useState('mainnet')
   const [userInfo, setUserInfo] = useState({})
   const [bgOpacity, setBgOpacity] = useState(0)
   const [isPc, setIsPc] = useState(true)
@@ -277,7 +277,7 @@ const Header = ({ currentRoute }) => {
     if ((window.ethereum && active) || (window.tronWeb && tronActive)) {
       setIsArtist(getIsArtist(chainId || tronChainId, account || tronAccount, library || tronLibrary));
       setSymbol(getSymbol(chainId || tronChainId));
-      setChainName(chainTxtObj[getChainType(chainId || tronChainId)]);
+      setChainName(getChainType(chainId || tronChainId));
     }
   }, [active, tronActive])
 
@@ -319,7 +319,7 @@ const Header = ({ currentRoute }) => {
                 >
                   {
                     chainArr.map(item => (
-                      <MenuItem key={item.name} value={item.name}>
+                      <MenuItem key={item.value} value={item.value}>
                         <img className={styles.option_img} src={item.icon} alt={item.name} />
                         <span className={styles.option_name}>{item.name}</span>
                       </MenuItem>
@@ -336,7 +336,7 @@ const Header = ({ currentRoute }) => {
                         type: HANDLE_SHOW_CONNECT_MODAL, showConnectModal: true
                       });
                     }}
-                    className="btn_multicolour"
+                    className="btn_multicolour h40 w200"
                   >Connect Wallet</Button>
                   : <Link className={styles.account_box} to="/collector">{abbrTxHash(account || tronAccount, 5, 4)}</Link>
               }
@@ -346,30 +346,6 @@ const Header = ({ currentRoute }) => {
           <div className={styles.box_h5}>
             <Link onClick={cancel} to="/"><img className={styles.logo} src={logoFull} /></Link>
             <div className="df aic">
-              {/* {
-                (active || tronActive) &&
-                <Select
-                  onChange={handleSwitchChain}
-                  value={chainName}
-                  className={styles.select_box}
-                >
-                  {
-                    chainArr.map(item => (
-                      <MenuItem key={item.name} value={item.name}>
-                        <img className={styles.option_img} src={item.icon} alt={item.name} />
-                        <span className={styles.option_name}>{item.name}</span>
-                      </MenuItem>
-                    ))
-                  }
-                </Select>
-              } */}
-              {/* <div className={styles.notice} onClick={goToMessage}>
-              <img width={14} src={notifications}></img>
-              {
-                isRedTip && 
-                <span className={styles.notice_tip}></span>
-              }
-            </div> */}
               <div className="df">
                 <img onClick={() => { setShowBox(oldStr => oldStr === 'about' ? '' : 'about') }} className={styles.more} src={moreG} />
               </div>
@@ -411,7 +387,7 @@ const Header = ({ currentRoute }) => {
                 >
                   {
                     chainArr.map(item => (
-                      <MenuItem key={item.name} value={item.name}>
+                      <MenuItem key={item.value} value={item.value}>
                         <img className={styles.option_img} src={item.icon} alt={item.name} />
                         <span className={styles.option_name}>{item.name}</span>
                       </MenuItem>

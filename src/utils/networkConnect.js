@@ -110,8 +110,8 @@ export const chains = env.ENV === 'development' ? [
 ]
 
 export const chainArr = [
-  { name: 'Ethereum', icon: eth },
-  { name: 'Loot', icon: loot },
+  { name: 'Ethereum', icon: eth, value: 'mainnet' },
+  { name: 'Loot', icon: loot, value: 'loot' },
   // { name: 'Base Goerli', icon: base },
   // { name: 'Optimism', icon: op },
   // { name: 'Arbitrum', icon: arb },
@@ -624,17 +624,8 @@ export const setupZkSyncEraMainnet = async (chainId) => {
 }
 
 export const chainFun = {
-  'Ethereum': setupEthMainnet,
-  'Base Goerli': setupBaseMainnet,
-  'Optimism': setupOptimismMainnet,
-  'Arbitrum': setupArbitrumMainnet,
-  'zkSync Era': setupZkSyncEraMainnet,
-  'BSC': setupBscMainnet,
-  'Klaytn': setupKlaytnMainnet,
-  'Polygon': setupPolygonMainnet,
-  'mumbai': setupMumbai,
-  'Loot': setupLootMainnet,
-  'Tron': null
+  'mainnet': setupEthMainnet,
+  'loot': setupLootMainnet,
 }
 
 
