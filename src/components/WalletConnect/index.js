@@ -124,10 +124,13 @@ export const WalletConnect = ({ visible }) => {
             console.log('message', message)
           })
 
-          // window.ethereum.on('chainChanged', message => {
-          //   window.location.reload()
-          //   console.log('chainChanged', message)
-          // })
+          window.ethereum.on('chainChanged', message => {
+            const wallet_type = window.localStorage.getItem('wallet_type')
+            if (wallet_type) {
+              onConnect(wallet_type)
+            }
+            console.log('chainChanged', message)
+          })
 
         }
       })
