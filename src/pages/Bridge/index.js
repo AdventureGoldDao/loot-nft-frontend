@@ -26,7 +26,7 @@ export default function Bridge() {
   const [toChainType, setToChainType] = useState(chainArr[1].value)
   const [visible, setVisible] = useState(false)
   const [list, setList] = useState([{ name: 'NFT Name #001' }, { name: 'NFT Name #002' }, { name: 'NFT Name #003' }, { name: 'NFT Name #004' }, { name: 'NFT Name #005' }, { name: 'NFT Name #006' }, { name: 'NFT Name #007' }, { name: 'NFT Name #008' }, { name: 'NFT Name #009' }, { name: 'NFT Name #0010' }])
-  const [currentNFT, setCurrentNFT] = useState({ name: 'NFT Name #001' })
+  const [currentNFT, setCurrentNFT] = useState({})
   const { dispatch } = useContext(mainContext);
   const { chainId } = useActiveWeb3React()
   const { needSign } = useNeedSign();

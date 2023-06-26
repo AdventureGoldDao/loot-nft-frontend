@@ -110,8 +110,8 @@ export const chains = env.ENV === 'development' ? [
 ]
 
 export const chainArr = [
-  { name: 'Ethereum', icon: eth, value: 'mainnet' },
-  { name: 'Loot', icon: loot, value: 'loot' },
+  { name: 'Ethereum Goerli', icon: eth, value: 'goerli' },
+  { name: 'Loot test', icon: loot, value: 'loot' },
   // { name: 'Base Goerli', icon: base },
   // { name: 'Optimism', icon: op },
   // { name: 'Arbitrum', icon: arb },
@@ -291,6 +291,46 @@ export const setupEthMainnet = async (chainId) => {
         params: [{
           chainId: `0x1`,
         }]
+      })
+      return true
+    })
+  } catch (err) {
+    console.log(err)
+    return false
+  }
+}
+
+export const setupEthGoerli = async (chainId) => {
+  if (chainId === 5) {
+    return;
+  }
+  try {
+    await injected.getProvider().then(provider => {
+      provider.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{
+          chainId: `0x5`
+        }]
+      }).catch(err => {
+        if (err.code !== 4902) {
+          return;
+        }
+        provider.request({
+          method: 'wallet_addEthereumChain',
+          params: [{
+            chainId: `0x5`,
+            chainName: 'Goerli test network',
+            nativeCurrency: {
+              name: 'GoerliETH',
+              symbol: 'GoerliETH',
+              decimals: 18,
+            },
+            rpcUrls: [
+              "https://goerli.infura.io/v3/"
+            ],
+            blockExplorerUrls: ['https://goerli.etherscan.io']
+          }]
+        })
       })
       return true
     })
@@ -625,6 +665,7 @@ export const setupZkSyncEraMainnet = async (chainId) => {
 
 export const chainFun = {
   'mainnet': setupEthMainnet,
+  'goerli': setupEthGoerli,
   'loot': setupLootMainnet,
 }
 
