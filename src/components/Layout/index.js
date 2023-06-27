@@ -7,10 +7,7 @@ import { Modal } from "@mui/material";
 import { mainContext } from "../../reducer";
 import styles from "./styles.module.scss";
 import Header from '../Header'
-import Footer from '../Footer'
-import Siderbar from '../Sidebar'
 import { WalletConnect } from '../WalletConnect'
-import EasterEgg from 'components/EasterEgg';
 import { useActiveTronWeb } from "hooks/activeTronWeb";
 import { HANDLE_SHOW_EASTER_MODAL } from "../../const";
 import eggLink from "assets/img/easter/egg_link.png";
@@ -68,12 +65,8 @@ const Layout = ({ children, routeArr }) => {
     <>
       <Header currentRoute={currentRoute} />
       <div className={`${styles.main} ${currentRoute.navList ? styles.addMaxWidth : ''} ${currentRoute.alonePage ? styles.alonePage : ''}`}>
-        <Siderbar currentRoute={currentRoute} />
         <div className={`${styles.content} ${currentRoute.navList ? styles.addMargin : ''}`}>{children}</div>
       </div>
-      {/* {
-        !currentRoute.alonePage && <Footer />
-      } */}
       <WaitingWalletConfirmModal visible={state.showWaitingWalletConfirmModal.show} />
       <FailedTransactionModal visible={state.showFailedTransactionModal} />
       <TransactionModal visible={state.showTransactionModal} />
