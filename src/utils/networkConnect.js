@@ -22,7 +22,7 @@ import zkCom from "assets/img/chain/com_zk.svg";
 import loot from "assets/img/chain/loot.svg";
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 10, 56, 97, 137, 280, 324, 420, 1001, 42161, 8217, 80001, 84531, 421613, 9088912]
+  supportedChainIds: [1, 3, 4, 5, 10, 56, 97, 137, 280, 324, 420, 1001, 42161, 8217, 80001, 84531, 421613, 5151706, 9088912]
 });
 
 export const symbolImgObj = {
@@ -340,7 +340,7 @@ export const setupEthGoerli = async (chainId) => {
   }
 }
 
-export const setupLootMainnet = async (chainId) => {
+export const setupLootTest = async (chainId) => {
   if (chainId === 9088912) {
     return;
   }
@@ -369,6 +369,46 @@ export const setupLootMainnet = async (chainId) => {
               "https://loot.calderachain.xyz/http"
             ],
             blockExplorerUrls: ['https://loot.calderaexplorer.xyz/']
+          }]
+        })
+      })
+      return true
+    })
+  } catch (err) {
+    console.log(err)
+    return false
+  }
+}
+
+export const setupLootMainnet = async (chainId) => {
+  if (chainId === 5151706) {
+    return;
+  }
+  try {
+    await injected.getProvider().then(provider => {
+      provider.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{
+          chainId: `0x4e9bda`
+        }]
+      }).catch(err => {
+        if (err.code !== 4902) {
+          return;
+        }
+        provider.request({
+          method: 'wallet_addEthereumChain',
+          params: [{
+            chainId: `0x4e9bda`,
+            chainName: 'Loot Chain',
+            nativeCurrency: {
+              name: 'AGLD',
+              symbol: 'AGLD',
+              decimals: 18,
+            },
+            rpcUrls: [
+              "https://loot-mainnet.calderachain.xyz/http"
+            ],
+            blockExplorerUrls: ['https://loot-mainnet.calderaexplorer.xyz/']
           }]
         })
       })
@@ -666,7 +706,8 @@ export const setupZkSyncEraMainnet = async (chainId) => {
 export const chainFun = {
   'mainnet': setupEthMainnet,
   'goerli': setupEthGoerli,
-  'loot': setupLootMainnet,
+  'loot': setupLootTest,
+  'lootmain': setupLootMainnet,
 }
 
 

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, NavLink, useLocation, useHistory } from "react-router-dom";
-import Web3 from "web3";
 import { Button, Popover, Select, MenuItem } from "@mui/material";
 import copy from 'copy-to-clipboard';
 
@@ -10,9 +9,7 @@ import { getChainType } from "../../web3/address";
 import { fetchDefaultAccount, recordWalletType } from "../../services/account";
 import { queryNoticeStatus } from "../../services/message";
 import { handleIsSignExpired, clearLocalStorage } from '../../utils/txSign'
-import { chainTxtObj, chainArr, chainFun, symbolImgObj } from '../../utils/networkConnect';
-import { LanguageBox, AboutBox } from "../Sidebar";
-import BackButton from "../BackButton";
+import { chainArr, chainFun, symbolImgObj } from '../../utils/networkConnect';
 import { useActiveTronWeb } from "hooks/activeTronWeb";
 import { useBalance, useNeedSign } from "hooks/account";
 import { getIsArtist } from "../../utils/handleContract";
@@ -22,41 +19,18 @@ import { isSelf, getQueryString } from "utils/index";
 import { mainContext } from "../../reducer";
 import { HANDLE_SHOW_CONNECT_MODAL, HANDLE_HIDE_EVENT_MODAL, HANDLE_NOTICE_NUM } from "../../const";
 import styles from "./styles.module.scss";
-import logo from "assets/img/logo.png";
 import logoFull from "assets/img/logoFull.svg";
 import copyIcon from "assets/img/header/copy.svg";
 import wallet from "assets/img/header/wallet.svg";
-// import stake from "assets/img/header/stake.svg";
 import stake from "assets/img/header/stakeNew.svg";
 import nft from "assets/img/header/nft.svg";
 import profile from "assets/img/header/profile.svg";
-import create from "assets/img/header/create.svg";
 import activity from "assets/img/header/activity.svg";
 import collection from "assets/img/header/collection.svg";
 import more from "assets/img/header/more.svg";
 import moreG from "assets/img/header/more_g.svg";
-import wow from "assets/img/header/wow.svg";
-import market from "assets/img/header/market.svg";
-import nftPlus from "assets/img/header/nftPlus.svg";
-import badge from "assets/img/header/badge.svg";
-import vote from "assets/img/header/vote.svg";
-import wowB from "assets/img/header/wow_2.svg";
-import marketB from "assets/img/header/market_2.svg";
-import nftPlusB from "assets/img/header/nftPlus_2.svg";
-import badgeB from "assets/img/header/badge_2.svg";
-import voteB from "assets/img/header/vote_2.svg";
-import dao from "assets/img/header/dao.png";
-import daoB from "assets/img/header/dao_2.png";
-import home from "assets/img/header/home.svg";
-import homeB from "assets/img/header/home_2.svg";
-import feed from "assets/img/header/feed.svg";
-import feedB from "assets/img/header/feed_2.svg";
 import logout from "assets/img/header/logout.svg";
-import events from "assets/img/header/events.svg";
 import hot from "assets/img/header/hot.svg";
-import switchSvg from "assets/img/header/switch.svg";
-import notifications from "assets/img/message/notifcations.svg";
-import { rgba } from "@react-spring/shared";
 
 
 const Header = ({ currentRoute }) => {
@@ -109,21 +83,11 @@ const Header = ({ currentRoute }) => {
     history.push('/claimDfa')
   }
 
-  const handleVisibleChange = () => {
-    setShowPop(false)
-  }
-
   const handleGoCreate = () => {
     cancel()
     history.push('/collectionManage/createNFT')
   }
 
-  const handleEventShow = () => {
-    dispatch({
-      type: HANDLE_HIDE_EVENT_MODAL,
-      hideEventModal: false
-    });
-  }
 
   const handleSwitchChain = (event) => {
     const chain = event.target.value;
@@ -140,15 +104,6 @@ const Header = ({ currentRoute }) => {
         type: HANDLE_SHOW_CONNECT_MODAL, showConnectModal: true
       });
     }
-  }
-  const goToMessage = () => {
-    setIsRedTip(false)
-    history.push('/message/likeme')
-  }
-
-  const goWow = () => {
-    setIsRedTip(false)
-    history.push('/wow')
   }
 
   const goMine = () => {
@@ -286,14 +241,7 @@ const Header = ({ currentRoute }) => {
   }, [currentRoute])
 
   return (
-    currentRoute.alonePage ? '' : isShare ?
-      <div className={styles.header_share}>
-        <div className="df_align_center">
-          <Link to="/" style={{ marginRight: 8 }}><img width={20} style={{ display: 'block' }} src={logo} /></Link>
-          <span className={styles.h5_hidden}>Powered by DeFine</span>
-        </div>
-        <div onClick={goMine} className={styles.create_btn}><img className="mr6" src={hot} />Create my ONE-PAGE</div>
-      </div> :
+    currentRoute.alonePage ? '' :
       <>
         <div
           className={`${styles.main} ${(currentRoute.headerTheme === 'dark' || (currentRoute.headerTheme === 'h5-dark' && !isPc)) ? styles.dark : ''}`}
@@ -307,6 +255,7 @@ const Header = ({ currentRoute }) => {
               <Link to="/" className={`${styles.nav} ml60 ${currentRoute.parent === 'home' ? styles.nav_active : ''}`}>Home</Link>
               <Link to="/explore" className={`${styles.nav} ml60 ${currentRoute.parent === 'explore' ? styles.nav_active : ''}`}>Explore</Link>
               <Link to="/bridge" className={`${styles.nav} ml60 ${currentRoute.parent === 'bridge' ? styles.nav_active : ''}`}>Bridge</Link>
+              <Link to="/createManage" className={`${styles.nav} ml60 ${currentRoute.parent === 'createManage' ? styles.nav_active : ''}`}>Dashboard</Link>
             </div>
 
             <div className="df aic">
@@ -375,6 +324,9 @@ const Header = ({ currentRoute }) => {
               </div>
               <div className={styles.pop_my_item}>
                 <Link onClick={cancel} to="/bridge" className={`${styles.nav} ${currentRoute.parent === 'bridge' ? styles.nav_active : ''}`}>Bridge</Link>
+              </div>
+              <div className={styles.pop_my_item}>
+                <Link onClick={cancel} to="/createManage" className={`${styles.nav} ${currentRoute.parent === 'createManage' ? styles.nav_active : ''}`}>Dashboard</Link>
               </div>
             </div>
             {

@@ -13,6 +13,7 @@ import Home from "pages/Home";
 import Explore from "pages/Explore";
 import Collector from "pages/Collector";
 import Bridge from "pages/Bridge";
+import Magic from "pages/Magic";
 
 
 function getLibrary(provider) {
@@ -33,6 +34,9 @@ const routeArr = [
   },
   {
     component: Collector, path: '/collector'
+  },
+  {
+    component: Magic, path: '/game/mighty-magic-heroes'
   },
 ]
 
