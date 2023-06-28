@@ -3,8 +3,8 @@ import React, { useEffect, useState, useRef } from "react";
 import { getPoolLeftTime } from "utils/time";
 
 const CountDown = ({ onEnd, time, type }) => {
-  const [left, setLeft] = useState()
-  let timer = useRef();
+  const [left, setLeft] = useState<any>()
+  let timer: any = useRef();
 
   const dealTime = (time) => {
     const obj = getPoolLeftTime(time);
@@ -32,7 +32,7 @@ const CountDown = ({ onEnd, time, type }) => {
         text = text + ' ' + left.seconds + 's'
       }
 
-    } else if(type === 'vote') {
+    } else if (type === 'vote') {
       if (left.days > 0) {
         return `${left.days} days, ${left.hours} hrs`
       } else if (left.hours > 0) {
@@ -41,19 +41,19 @@ const CountDown = ({ onEnd, time, type }) => {
         return `${left.minutes} mins`
       } else {
         return `${left.seconds} secs`
-      } 
-      
+      }
 
-    } else if(type === 'farm') {
+
+    } else if (type === 'farm') {
       text = text + left.hours + ' : ' + left.minutes
       if (left.days > 0) {
         return `In ${left.days} days`
       } else {
         text = text + ' : ' + left.seconds
-      } 
-      
+      }
 
-    }else {
+
+    } else {
       text = text + left.hours + ' : ' + left.minutes
       if (left.days > 0) {
         text = left.days + 'd ' + text
@@ -76,9 +76,13 @@ const CountDown = ({ onEnd, time, type }) => {
   }, [time])
 
   return (
-    left
-      ? textShow()
-      : ""
+    <>
+      {
+        left
+          ? textShow()
+          : ""
+      }
+    </>
   )
 }
 

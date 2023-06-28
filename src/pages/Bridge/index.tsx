@@ -26,7 +26,7 @@ export default function Bridge() {
   const [toChainType, setToChainType] = useState(chainArr[1].value)
   const [visible, setVisible] = useState(false)
   const [list, setList] = useState([{ name: 'NFT Name #001' }, { name: 'NFT Name #002' }, { name: 'NFT Name #003' }, { name: 'NFT Name #004' }, { name: 'NFT Name #005' }, { name: 'NFT Name #006' }, { name: 'NFT Name #007' }, { name: 'NFT Name #008' }, { name: 'NFT Name #009' }, { name: 'NFT Name #0010' }])
-  const [currentNFT, setCurrentNFT] = useState({})
+  const [currentNFT, setCurrentNFT] = useState<any>({})
   const { dispatch } = useContext(mainContext);
   const { chainId } = useActiveWeb3React()
   const { needSign } = useNeedSign();
@@ -142,7 +142,7 @@ export default function Bridge() {
           <div className={styles.modal_title}>Select a NFT</div>
           <div className={styles.modal_content}>
             {
-              list.map(item => (
+              list.map((item: any) => (
                 <div onClick={() => { onSelectNFT(item) }} key={item} className={`${styles.modal_item} ${item === currentNFT ? styles.nft_active : ''}`}>
                   <div className='df_align_center'>
                     <img className={styles.nft_img} src={item.icon || 'https://define-art-static-prod.s3-ap-northeast-1.amazonaws.com/test/token/image/mumbai/0x34e91Bbcd9591D0Fe275f9B7a737D4b42617fa4c/5.png'} alt={item.name} />

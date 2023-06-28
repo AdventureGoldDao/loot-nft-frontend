@@ -265,8 +265,6 @@ export const WalletConnect = ({ visible }) => {
         className={styles.walletModal}
         open={visible}
         onClose={handleCancel}
-        title={'Please select a wallet'}
-        footer={null}
       >
         <Box sx={{ ...style }}>
           <div className={styles.title}>Connect a wallet</div>
@@ -335,8 +333,6 @@ export const WalletConnect = ({ visible }) => {
       <Modal
         open={tipVisible}
         onClose={handleTipCancel}
-        width={400}
-        footer={null}
       >
         <Box sx={{ ...style }}>
           <div style={{

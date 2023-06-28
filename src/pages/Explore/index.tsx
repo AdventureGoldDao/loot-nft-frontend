@@ -43,7 +43,7 @@ export default function Explore() {
   const [isPc, setIsPc] = useState(true)
   const loadingList = [1, 2, 3, 4]
   const history = useHistory()
-  const [bannerList, setBannerList] = useState([])
+  const [bannerList, setBannerList] = useState<any>([])
   const [articlesList, setArticlesList] = useState([])
   const [nftType, setNftType] = useState('all')
   const { needSign } = useNeedSign();
