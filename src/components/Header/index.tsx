@@ -1,35 +1,116 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from 'react-router-dom'
-import { Button, Popover, Select, MenuItem } from "@mui/material";
-import copy from 'copy-to-clipboard';
+import { Button, Select, MenuItem } from "@mui/material";
+import styled from 'styled-components/macro';
 
 import { useActiveWeb3React } from "../../web3";
 import { getChainType } from "../../web3/address";
-import { fetchDefaultAccount, recordWalletType } from "../../services/account";
-import { queryNoticeStatus } from "../../services/message";
-import { handleIsSignExpired, clearLocalStorage } from '../../utils/txSign'
 import { chainArr, chainFun, symbolImgObj } from '../../utils/networkConnect';
-import { useActiveTronWeb } from "hooks/activeTronWeb";
-import { useBalance, useNeedSign } from "hooks/account";
-import { getIsArtist } from "../../utils/handleContract";
 import { abbrTxHash } from "../../utils/format";
 import { getSymbol } from "../../utils/symbol";
-import { isSelf, getQueryString } from "utils/index";
 import { mainContext } from "../../reducer";
-import { HANDLE_SHOW_CONNECT_MODAL, HANDLE_HIDE_EVENT_MODAL, HANDLE_NOTICE_NUM } from "../../const";
-import styles from "./styles.module.scss";
+import { HANDLE_SHOW_CONNECT_MODAL } from "../../const";
 import logoFull from "assets/img/logoFull.svg";
 import more from "assets/img/header/more.svg";
 import moreG from "assets/img/header/more_g.svg";
+import { BREAKPOINTS } from 'theme';
 
+const Main = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 72px;
+  z-index: 10;
+
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    height: 60px;
+  }
+`
+const Box = styled.div`
+  height: 100%;
+  padding: 0 60px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    display: none;
+  }
+`
+const Logo = styled.img`
+  height: 22px;
+`
+const NavLink = styled(Link) <{ active: boolean }>`
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  color: ${props => props.active ? '#A5FFBE' : '#fff'};
+  &:hover {
+    color: #A5FFBE;
+  }
+`
+const OptionImg = styled.img`
+  display: inline-block;
+  height: 16px;
+  border-radius: 50%;
+`
+const OptionName = styled.span`
+  margin-left: 8px;
+  font-size: 14px;
+`
+const AccountBox = styled(Link)`
+  display: inline-block;
+  text-decoration: none;
+  color: #A5FFBE;
+  height: 28px;
+  padding: 0 18px;
+  text-align: center;
+  line-height: 28px;
+  background-color: rgba(165, 255, 190, 0.1);
+  border-radius: 50px;
+`
+const BoxH5 = styled.div`
+  display: none;
+
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    height: 100%;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+`
+const More = styled.img`
+  width: 21px;
+  margin-left: 20px;
+`
+const NavH5Body = styled.div`
+  position: fixed;
+  z-index: 11;
+  top: 60px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #131313;
+`
+const PopMyBox = styled.div`
+  padding: 20px;
+  text-align: center;
+`
+const PopMyItem = styled.div`
+  height: 50px;
+  line-height: 50px;
+  font-size: 16px;
+`
 
 const Header = ({ currentRoute }) => {
   const [showBox, setShowBox] = useState('');
   const [chainName, setChainName] = useState('mainnet')
   const [bgOpacity, setBgOpacity] = useState(0)
   const { account, active, chainId } = useActiveWeb3React()
-  const { tronLibrary, tronAccount, tronChainId, tronActive } = useActiveTronWeb();
   const { state, dispatch } = useContext(mainContext);
 
   const cancel = () => {
@@ -38,18 +119,9 @@ const Header = ({ currentRoute }) => {
 
   const handleSwitchChain = (event) => {
     const chain = event.target.value;
-    if (tronChainId && !chainId && chain !== 'TRX') {
-      dispatch({
-        type: HANDLE_SHOW_CONNECT_MODAL, showConnectModal: true
-      });
-    }
 
     if (chainFun[chain]) {
       chainFun[chain]()
-    } else if (chain === 'TRX') {
-      dispatch({
-        type: HANDLE_SHOW_CONNECT_MODAL, showConnectModal: true
-      });
     }
   }
 
@@ -75,34 +147,29 @@ const Header = ({ currentRoute }) => {
 
   return (
     <>
-      <div
-        className={`${styles.main} ${currentRoute.headerTheme === 'dark' ? styles.dark : ''}`}
-        style={{
-          background: `rgba(19, 19, 19, ${bgOpacity})`
-        }}
-      >
-        <div className={styles.box}>
+      <Main style={{ background: `rgba(19, 19, 19, ${bgOpacity})` }}>
+        <Box>
           <div className="df aic">
-            <Link to="/"><img className={styles.logo} src={logoFull} /></Link>
-            <Link to="/" className={`${styles.nav} ml60 ${currentRoute.parent === 'home' ? styles.nav_active : ''}`}>Home</Link>
-            <Link to="/explore" className={`${styles.nav} ml60 ${currentRoute.parent === 'explore' ? styles.nav_active : ''}`}>Explore</Link>
-            <Link to="/bridge" className={`${styles.nav} ml60 ${currentRoute.parent === 'bridge' ? styles.nav_active : ''}`}>Bridge</Link>
-            <Link to="/createManage" className={`${styles.nav} ml60 ${currentRoute.parent === 'createManage' ? styles.nav_active : ''}`}>Dashboard</Link>
+            <Link to="/"><Logo src={logoFull} /></Link>
+            <NavLink to="/" active={currentRoute.parent === 'home'} className={`ml60`}>Home</NavLink>
+            <NavLink to="/explore" active={currentRoute.parent === 'explore'} className={`ml60`}>Explore</NavLink>
+            <NavLink to="/bridge" active={currentRoute.parent === 'bridge'} className={`ml60`}>Bridge</NavLink>
+            <NavLink to="/createManage" active={currentRoute.parent === 'createManage'} className={`ml60`}>Dashboard</NavLink>
           </div>
 
           <div className="df aic">
             {
-              (active || tronActive) &&
+              (active) &&
               <Select
                 onChange={handleSwitchChain}
                 value={chainName}
-                className={`${styles.select_box} mr16`}
+                className={`mr16`}
               >
                 {
                   chainArr.map(item => (
                     <MenuItem key={item.value} value={item.value}>
-                      <img className={styles.option_img} src={item.icon} alt={item.name} />
-                      <span className={styles.option_name}>{item.name}</span>
+                      <OptionImg src={item.icon} alt={item.name} />
+                      <OptionName>{item.name}</OptionName>
                     </MenuItem>
                   ))
                 }
@@ -110,7 +177,7 @@ const Header = ({ currentRoute }) => {
             }
 
             {
-              !(active || tronActive)
+              !(active)
                 ? <Button
                   onClick={() => {
                     dispatch({
@@ -119,82 +186,70 @@ const Header = ({ currentRoute }) => {
                   }}
                   className="btn_multicolour h40 w200"
                 >Connect Wallet</Button>
-                : <Link className={styles.account_box} to="/collector">{abbrTxHash(account || tronAccount, 5, 4)}</Link>
+                : <AccountBox to="/collector">{abbrTxHash(account, 5, 4)}</AccountBox>
             }
           </div>
-        </div>
+        </Box>
 
-        <div className={styles.box_h5}>
-          <Link onClick={cancel} to="/"><img className={styles.logo} src={logoFull} /></Link>
+        <BoxH5>
+          <Link onClick={cancel} to="/"><Logo src={logoFull} /></Link>
           <div className="df aic">
             <div className="df">
-              <img onClick={() => { setShowBox(oldStr => oldStr === 'about' ? '' : 'about') }} className={styles.more} src={moreG} />
+              <More onClick={() => { setShowBox(oldStr => oldStr === 'about' ? '' : 'about') }} src={moreG} />
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* <div className={styles.nav_footer}>
-          <Link to="/" className={styles.nav_footer_item}>
-            <img className={styles.nav_footer_img} src={currentRoute.parent === 'home' ? homeB : home} />
-            <span className={styles.nav_footer_text}>Home</span>
-          </Link>
-          <Link to="/explore" className={styles.nav_footer_item}>
-            <img className={styles.nav_footer_img} src={currentRoute.parent === 'explore' ? marketB : market} />
-            <span className={styles.nav_footer_text}>Explore</span>
-          </Link>
-        </div> */}
+        </BoxH5>
+      </Main>
 
       {
-        showBox && <div className={styles.nav_h5_body}>
-          <div className={styles.pop_my_box}>
-            <div className={styles.pop_my_item}>
-              <Link onClick={cancel} to="/" className={`${styles.nav} ${currentRoute.parent === 'home' ? styles.nav_active : ''}`}>Home</Link>
-            </div>
-            <div className={styles.pop_my_item}>
-              <Link onClick={cancel} to="/explore" className={`${styles.nav} ${currentRoute.parent === 'explore' ? styles.nav_active : ''}`}>Explore</Link>
-            </div>
-            <div className={styles.pop_my_item}>
-              <Link onClick={cancel} to="/bridge" className={`${styles.nav} ${currentRoute.parent === 'bridge' ? styles.nav_active : ''}`}>Bridge</Link>
-            </div>
-            <div className={styles.pop_my_item}>
-              <Link onClick={cancel} to="/createManage" className={`${styles.nav} ${currentRoute.parent === 'createManage' ? styles.nav_active : ''}`}>Dashboard</Link>
-            </div>
-          </div>
+        showBox && <NavH5Body>
+          <PopMyBox>
+            <PopMyItem>
+              <NavLink onClick={cancel} to="/" active={currentRoute.parent === 'home'}>Home</NavLink>
+            </PopMyItem>
+            <PopMyItem>
+              <NavLink onClick={cancel} to="/explore" active={currentRoute.parent === 'explore'}>Explore</NavLink>
+            </PopMyItem>
+            <PopMyItem>
+              <NavLink onClick={cancel} to="/bridge" active={currentRoute.parent === 'bridge'}>Bridge</NavLink>
+            </PopMyItem>
+            <PopMyItem>
+              <NavLink onClick={cancel} to="/createManage" active={currentRoute.parent === 'createManage'}>Dashboard</NavLink>
+            </PopMyItem>
+          </PopMyBox>
           {
-            (active || tronActive) &&
-            <div className={styles.pop_my_box}>
+            (active) &&
+            <PopMyBox>
               <Select
                 onChange={handleSwitchChain}
                 value={chainName}
-                className={styles.select_box}
               >
                 {
                   chainArr.map(item => (
                     <MenuItem key={item.value} value={item.value}>
-                      <img className={styles.option_img} src={item.icon} alt={item.name} />
-                      <span className={styles.option_name}>{item.name}</span>
+                      <OptionImg src={item.icon} alt={item.name} />
+                      <OptionName>{item.name}</OptionName>
                     </MenuItem>
                   ))
                 }
               </Select>
-            </div>
+            </PopMyBox>
           }
-          <div className={styles.pop_my_box}>
+          <PopMyBox>
             {
-              !(active || tronActive)
-                ? <Button
+              !(active) ?
+                <Button
                   onClick={() => {
                     dispatch({
                       type: HANDLE_SHOW_CONNECT_MODAL, showConnectModal: true
                     });
                   }}
                   className="btn_multicolour"
-                >Connect Wallet</Button>
-                : <Link onClick={cancel} className={styles.account_box} to="/collector">{abbrTxHash(account || tronAccount, 5, 4)}</Link>
+                >Connect Wallet</Button> :
+                <AccountBox onClick={cancel} to="/collector">{abbrTxHash(account, 5, 4)}</AccountBox>
             }
-          </div>
-        </div>
+          </PopMyBox>
+        </NavH5Body>
       }
     </>
   )

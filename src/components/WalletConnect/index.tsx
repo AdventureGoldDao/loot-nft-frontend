@@ -3,6 +3,7 @@ import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { LedgerConnector } from "@web3-react/ledger-connector";
 import { BscConnector } from '@binance-chain/bsc-connector';
 import { Modal, Box } from "@mui/material";
+import styled from 'styled-components/macro';
 
 import { useActiveWeb3React } from "../../web3";
 import { useActiveTronWeb } from "hooks/activeTronWeb";
@@ -19,7 +20,46 @@ import walletConnectIcon from '../../assets/img/modal/WalletConnect.svg'
 import bitKeep from '../../assets/img/modal/BitKeep.svg'
 import Coinbase from '../../assets/img/modal/Coinbase.svg'
 import ledgerIcon from '../../assets/img/modal/Ledger.png'
-import styles from "./styles.module.scss";
+
+const Title = styled.div`
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  color: #76AB8B;
+  margin-bottom: 20px;
+`
+const WalletItem = styled.div`
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  height: 60px;
+  background: #161616;
+  border: 1px solid #4B5954;
+  border-radius: 8px;
+  padding-left: 20px;
+  color: #EBEBEB;
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 12px;
+`
+const WalletIcon = styled.div`
+  display: inline-block;
+  width: 38px;
+  height: 38px;
+  border: $hr;
+  border-radius: 50%;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  margin-right: 23px;
+  background-color: #fff;
+
+  img {
+    width: 100%;
+  }
+`
 
 const POLLING_INTERVAL = 12000;
 const RPC_URLS = {
@@ -262,71 +302,63 @@ export const WalletConnect = ({ visible }) => {
   return (
     <>
       <Modal
-        className={styles.walletModal}
         open={visible}
         onClose={handleCancel}
       >
         <Box sx={{ ...style }}>
-          <div className={styles.title}>Connect a wallet</div>
-          <div className={styles.walletItem} onClick={() => { onConnect('MetaMask') }}>
-            <div className={styles.walletIcon} >
+          <Title>Connect a wallet</Title>
+          <WalletItem onClick={() => { onConnect('MetaMask') }}>
+            <WalletIcon>
               <img src={isImToken ? imTokenIcon : metaMaskIcon} alt="" />
-            </div>
+            </WalletIcon>
             <span>{isImToken ? 'imToken' : 'MetaMask'}</span>
-          </div>
+          </WalletItem>
 
-          <div className={styles.walletItem} onClick={() => { onConnect('Coinbase') }}>
-            <div className={styles.walletIcon} >
+          <WalletItem onClick={() => { onConnect('Coinbase') }}>
+            <WalletIcon>
               <img src={Coinbase} />
-            </div>
+            </WalletIcon>
             <span>Coinbase</span>
-          </div>
+          </WalletItem>
 
-          <div className={styles.walletItem} onClick={() => { onConnect('BitKeep') }}>
-            <div className={styles.walletIcon}>
+          <WalletItem onClick={() => { onConnect('BitKeep') }}>
+            <WalletIcon>
               <img src={bitKeep} alt="" />
-            </div>
+            </WalletIcon>
             <span>BitKeep</span>
-          </div>
+          </WalletItem>
 
-          <div className={styles.walletItem} onClick={() => { onConnect('TronLink') }}>
-            <div className={styles.walletIcon}>
+          <WalletItem onClick={() => { onConnect('TronLink') }}>
+            <WalletIcon>
               <img src={tronLinkIcon} alt="" />
-            </div>
+            </WalletIcon>
             <span>TronLink</span>
-          </div>
+          </WalletItem>
 
           {
-            isMobile && <div className={styles.walletItem} onClick={() => { onConnect('MetaMask') }}>
-              <div className={styles.walletIcon} >
+            isMobile && <WalletItem onClick={() => { onConnect('MetaMask') }}>
+              <WalletIcon>
                 <img src={hyperPay} alt="" />
-              </div>
+              </WalletIcon>
               <span>HyperPay</span>
-            </div>
+            </WalletItem>
           }
 
           {
-            isMobile && <div className={styles.walletItem} onClick={() => { onConnect('MetaMask') }}>
-              <div className={styles.walletIcon}>
+            isMobile && <WalletItem onClick={() => { onConnect('MetaMask') }}>
+              <WalletIcon>
                 <img src={universalIcon} alt="" />
-              </div>
+              </WalletIcon>
               <span>Universal Wallet</span>
-            </div>
+            </WalletItem>
           }
 
-          <div className={styles.walletItem} onClick={() => { onConnect('WalletConnect') }}>
-            <div className={styles.walletIcon}>
+          <WalletItem onClick={() => { onConnect('WalletConnect') }}>
+            <WalletIcon>
               <img src={walletConnectIcon} alt="" />
-            </div>
+            </WalletIcon>
             <span>WalletConnect</span>
-          </div>
-
-          {/* <div className={styles.walletItem} onClick={() => { onConnect('Ledger') }}>
-          <div className={styles.walletIcon}>
-            <img src={ledgerIcon} alt="" />
-          </div>
-          <span>Ledger</span>
-        </div> */}
+          </WalletItem>
         </Box>
       </Modal>
 

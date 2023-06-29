@@ -1,11 +1,18 @@
 import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { Modal, Box } from "@mui/material";
+import styled from 'styled-components/macro';
 
 import { HANDLE_SHOW_FAILED_TRANSACTION_MODAL } from "../../const";
 import { mainContext } from "../../reducer";
 import { ReactComponent as FailedIcon } from '../../assets/img/failed_icon.svg'
-import styles from "./styles.module.scss";
+
+const Title = styled.div`
+  margin: 20px 0 10px;
+  text-transform: uppercase;
+  font-size: 20px;
+  font-weight: 700;
+`
 
 const style = {
   position: 'absolute',
@@ -37,7 +44,7 @@ export const FailedTransactionModal = ({ visible }) => {
     >
       <Box sx={{ ...style }}>
         <FailedIcon />
-        <div className={styles.title} style={{ color: '#FF7D7D' }}>Failed</div>
+        <Title style={{ color: '#FF7D7D' }}>Failed</Title>
         <div style={{ color: '#975D5D' }}>Transaction failed, please try again</div>
       </Box>
     </Modal>

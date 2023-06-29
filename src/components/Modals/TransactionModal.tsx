@@ -1,11 +1,18 @@
 import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { Modal, Box } from "@mui/material";
+import styled from 'styled-components/macro';
 
 import { HANDLE_SHOW_TRANSACTION_MODAL } from "../../const";
 import { mainContext } from "../../reducer";
 import { ReactComponent as SuccessIcon } from '../../assets/img/success_icon.svg'
-import styles from "./styles.module.scss";
+
+const Title = styled.div`
+  margin: 20px 0 10px;
+  text-transform: uppercase;
+  font-size: 20px;
+  font-weight: 700;
+`
 
 const style = {
   position: 'absolute',
@@ -36,7 +43,7 @@ export const TransactionModal = ({ visible }) => {
     >
       <Box sx={{ ...style }}>
         <SuccessIcon />
-        <div className={styles.title} style={{ color: '#A5FFBE' }}>SUCCESS</div>
+        <Title style={{ color: '#A5FFBE' }}>SUCCESS</Title>
         <div style={{ color: '#76AB8B' }}>You have successfully claim NFT</div>
       </Box>
     </Modal>

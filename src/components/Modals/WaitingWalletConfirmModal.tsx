@@ -1,12 +1,19 @@
 import React, { useContext } from "react";
 import Lottie from "react-lottie";
 import { Modal, Box } from "@mui/material";
+import styled from 'styled-components/macro';
 
 import { HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL } from "../../const";
 import { mainContext } from "../../reducer";
 import loading from '../../assets/loading.json'
 import { ReactComponent as LoadingIcon } from '../../assets/img/loading_icon.svg'
-import styles from "./styles.module.scss";
+
+const Title = styled.div`
+  margin: 20px 0 10px;
+  text-transform: uppercase;
+  font-size: 20px;
+  font-weight: 700;
+`
 
 const style = {
   position: 'absolute',
@@ -50,7 +57,7 @@ export const WaitingWalletConfirmModal = ({ visible }) => {
     >
       <Box sx={{ ...style }}>
         <LoadingIcon />
-        <div className={styles.title} style={{ color: '#A5FFBE' }}>Minting in progress</div>
+        <Title style={{ color: '#A5FFBE' }}>Minting in progress</Title>
         <div style={{ color: '#76AB8B' }}>Please confirm the transaction with your wallet.</div>
       </Box>
     </Modal>
