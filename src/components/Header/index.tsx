@@ -154,7 +154,7 @@ const Header = ({ currentRoute }) => {
             <NavLink to="/" active={currentRoute.parent === 'home'} className={`ml60`}>Home</NavLink>
             <NavLink to="/explore" active={currentRoute.parent === 'explore'} className={`ml60`}>Explore</NavLink>
             <NavLink to="/bridge" active={currentRoute.parent === 'bridge'} className={`ml60`}>Bridge</NavLink>
-            <NavLink to="/createManage" active={currentRoute.parent === 'createManage'} className={`ml60`}>Dashboard</NavLink>
+            <NavLink to="/dashboard" active={currentRoute.parent === 'dashboard'} className={`ml60`}>Dashboard</NavLink>
           </div>
 
           <div className="df aic">
@@ -214,7 +214,7 @@ const Header = ({ currentRoute }) => {
               <NavLink onClick={cancel} to="/bridge" active={currentRoute.parent === 'bridge'}>Bridge</NavLink>
             </PopMyItem>
             <PopMyItem>
-              <NavLink onClick={cancel} to="/createManage" active={currentRoute.parent === 'createManage'}>Dashboard</NavLink>
+              <NavLink onClick={cancel} to="/dashboard" active={currentRoute.parent === 'dashboard'}>Dashboard</NavLink>
             </PopMyItem>
           </PopMyBox>
           {

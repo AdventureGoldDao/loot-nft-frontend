@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Skeleton, Grid } from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import { useHistory, Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from "swiper";
@@ -104,14 +104,14 @@ export default function Home() {
                   </Grid>
                   <Grid item xs={12} sm={12} md={8} lg={8} className={`pl40`}>
                     <div>Create by <span className='c_green fw600'>Amber Lee</span> </div>
-                    <div className={`c_green mt10 ell ${styles.nft_name}`}>NFT Named on 15 June</div>
+                    <div className={`c_green mt10 text_hidden_1 ${styles.nft_name}`}>NFT Named on 15 June</div>
                     <div className={`text_hidden_3 ${styles.nft_des}`}>Loot is randomized adventurer gear generated and stored on chain. Stats, images, and other functionality are intentionally omitted for others to interpret. Feel free to use Loot in any way you want.</div>
                     <div className='df mt30'>
-                      <div className='f1'>
+                      <div className='f3'>
                         <div>Status</div>
                         <div className='c_green fw600 mt10 fs24'>Ended at 21 hours</div>
                       </div>
-                      <div className='f1'>
+                      <div className='f2'>
                         <div>Status</div>
                         <div className='c_green fw600 mt10 fs24'>400/1,000</div>
                       </div>
@@ -121,7 +121,7 @@ export default function Home() {
                       </div>
                     </div>
                     <div className={styles.mint_btn}>
-                      <Button className={`w200 h40 ${styles.theme_mulit_btn}`} disableRipple>Free Mint</Button>
+                      <Button className={`w200 h40 btn_multicolour`} disableRipple>Free Mint</Button>
                     </div>
                   </Grid>
                 </Grid>
@@ -153,29 +153,19 @@ export default function Home() {
             </div>
           </div>
           <div className={styles.mint_btn}>
-            <Button className={`w200 h40 ${styles.theme_mulit_btn}`} disableRipple>Free Mint</Button>
+            <Button className={`w200 h40 btn_multicolour`} disableRipple>Free Mint</Button>
           </div>
         </div>
       </div>
       <div className={styles.page_content}>
-        <div className='space-between-center'>
-          <div className='df_align_center'>
-            <img width={44} src={upcoming}></img>
-            <span className={styles.page_content_title}>Upcoming Claims</span>
+        <div className={styles.game_magic}>
+          <div className={styles.title}>Mighty Magic HEROES</div>
+          <div className='df'>
+            <div className={styles.btn_border}>AVG</div>
+            <div className={styles.btn_border}>Free Mint</div>
           </div>
-          <div className={`c_green fw600 ${styles.viewAll}`}>
-            view all &gt;
-          </div>
-        </div>
-        <div className={styles.content}>
-          {
-            list.map(item => (
-              <BadgeCard key={item.project} item={item} />
-            ))
-          }
-        </div>
-        <div className={`c_green fw600 ${styles.viewAll_h5}`}>
-          view all &gt;
+          <div className={`mb30 lh24`}>Embark on this thrilling journey with "Mighty Magic" as you explore the realm of NFTs and engage in epic battles where only the mightiest heroes prevail. Sharpen your strategy, unleash the magic within, and let your heroes claim victory and glory!</div>
+          <Button className='w200 h40 btn_themeColor'>Learn More</Button>
         </div>
       </div>
       <div className={styles.page_content}>

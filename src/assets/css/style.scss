@@ -197,7 +197,18 @@
 .bg_hot_3 {
   background: #FFD15A;
 }
-
+button {
+  text-transform: none !important;
+  font-family: 'Inconsolata', 'Bai Jamjuree', sans-serif, Poppins !important;
+}
+.btn_themeColor {
+  background: #A5FFBE !important;
+  color: #213425 !important;
+  font-weight: 700 !important;
+  box-shadow: none;
+  text-transform: none !important;
+  font-family: 'Inconsolata', 'Bai Jamjuree', sans-serif, Poppins !important;
+}
 .btn_multicolour {
   background: $multicolour;
   color: #213425 !important;
@@ -298,6 +309,9 @@
 
 .h40 {
   height: 40px;
+}
+.h40 {
+  height: 36px;
 }
 
 .h50 {

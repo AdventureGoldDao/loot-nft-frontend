@@ -106,6 +106,29 @@
     flex-wrap: wrap;
     margin: 20px -10px;
   }
+  .game_magic {
+    padding: 200px 100px 60px 100px;
+    border: 1px solid #4B5954;
+    border-radius: 20px;
+    background-image: url(../../assets/img/home/game_magic.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    .title {
+      font-size: 46px;
+      font-weight: 700;
+    }
+    .btn_border {
+      // height: 30px;
+      margin: 20px 10px 20px 0;
+      padding: 10px 20px;
+      line-height: 10px;
+      border-radius: 50px;
+      border: 1px solid var(--line-color-2, #4B5954);
+      background: #000;
+      color: #A5FFBE;
+    }
+  }
 }
 .page_foot {
   position: relative;

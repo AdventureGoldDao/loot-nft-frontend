@@ -13,6 +13,9 @@ import Home from "pages/Home";
 import Explore from "pages/Explore";
 import Collector from "pages/Collector";
 import Bridge from "pages/Bridge";
+import NFTDetail  from "pages/NFTDetail";
+import NFTManage from "pages/NFTManage";
+import CollectionManageIndex from "pages/NFTManage/CollectionManage";
 
 
 function getLibrary(provider) {
@@ -33,6 +36,15 @@ const routeArr = [
   },
   {
     component: Collector, path: '/collector'
+  },
+  {
+    component: NFTDetail, path: '/badge/:nftId'
+  },
+  {
+    component: NFTManage, path: '/dashboard', parent: 'dashboard'
+  },
+  {
+    component: CollectionManageIndex, path: '/collectionManage/:collectionId'
   },
 ]
 
