@@ -21,6 +21,7 @@ import DeFineBlindBox from "../web3/abi/DeFineBlindBox.json";
 import DeFinePuzzle from "../web3/abi/DeFinePuzzle.json";
 import DeFineSeason from "../web3/abi/DeFineSeason.json";
 import ClaimReward from "../web3/abi/ClaimReward.json";
+import FreeMint721 from "../web3/abi/FreeMint721NFT.json";
 import { abi as VaultRewardAbi } from "../web3/abi/VaultReward.json";
 import { getToken, getTokenTron } from "../utils/tokenList";
 import { getContract } from "../web3";
@@ -737,4 +738,35 @@ export const deployNFT721 = (library, address, name, symbol, chainType) => {
 }
 export const getNFT721 = (library, contractAddress) => {
   return getContract(library, DFA721.abi, contractAddress)
+}
+export const deployFreeMintNFT721 = (library, address, name, symbol, chainType,maxCount,startTime,endTime,userLimit,acceptCurrency,mintPrice) => {
+  const data = {};
+  
+  const myContract = getContract(library, FreeMint721.abi);
+  return myContract.deploy({
+    data: FreeMint721.bytecode,
+    arguments: [
+      name,
+      symbol,
+      `http://13.229.74.96:8080/nftInfo/${chainType}/`,
+      maxCount,
+      startTime,
+      endTime,
+      userLimit,
+      acceptCurrency,
+      mintPrice
+    ]
+  }).send({ from: address })
+    .on('error', function (error) {
+      // console.log('error___', error)
+    })
+    .on('receipt', function (receipt) {
+      data.transactionHash = receipt.transactionHash
+      data.address = receipt.contractAddress
+      data.blockNumber = receipt.blockNumber
+    })
+    .then(function () {
+      return data;
+    });
+
 }

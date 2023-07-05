@@ -1,8 +1,16 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
+import { useParams, useHistory } from 'react-router-dom';
 import { Button, Modal, Box, TextField, Switch } from "@mui/material";
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+import CollectionModal from '../CollectionModal';
+import PushModal from '../PushModal'
+import Snackbar from "components/SnackMessage"
+import { useActiveWeb3React } from '../../../web3';
+import { delCollection, queryCollectionDetail, saveNFT,useOwnerNFTList } from "../../../services/createNFTManage"
+import { dataURLtoBlob } from 'utils/dataURLtoBlob';
 import { ReactComponent as IconEdit } from "assets/img/nftManage/icon_edit.svg";
 import BadgeCard from 'components/BadgeCard';
 import { useBadgeProjectList } from "../../../services/badge"
@@ -105,10 +113,18 @@ const CreateNftBaseBox = styled.div`
   display: flex;
 `
 const UploadBox = styled.div`
+  position: relative;
   flex: 1;
   margin-right: 20px;
   border-radius: 8px;
   background: var(--card-color, #242926);
+`
+const ShowImg = styled.img`
+  position: absolute;
+  top: 0;
+  max-width: 100%;
+  max-height: 100%;
+  /* object-fit: cover; */
 `
 const ColorGreenLight = styled.span`
   color: #7A9283;
@@ -201,57 +217,153 @@ const ItemRemove = styled.div`
   cursor: pointer;
 `
 
-
 export default function CollectionManageIndex() {
+  const { account } = useActiveWeb3React()
+  const { collectionId } = useParams<any>()
+  const [collectionInfo, setCollectionInfo] = useState<any>({})
   const chooseImg = useRef(null)
   const [loading, setLoading] = useState(false)
-  const { list, total } = useBadgeProjectList(1, 4, setLoading, '', '', '')
+  const [refreshList, setRefreshList] = useState(1)
+  const { list, total } = useOwnerNFTList(collectionId,1, 10, setLoading, refreshList)
   const [visible, setVisible] = useState(false)
+  const [visibleNFT, setVisibleNFT] = useState(false)
+  const [visible2, setVisible2] = useState(false)
   const label = { inputProps: { 'aria-label': 'Switch demo' } };
+  const [nftForm, setNftForm] = useState<any>({})
+  const [selectedImage, setSelectedImage] = useState(null);
   const [arrts, setAttrs] = useState([
     {
-      key: 'Type',
-      value: 'name'
+      key: '',
+      value: ''
     }
   ])
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false)
+  const [msg, setMsg] = useState('')
+  const [severity,setSeverity] = useState('success')
 
   const openModal = () => {
-    setVisible(true)
+    setVisibleNFT(true)
   }
   const handleCancel = () => {
     setVisible(false)
+  }
+  const handleCancelNFT = () => {
+    setVisibleNFT(false)
+  }
+  const handleCancel2 = () => {
+    setVisible2(false)
   }
   const openFile = () => {
     chooseImg.current.click()
   }
   const addItem = () => {
     let obj = {
-      key:'',
-      value:''
+      key: '',
+      value: ''
     }
-    setAttrs([ ...arrts,obj])
+    setAttrs([...arrts, obj])
   }
   const removeItem = (index) => {
     let arr = [...arrts]
     arr.splice(index, 1)
     setAttrs(arr)
   }
+  const deleteCollection = async (collectionId) => {
+    let res = await delCollection(collectionId)
+    console.log(res);
+
+  }
+  const openEdit = () => {
+    setVisible(true)
+    console.log('hhh');
+    console.log(visible);
+  }
+  const queryInfo = async () => {
+    let res = await queryCollectionDetail(collectionId)
+    console.log(res);
+    setCollectionInfo(res)
+  }
+  const changeFile = (event) => {
+    console.log(event.target.files);
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      setSelectedImage(reader.result);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+    // setSelectedImage(URL.createObjectURL(file))
+  }
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setNftForm((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+  const handelSubmit = async () => {
+    console.log(nftForm);
+    const formData = new FormData()
+    formData.append('image', dataURLtoBlob(selectedImage))
+    formData.append('name', nftForm.name)
+    formData.append('description', nftForm.description)
+    formData.append('count', nftForm.count)
+    formData.append('count', nftForm.count)
+
+    let obj = Object.fromEntries(arrts.map(item => [item.key, item.value]));
+    formData.append('attributes', JSON.stringify(obj))
+
+    let res = await saveNFT(collectionId, formData)
+    console.log(res);
+    initMsg('Success!')
+    handleCancelNFT()
+    let a = refreshList + 1
+    setRefreshList(a)
+  }
+  const initMsg = (msg) => {
+    setMsg(msg)
+    setSeverity('success')
+    setIsSnackbarOpen(true)
+  }
+  const closeSnackbar = () => {
+    setIsSnackbarOpen(false)
+  }
+  const handleChangeArrt = (event,idx,type) => {
+    console.log(event);
+    console.log(idx);
+    let arr = [...arrts]
+    arr[idx][type] = event.target.value
+    // arrts.map((item,index) =>{
+    //   if(index === idx){
+    //     item[type] = event.target.value
+    //   }
+    // } )
+    console.log(arr);
+    setAttrs(arr)
+  }
+
+  useEffect(() => {
+    queryInfo()
+  }, [collectionId])
 
   return (
     <>
       <CollectionManage>
         <ManageHeader>
           <CollectionItem>
-            <CollectionTitle>Nick Collection (NC)</CollectionTitle>
+            <CollectionTitle>{collectionInfo.name ? collectionInfo.name : '--'}</CollectionTitle>
             <CollectionFunc>
               <ThemeProvider theme={theme}>
-                <BtnMr variant="outlined" color="error">Delete</BtnMr>
-                <BtnMr variant="outlined" color="primary"><IconEdit /> &nbsp;Edit</BtnMr>
-                <Button variant="contained" color="primary">Deploy & Push</Button>
+                <BtnMr variant="outlined" color="error" onClick={deleteCollection}>Delete</BtnMr>
+                <BtnMr variant="outlined" color="primary" onClick={openEdit}><IconEdit /> &nbsp;Edit</BtnMr>
+                <Button disabled={collectionInfo.maxCount === 0} variant="contained" color="primary">Deploy & Push</Button>
               </ThemeProvider>
             </CollectionFunc>
           </CollectionItem>
-          <CollectionDes>Embark on this thrilling journey with "Mighty Magic" as you explore the realm of NFTs and engage in epic battles where only the mightiest heroes prevail. Sharpen your strategy, unleash the magic within, and let your heroes claim victory and glory!</CollectionDes>
+          <CollectionDes>{collectionInfo.description}</CollectionDes>
         </ManageHeader>
         <ManageMain>
           <CreateBox>
@@ -270,9 +382,12 @@ export default function CollectionManageIndex() {
           }
         </ManageMain>
       </CollectionManage>
+      <CollectionModal visible={visible} closeModal={handleCancel}></CollectionModal>
+      <PushModal visiblePush={visible2} closePushModal={handleCancel2} collectionId={'555'}></PushModal>
+
       <Modal
-        open={visible}
-        onClose={handleCancel}>
+        open={visibleNFT}
+        onClose={handleCancelNFT}>
         <Box sx={{ ...style }}>
           <div className='mb20'>Create NFT</div>
           <CreateNftBaseBox>
@@ -283,28 +398,36 @@ export default function CollectionManageIndex() {
                 <ColorGreenLight className='mt10'>Supported file types</ColorGreenLight>
                 <ColorGreenLight className='mt8'>include JPEG, PNG, and GIF.</ColorGreenLight>
               </div>
-              <UploadInput ref={chooseImg} type='file' accept='image/*'></UploadInput>
+              <ShowImg src={selectedImage}></ShowImg>
+              {/* <img ></img> */}
+              <UploadInput ref={chooseImg} type='file' accept='image/*' onChange={changeFile}></UploadInput>
             </UploadBox>
             <div className='f1'>
-              <TextInput fullWidth id="collection-name" label="NFT Name"
-                placeholder={`e.g. "Loot Collection"`}
+              <TextInput fullWidth id="nft-name" label="NFT Name" name={'name'}
+                placeholder={`e.g. "NFT name"`}
                 variant="standard"
+                value={nftForm.name}
+                onChange={handleChange}
                 InputLabelProps={{
                   shrink: true,
                 }} />
-              <TextInput fullWidth id="standard-helperText"
+              <TextInput fullWidth id="standard-helperText" name={'description'}
                 label="Description (Optional)"
                 placeholder="Default Value"
                 rows={4}
                 multiline
                 variant="standard"
+                value={nftForm.description}
+                onChange={handleChange}
                 InputLabelProps={{
                   shrink: true,
                 }}
               />
-              <TextInput fullWidth id="collection-name" label="Total Supply"
+              <TextInput fullWidth id="collection-name" label="Total Supply" name={'count'}
                 placeholder={`e.g. "Loot Collection"`}
                 variant="standard"
+                value={nftForm.count}
+                onChange={handleChange}
                 InputLabelProps={{
                   shrink: true,
                 }} />
@@ -314,13 +437,14 @@ export default function CollectionManageIndex() {
             <FormControlLabel control={<GreenSwitch defaultChecked />} label="Properties" labelPlacement="start" />
           </SwitchGroup>
           {
-            arrts.map((item,index) => (
+            arrts.map((item, index) => (
               <ArrtItem>
                 <ItemKey>
                   <TextInput fullWidth id="standard-helperText"
                     placeholder="Key"
                     multiline
                     variant="standard"
+                    onChange={(event)=>{handleChangeArrt(event,index,'key')}}
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -328,17 +452,18 @@ export default function CollectionManageIndex() {
                 </ItemKey>
                 <ItemVal>
                   <TextInput fullWidth id="standard-helperText"
-                    placeholder="Key"
+                    placeholder="Value"
                     multiline
                     variant="standard"
+                    onChange={(event)=>{handleChangeArrt(event,index,'value')}}
                     InputLabelProps={{
                       shrink: true,
                     }}
                   />
                   <ItemFunc>
                     {
-                      index >0 &&
-                      <ItemAdd onClick={()=>{removeItem(index)}}>-</ItemAdd>
+                      index > 0 &&
+                      <ItemAdd onClick={() => { removeItem(index) }}>-</ItemAdd>
                     }
                     <ItemAdd onClick={addItem}>+</ItemAdd>
                   </ItemFunc>
@@ -347,10 +472,11 @@ export default function CollectionManageIndex() {
             ))
           }
           <div className='mt20 mb20 tar'>
-            <Button className='w200 btn_themeColor'>Save</Button>
+            <Button className='w200 btn_themeColor' onClick={handelSubmit}>Save</Button>
           </div>
         </Box>
       </Modal>
+      <Snackbar isSnackbarOpen={isSnackbarOpen} msg={msg} closeSnackbar={closeSnackbar} severity={severity}></Snackbar>
     </>
   )
 }

@@ -102,17 +102,7 @@ export default function BadgeCard({ item, type = '' }) {
   const history = useHistory()
 
   const goToBadgeDetail = (item) => {
-    if (item.claimType === 'blindbox') {
-      history.push(`/blindbadge/${item.project}`)
-    } else if (item.claimType === 'nftPlus') {
-      history.push(`/${item.project}`)
-    } else {
-      if (item.types.length > 1) {
-        history.push(`/badge/${item.project}`)
-      } else {
-        history.push(`/badge/${item.project}/${item.types[0]}`)
-      }
-    }
+    history.push(`/collectionDetail/${item.id}`)
   }
 
   const dealTime = () => {

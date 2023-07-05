@@ -16,9 +16,9 @@ import Explore from "pages/Explore";
 import Collector from "pages/Collector";
 import Bridge from "pages/Bridge";
 import NFTDetail  from "pages/NFTDetail";
-import NFTManage from "pages/NFTManage";
-import CollectionManageIndex from "pages/NFTManage/CollectionManage";
-
+import Dashboard from "pages/Dashboard";
+import CollectionManageIndex from "pages/Dashboard/CollectionManage";
+import CollectionDetail from "pages/CollectionInfo"
 
 function getLibrary(provider) {
   const library = new Web3Provider(provider);
@@ -49,10 +49,13 @@ const routeArr = [
     component: NFTDetail, path: '/badge/:nftId'
   },
   {
-    component: NFTManage, path: '/dashboard', parent: 'dashboard'
+    component: Dashboard, path: '/dashboard', parent: 'dashboard'
   },
   {
     component: CollectionManageIndex, path: '/collectionManage/:collectionId'
+  },
+  {
+    component: CollectionDetail, path: '/collectionDetail/:collectionId'
   },
 ]
 

@@ -1,7 +1,7 @@
 const development = {
   "ENV": "development",
-  "API_URL": "https://staging-api.de-fine.art/v3"
-
+  "API_URL": "http://13.229.74.96:8080"
+  // "API_URL": "https://staging-api.de-fine.art/v3"
 }
 // const development = {
 //   "ENV": "production",

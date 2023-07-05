@@ -3,6 +3,7 @@ import { Select, MenuItem } from "@mui/material";
 import styled from 'styled-components/macro';
 
 import { useBadgeProjectList } from "../../services/badge"
+import { useCollectionList } from "../../services/createNFTManage"
 import BadgeCard from "components/BadgeCard";
 import bg from 'assets/img/explore_bg.svg'
 import { BREAKPOINTS } from 'theme';
@@ -31,7 +32,7 @@ const Content = styled.div`
 export default function Explore() {
   const [pageNo, setPageNo] = useState(1)
   const [loading, setLoading] = useState(false)
-  const { list, total } = useBadgeProjectList(pageNo, 50, setLoading, '', '', '')
+  const { list, total } = useCollectionList(pageNo, 50, setLoading, '')
   const [nftType, setNftType] = useState('all')
 
   const handleSwitchNftType = (event) => {

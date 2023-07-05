@@ -19,7 +19,8 @@ import baseCom from "assets/img/chain/com_base.svg";
 import opCom from "assets/img/chain/com_op.svg";
 import arbCom from "assets/img/chain/com_arb.svg";
 import zkCom from "assets/img/chain/com_zk.svg";
-import loot from "assets/img/chain/loot.svg";
+// import loot from "assets/img/chain/loot.svg";
+import loot from "assets/img/chain/com_loot.svg";
 
 export const injected = new InjectedConnector({
   supportedChainIds: [1, 3, 4, 5, 10, 56, 97, 137, 280, 324, 420, 1001, 42161, 8217, 80001, 84531, 421613, 5151706, 9088912]
@@ -76,7 +77,9 @@ export const chainTypeComImgObj = {
   klaytn: klaytnCom,
   baobab: klaytnCom,
   tron: tronCom,
-  shasta: tronCom
+  shasta: tronCom,
+  loot: loot,
+  loottest: loot
 }
 
 export const chains = env.ENV === 'development' ? [
