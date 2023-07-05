@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import styled from 'styled-components/macro';
 
 import { BREAKPOINTS } from 'theme';
-import { chainTypeImgObj } from '../../utils/networkConnect';
+import { chainTypeImgObj, chainTxtObj } from '../../utils/networkConnect';
 import CountDown from "components/CountDown";
 
 const CardBox = styled.div`
@@ -42,6 +42,11 @@ const ChainImg = styled.img`
   border-radius: 50%;
 `
 const ItemFooter = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 18px;
   position: absolute;
   left: 1px;
   bottom: 1px;
@@ -50,21 +55,27 @@ const ItemFooter = styled.div`
   border-radius: 10px;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0) 1.04%, rgba(0, 0, 0, 0) 38.54%, #000000 81.77%);
 `
-const FooterName = styled.div<{ collector: boolean }>`
-  position: absolute;
-  left: 18px;
-  right: 18px;
-  bottom: ${props => props.collector ? '54px' : '20px'};
+const NftName = styled.div<{ collector: boolean }>`
+  display: ${props => props.collector ? 'block' : 'none'};
   color: #A5FFBE;
 `
-const CollectionName = styled.div<{ collector: boolean }>`
-  position: absolute;
-  left: 18px;
-  right: 18px;
-  bottom: 20px;
-  display: ${props => props.collector ? 'flex' : 'none'};
+const CollectionName = styled.div`
+  color: #ebebeb;
+`
+const ChainName = styled.div`
+  display: flex;
   align-items: center;
+  color: #7A9283;
   font-size: 14px;
+  font-weight: 600;
+  margin-top: 12px;
+  img {
+    width: 18px;
+    height: 18px;
+    border-radius: 18px;
+    overflow: hidden;
+    margin-right: 7px;
+  }
 `
 const ItemActivity = styled.div`
   position: absolute;
@@ -89,7 +100,7 @@ const ItemForeshow = styled.div`
   font-size: 12px;
   font-weight: 600;
   border-radius: 30px;
-  padding: 0 14px;
+  padding: 0 5px;
   height: 20px;
   line-height: 20px;
   background: linear-gradient(89.89deg, #C19700 3.69%, #FFEE53 15.21%, #FDFFAC 57.81%, #FFEE53 83.86%, #C19700 99.9%);
@@ -108,11 +119,12 @@ export default function BadgeCard({ item, type = '' }) {
   const dealTime = () => {
     const now = Date.now();
     const info = item;
-    if (info) {
+    if (info && info.eventStartTime && info.eventEndTime) {
       let date;
       if (info.eventStartTime - now > 0) {
         date = info.eventStartTime;
         setTime(date)
+        setShowCountDown(false)
       } else {
         date = info.eventEndTime;
         setTimeType('end')
@@ -129,18 +141,25 @@ export default function BadgeCard({ item, type = '' }) {
 
   useEffect(() => {
     dealTime()
+    console.log(item.eventStartTime)
   }, [item])
 
   return (
     <CardBox>
-      <DefaultBorder active={item.status === 'active' && type !== 'collector'} onClick={() => { goToBadgeDetail(item) }}>
+      <DefaultBorder active={showCountDown && type !== 'collector'} onClick={() => { goToBadgeDetail(item) }}>
         <BadgeItem style={{ backgroundImage: `url(${item.image})` }}>
           {
             type === 'collector' && <ChainImg src={chainTypeImgObj[item.chainType]} />
           }
           <ItemFooter>
-            <FooterName className={`ell`} collector={type === 'collector'}>{item.name}</FooterName>
-            <CollectionName collector={type === 'collector'}>CollectionName</CollectionName>
+            <NftName className={`ell`} collector={type === 'collector'}>{item.name}</NftName>
+            <CollectionName>CollectionName</CollectionName>
+            {
+              type === 'game' && <ChainName>
+                <img src={chainTypeImgObj[item.chainType]} />
+                <span>{chainTxtObj[item.chainType]}</span>
+              </ChainName>
+            }
           </ItemFooter>
 
 
@@ -153,7 +172,7 @@ export default function BadgeCard({ item, type = '' }) {
                 </ItemActivity>
               ) : (
                 !!time && (
-                  <ItemForeshow>
+                  <ItemForeshow title={`Start at ${new Date(time).toLocaleString()}`} className="ell">
                     <span>Start at </span>
                     {new Date(time).toLocaleString()}
                   </ItemForeshow>

@@ -111,7 +111,7 @@ const PopMyItem = styled.div`
 const HeaderSpecial = () => {
   const [showBox, setShowBox] = useState('');
   const [chainName, setChainName] = useState('mainnet')
-  const [bgOpacity, setBgOpacity] = useState(0)
+  const [bgOpacity, setBgOpacity] = useState(0.5)
   const { account, active, chainId } = useActiveWeb3React()
   const { state, dispatch } = useContext(mainContext);
 
@@ -139,6 +139,10 @@ const HeaderSpecial = () => {
       }
     }
     window.addEventListener('scroll', changeBg);
+
+    return () => {
+      window.removeEventListener('scroll', changeBg);
+    }
   }, [])
 
   useEffect(() => {

@@ -101,7 +101,7 @@ const GamesRightBoxItem = styled.div<{ active: boolean }>`
     border: 1px solid #A5FFBE;
   }
 `
-const Tag = styled.div`
+export const Tag = styled.div`
   height: 30px;
   line-height: 28px;
   padding: 0 20px;
@@ -185,7 +185,7 @@ export default function Games() {
   const history = useHistory()
 
   const goGameWebsite = () => {
-    window.open(selectGame.website)
+    history.push(`/games/${selectGame.id}`)
   }
   const goGameDetail = (item) => {
     history.push(`/games/${item.id}`)

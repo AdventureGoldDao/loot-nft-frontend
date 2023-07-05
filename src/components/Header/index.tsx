@@ -137,6 +137,10 @@ const Header = ({ currentRoute }) => {
       }
     }
     window.addEventListener('scroll', changeBg);
+
+    return () => {
+      window.removeEventListener('scroll', changeBg);
+    }
   }, [])
 
   useEffect(() => {
