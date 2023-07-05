@@ -22,21 +22,11 @@ const Title = styled.div`
   font-size: 48px;
   font-weight: 600;
 `
-const SelectBox = styled(Select)`
-  background-color: #000;
-  padding: 14px 10px 14px 20px;
-`
 const Content = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin: 20px -10px;
 `
-
-const typesArr = [
-  { value: 'all', label: 'All NFTs' },
-  { value: 'ongoing', label: 'Ongoing' },
-  { value: 'upcoming', label: 'Upcoming' },
-]
 
 export default function Explore() {
   const [pageNo, setPageNo] = useState(1)
@@ -55,16 +45,6 @@ export default function Explore() {
     <Main>
       <div className="space-between-center">
         <Title>Explore</Title>
-        <SelectBox
-          onChange={handleSwitchNftType}
-          value={nftType}
-        >
-          {
-            typesArr.map(item => (
-              <MenuItem key={item.value} value={item.value}>{item.label}</MenuItem>
-            ))
-          }
-        </SelectBox>
       </div>
 
       <Content>

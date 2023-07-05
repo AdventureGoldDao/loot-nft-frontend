@@ -51,6 +51,8 @@ export const chainTypeImgObj = {
   mumbai: polygon,
   klaytn: klaytn,
   baobab: klaytn,
+  loot: loot,
+  loottest: loot,
   tron: tron,
   shasta: tron
 }
@@ -111,7 +113,7 @@ export const chains = env.ENV === 'development' ? [
 
 export const chainArr = [
   { name: 'Ethereum Goerli', icon: eth, value: 'goerli' },
-  { name: 'Loot test', icon: loot, value: 'loot' },
+  { name: 'Loot Test', icon: loot, value: 'loottest' },
   // { name: 'Base Goerli', icon: base },
   // { name: 'Optimism', icon: op },
   // { name: 'Arbitrum', icon: arb },
@@ -124,7 +126,9 @@ export const chainArr = [
 
 export const chainTxtObj = {
   mainnet: "Ethereum",
+  goerli: "Ethereum Goerli",
   loot: "Loot",
+  loottest: "Loot Test",
   // basegoerli: "Base Goerli",
   // optimism: "Optimism",
   // optimisticgoerli: "Optimism",
@@ -134,7 +138,6 @@ export const chainTxtObj = {
   // zksynceratest: "zkSync Era",
   // ropsten: "Ethereum",
   // rinkeby: "Ethereum",
-  // goerli: "Ethereum",
   // bsc: "BSC",
   // bsctestnet: "BSC",
   // polygon: "Polygon",
@@ -359,7 +362,7 @@ export const setupLootTest = async (chainId) => {
           method: 'wallet_addEthereumChain',
           params: [{
             chainId: `0x8aaf90`,
-            chainName: 'loot',
+            chainName: 'loot test',
             nativeCurrency: {
               name: 'AGLD',
               symbol: 'AGLD',
@@ -399,7 +402,7 @@ export const setupLootMainnet = async (chainId) => {
           method: 'wallet_addEthereumChain',
           params: [{
             chainId: `0x4e9bda`,
-            chainName: 'Loot Chain',
+            chainName: 'Loot',
             nativeCurrency: {
               name: 'AGLD',
               symbol: 'AGLD',
@@ -706,8 +709,8 @@ export const setupZkSyncEraMainnet = async (chainId) => {
 export const chainFun = {
   'mainnet': setupEthMainnet,
   'goerli': setupEthGoerli,
-  'loot': setupLootTest,
-  'lootmain': setupLootMainnet,
+  'loottest': setupLootTest,
+  'loot': setupLootMainnet,
 }
 
 

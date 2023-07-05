@@ -10,6 +10,8 @@ import "tailwindcss/tailwind.css"
 import { ContextProvider } from "./reducer";
 import Layout from "./components/Layout";
 import Home from "pages/Home";
+import Games from "pages/Games";
+import GameDetail from "pages/GameDetail";
 import Explore from "pages/Explore";
 import Collector from "pages/Collector";
 import Bridge from "pages/Bridge";
@@ -27,6 +29,12 @@ function getLibrary(provider) {
 const routeArr = [
   {
     component: Home, path: '/', parent: 'home'
+  },
+  {
+    component: Games, path: '/games', special: 'game'
+  },
+  {
+    component: GameDetail, path: '/games/:id', special: 'game'
   },
   {
     component: Explore, path: '/explore', parent: 'explore'

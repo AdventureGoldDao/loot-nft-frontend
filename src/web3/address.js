@@ -155,8 +155,10 @@ export function getChainType(chainId) {
             return 'basegoerli'
         case 421613:
             return 'nitrogoerli'
-        case 9088912:
+        case 5151706:
             return 'loot'
+        case 9088912:
+            return 'loottest'
         case 'tron':
             return 'tron'
         case 'shasta':
@@ -203,6 +205,8 @@ export function getChainId(chainType) {
         case 'nitrogoerli':
             return 421613
         case 'loot':
+            return 5151706
+        case 'loottest':
             return 9088912
         case 'tron':
             return 'tron'

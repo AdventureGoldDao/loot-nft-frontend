@@ -2,7 +2,7 @@
 @import "./default";
 @import "./mixin";
 
-@include Margins((-10,-20,-2,2, 4, 5, 6, 8, 10, 12, 14, 15, 16, 20, 24, 30, 32, 40, 50, 60), 1px);
+@include Margins((-10,-20,-2,2, 4, 5, 6, 8, 10, 12, 14, 15, 16, 20, 24, 30, 32, 36, 40, 50, 60), 1px);
 @include Paddings((2, 4, 5, 6, 8, 10, 12, 14, 15, 16, 20, 24, 30, 32, 40, 60), 1px);
 @include SACSS(font-size, fs, (0, 12, 14, 16, 18, 20, 22, 24, 26, 28, 32, 36, 38, 40, 60), 1px);
 @include SACSS(line-height, lh, (12, 16, 18, 20, 24, 28, 32, 36, 48, 80, 84), 1px);
@@ -724,32 +724,11 @@ MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-focused st
   word-break: break-all
 }
 
-.css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root {
-  background-color: rgba(165, 255, 190, 0.1);
-  border-radius: 50px !important;
-  color: #fff !important;
-  height: 28px;
-  line-height: 28px !important;
-  .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
-    display: flex;
-    align-items: center;
-  }
-  .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon {
-    color: #A5FFBE;
-  }
-  .css-bpeome-MuiSvgIcon-root-MuiSelect-icon {
-    color: #A5FFBE;
-  }
-}
-.css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root.Mui-focused .MuiOutlinedInput-notchedOutline {
-  border-color: #7FB093 !important;
-}
 .css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
   background-color: rgba(0, 0, 0, 0.8) !important;
   color: #7FB093 !important;
 
-  .css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root.Mui-selected {
-    background: none;
+  .css-1dkvazp-MuiButtonBase-root-MuiMenuItem-root.Mui-selected {
     color: #fff;
   }
 }

@@ -1,0 +1,242 @@
+import React, { useEffect, useState } from 'react'
+import { Button } from "@mui/material";
+import styled from 'styled-components/macro';
+import { useHistory } from 'react-router-dom'
+
+import { BREAKPOINTS } from 'theme';
+import { gamesArr } from 'pages/GameDetail'
+import upcoming from 'assets/img/home/icon_upcoming.png'
+
+const Main = styled.div`
+  position: relative;
+  min-height: 100vh;
+  padding: 102px 100px 70px 145px;
+
+  @media screen and (min-width: ${BREAKPOINTS.xxl}px) {
+    padding-right: 150px;
+  }
+  @media screen and (min-width: ${BREAKPOINTS.xxxl}px) {
+    padding-right: 300px;
+  }
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    padding: 16px;
+  }
+`
+const BgBox = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: contain;
+  &::before {
+    background-color: rgba(26, 30, 30, 0.50);
+    backdrop-filter: blur(30px);
+    display: block;
+    content: "";
+    width: 100%;
+    height: 100%;
+  }
+`
+const GamesBox = styled.div`
+  display: flex;
+`
+const ShadeBox = styled.div`
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 59px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    padding: 20px;
+  }
+`
+const GameInfoBox = styled.div`
+  position: relative;
+  flex: auto;
+  margin-right: 35px;
+  height: 495px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-radius: 20px;
+  overflow: hidden;
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    margin-right: 0;
+  }
+`
+const GamesRightBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    display: none;
+  }
+`
+const GamesRightBoxItem = styled.div<{ active: boolean }>`
+  width: 180px;
+  height: 105px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid ${props => props.active ? '#A5FFBE' : 'transparent'};
+  cursor: pointer;
+  margin-bottom: 25px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+  &:hover {
+    border: 1px solid #A5FFBE;
+  }
+`
+const Tag = styled.div`
+  height: 30px;
+  line-height: 28px;
+  padding: 0 20px;
+  border-radius: 50px;
+  border: 1px solid #4B5954;
+  background: #000;
+  color: #A5FFBE;
+  font-size: 16px;
+  font-weight: 500;
+  margin-right: 12px;
+`
+const Content = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin: -17px -13px;
+`
+const ContentItemBox = styled.div`
+  width: 50%;
+  padding: 17px 13px;
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    width: 100%;
+    padding-bottom: 3px;
+  }
+`
+const ContentItem = styled.div`
+  position: relative;
+  padding-bottom: 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid #4B5954;
+  &:hover {
+    border: 1px solid #A5FFBE;
+    box-shadow: 0px 4px 24px 0px rgba(165, 255, 190, 0.40);
+  }
+`
+const ShadeCard = styled.div`
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.88));
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 22px 27px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+`
+const NameTag = styled.div`
+  height: 45px;
+  line-height: 45px;
+  padding: 0 27px;
+  background-color: #000;
+  border-radius: 50px;
+  color: #EBEBEB;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 6px;
+
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    height: 30px;
+    line-height: 30px;
+    padding: 0 20px;
+    font-size: 20px;
+  }
+`
+const DetailLine = styled.div`
+  line-height: 1.5;
+  color: #EBEBEB;
+  font-weight: 400;
+  width: 100%;
+`
+
+
+export default function Games() {
+  const [selectGame, setSelectGame] = useState(gamesArr[0]);
+  const history = useHistory()
+
+  const goGameWebsite = () => {
+    window.open(selectGame.website)
+  }
+  const goGameDetail = (item) => {
+    history.push(`/games/${item.id}`)
+  }
+
+  useEffect(() => {
+  }, [])
+
+  return (
+    <Main>
+      <BgBox style={{ backgroundImage: `url(${selectGame.banner})` }} />
+      <GamesBox>
+        <GameInfoBox style={{ backgroundImage: `url(${selectGame.banner})` }}>
+          <ShadeBox>
+            <div style={{ color: '#A5FFBE', fontSize: 46, fontWeight: 800, marginBottom: 20 }}>{selectGame.name}</div>
+            <div className='df_align_center mb20'>
+              {
+                selectGame.tags.map(item => <Tag>{item}</Tag>)
+              }
+            </div>
+            <div style={{ color: '#EBEBEB', fontWeight: 400, marginBottom: 30, lineHeight: 1.5 }}>{selectGame.description}</div>
+            <Button onClick={goGameWebsite} className='btn_themeColor' style={{ paddingLeft: 32, paddingRight: 32 }}>Learn More</Button>
+          </ShadeBox>
+        </GameInfoBox>
+        <GamesRightBox>
+          {
+            gamesArr.slice(0, 4).map(item =>
+              <GamesRightBoxItem onClick={() => { setSelectGame(item) }} style={{ backgroundImage: `url(${item.banner})` }} active={selectGame.id === item.id} />
+            )
+          }
+        </GamesRightBox>
+      </GamesBox>
+      <div className='df_align_center mt24 mb24' style={{ marginLeft: '-15px' }}>
+        <img width={44} src={upcoming} />
+        <div style={{ fontSize: 30, fontWeight: 600, color: '#EBEBEB', marginLeft: 11 }}>Games</div>
+      </div>
+
+      <Content>
+        {
+          gamesArr.map(item =>
+            <ContentItemBox>
+              <ContentItem onClick={() => { goGameDetail(item) }} style={{ backgroundImage: `url(${item.banner})` }}>
+                <ShadeCard>
+                  <NameTag>{item.name}</NameTag>
+                  <DetailLine className='ell'>{item.description}</DetailLine>
+                </ShadeCard>
+              </ContentItem>
+            </ContentItemBox>
+          )
+        }
+      </Content>
+    </Main>
+  )
+}

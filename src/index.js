@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import GA4React from "ga-4-react";
+import { ThemeProvider } from '@mui/material/styles';
 
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { customTheme } from 'theme';
 
 if (window.localStorage.getItem('wallet_type') === 'BitKeep' && window.bitkeep) {
   window.ethereum = window.bitkeep.ethereum;
@@ -31,7 +33,9 @@ if (window.localStorage.getItem('wallet_type') === 'MetaMask' && window.ethereum
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme={customTheme}>
+      <App />
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

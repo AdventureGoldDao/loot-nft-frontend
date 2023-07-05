@@ -5,7 +5,6 @@ import styled from 'styled-components/macro';
 
 import { HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL } from "../../const";
 import { mainContext } from "../../reducer";
-import loading from '../../assets/loading.json'
 import { ReactComponent as LoadingIcon } from '../../assets/img/loading_icon.svg'
 
 const Title = styled.div`
@@ -26,14 +25,6 @@ const style = {
   textAlign: 'center'
 };
 
-const defaultOptions = {
-  loop: true,
-  autoplay: true,
-  animationData: loading,
-  rendererSettings: {
-    preserveAspectRatio: 'xMidYMid slice'
-  }
-};
 
 export const WaitingWalletConfirmModal = ({ visible }) => {
   const { dispatch, state } = useContext(mainContext);
