@@ -14,7 +14,7 @@ const development = {
 // }
 const production = {
   "ENV": "production",
-  "API_URL": "https://api.de-fine.art/v3"
+  "API_URL": "http://13.229.74.96:8080"
 }
 
 const env = { development, production }[process.env.NODE_ENV || 'development']
