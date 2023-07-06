@@ -35,20 +35,30 @@ const LeftNav = styled.div`
   }
 `
 const NavLink = styled(Link) <{ active: boolean }>`
+  position: relative;
+  top: 0;
+  transition: top 0.2s;
   border-radius: 50%;
   overflow: hidden;
   width: 55px;
   height: 55px;
   margin-bottom: 30px;
-  border: 1px solid transparent;
   ${props => props.active ? `
       border: 1px solid #A5FFBE;
       box-shadow: 0px 1px 10px 0px rgba(165, 255, 190, 0.50);
     ` : ''
   }
   &:hover {
+    top: -3px;
     border: 1px solid #A5FFBE;
     box-shadow: 0px 1px 10px 0px rgba(165, 255, 190, 0.50);
+  }
+  &>img {
+    width: 100%;
+    transition: transform 0.5s;
+    &:hover {
+      transform: scale(1.2, 1.2);
+    }
   }
 `
 const Main = styled.div`
@@ -76,7 +86,15 @@ const Layout = ({ children, routeArr }) => {
     setCurrentId(location.pathname.substring(7))
   }, [location.pathname])
 
-  console.log(currentId)
+  useEffect(() => {
+    if (currentRoute.special) {
+      if (document.title !== 'Games') {
+        document.title = 'Games'
+      }
+    } else if (document.title !== 'Games-NFT') {
+      document.title = 'Games-NFT'
+    }
+  }, [currentRoute])
 
   return (
     <>
@@ -88,7 +106,7 @@ const Layout = ({ children, routeArr }) => {
                 gamesArr.map(item =>
                   <NavLink key={item.id} to={`/games/${item.id}`} active={currentId === item.id}>
                     <Tooltip title={item.name} placement="right" arrow>
-                      <img width={'100%'} src={item.logo} />
+                      <img src={item.logo} />
                     </Tooltip>
                   </NavLink>
                 )

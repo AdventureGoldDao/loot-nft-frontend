@@ -63,14 +63,20 @@ const ShadeBox = styled.div`
 `
 const GameInfoBox = styled.div`
   position: relative;
+  top: 0;
+  transition: background-size 0.5s, top 0.2s;
   flex: auto;
   margin-right: 35px;
   height: 495px;
   background-repeat: no-repeat;
   background-position: center;
-  background-size: cover;
+  background-size: 100% 100%;
   border-radius: 20px;
   overflow: hidden;
+  &:hover {
+    top: -5px;
+    background-size: 120% 120%;
+  }
   @media screen and (max-width: ${BREAKPOINTS.md}px) {
     margin-right: 0;
   }
@@ -83,21 +89,25 @@ const GamesRightBox = styled.div`
     display: none;
   }
 `
-const GamesRightBoxItem = styled.div<{ active: boolean }>`
+const GamesRightBoxItem = styled.div`
+  position: relative;
+  top: 0;
+  transition: background-size 0.5s, top 0.2s;
   width: 180px;
   height: 105px;
   background-repeat: no-repeat;
   background-position: center;
-  background-size: cover;
+  background-size: 100% 100%;
   border-radius: 10px;
   overflow: hidden;
-  border: 1px solid ${props => props.active ? '#A5FFBE' : 'transparent'};
   cursor: pointer;
   margin-bottom: 25px;
   &:last-child {
     margin-bottom: 0;
   }
   &:hover {
+    top: -5px;
+    background-size: 120% 120%;
     border: 1px solid #A5FFBE;
   }
 `
@@ -128,15 +138,19 @@ const ContentItemBox = styled.div`
 `
 const ContentItem = styled.div`
   position: relative;
+  top: 0;
+  transition: background-size 0.5s, top 0.2s;
   padding-bottom: 50%;
   background-repeat: no-repeat;
   background-position: center;
-  background-size: cover;
+  background-size: 100% 100%;
   border-radius: 10px;
   overflow: hidden;
   cursor: pointer;
   border: 1px solid #4B5954;
   &:hover {
+    top: -5px;
+    background-size: 120% 120%;
     border: 1px solid #A5FFBE;
     box-shadow: 0px 4px 24px 0px rgba(165, 255, 190, 0.40);
   }
@@ -157,7 +171,7 @@ const ShadeCard = styled.div`
 const NameTag = styled.div`
   height: 45px;
   line-height: 45px;
-  padding: 0 27px;
+  padding: 0 20px;
   background-color: #000;
   border-radius: 50px;
   color: #EBEBEB;
@@ -213,7 +227,7 @@ export default function Games() {
         <GamesRightBox>
           {
             gamesArr.slice(0, 4).map(item =>
-              <GamesRightBoxItem onClick={() => { setSelectGame(item) }} style={{ backgroundImage: `url(${item.banner})` }} active={selectGame.id === item.id} />
+              <GamesRightBoxItem onClick={() => { setSelectGame(item) }} style={{ backgroundImage: `url(${item.banner})` }} />
             )
           }
         </GamesRightBox>

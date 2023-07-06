@@ -14,11 +14,11 @@ export const clearLocalStorage = (type) => {
 }
 
 const personalSign = (provider, msg, fromAddress, pwd) => {
-  msg = 'Welcome to DeFine V4!\n\n' +
+  msg = 'Welcome !\n\n' +
   'Click "Sign" to continue. \nThis signature will cost 0 gas.\n\n' +
   'Wallet address:\n' +
   fromAddress + '\n\n' +
-  'DeFine Nonce:\n' + msg;
+  'Nonce:\n' + msg;
 
   const web3 = new Web3(provider);
   return new Promise((resolve, reject) => {
@@ -35,11 +35,11 @@ const personalSign = (provider, msg, fromAddress, pwd) => {
 }
 
 const tronSign = async (msg, fromAddress) => {
-  msg = 'Welcome to DeFine V4!\n\n' +
+  msg = 'Welcome !\n\n' +
   'Click "Sign" to continue. \nThis signature will cost 0 gas.\n\n' +
   'Wallet address:\n' +
   fromAddress + '\n\n' +
-  'DeFine Nonce:\n' + msg;
+  'Nonce:\n' + msg;
 
   const signature = await window.tronWeb.trx.sign(Web3.utils.utf8ToHex(msg).substr(2))
   window.localStorage.setItem('tron_address', fromAddress)

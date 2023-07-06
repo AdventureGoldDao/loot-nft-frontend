@@ -6,10 +6,28 @@ import { BREAKPOINTS } from 'theme';
 import { chainTypeImgObj, chainTxtObj } from '../../utils/networkConnect';
 import CountDown from "components/CountDown";
 
+const BadgeItem = styled.div`
+  width: 100%;
+  padding-bottom: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  transition: background-size 0.5s;
+`
 const CardBox = styled.div`
   width: 20%;
   padding: 10px;
-
+  position: relative;
+  top: 0;
+  transition: top 0.2s;
+  &:hover {
+    top: -5px;
+  }
+  &:hover ${BadgeItem} {
+    background-size: 120% 120%;
+  }
   @media screen and (max-width: ${BREAKPOINTS.md}px) {
     width: 50%;
     padding: 5px;
@@ -23,15 +41,6 @@ const DefaultBorder = styled.div<{ active: boolean }>`
   background: ${props => props.active ? 'linear-gradient(148.86deg, #FFF266 0%, #A5FFBE 98.64%)' : '#4B5954'};
   cursor: pointer;
   position: relative;
-`
-const BadgeItem = styled.div`
-  width: 100%;
-  padding-bottom: 100%;
-  border-radius: 8px;
-  overflow: hidden;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
 `
 const ChainImg = styled.img`
   position: absolute;
@@ -141,7 +150,6 @@ export default function BadgeCard({ item, type = '' }) {
 
   useEffect(() => {
     dealTime()
-    console.log(item.eventStartTime)
   }, [item])
 
   return (
