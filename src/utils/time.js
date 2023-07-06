@@ -5,6 +5,7 @@ const tow = (n) => {
 
 }
 export const getPoolLeftTime = (time) => {
+  console.log(time);
   if (time) {
     const date = new Date(time * 1000);
     const now = new Date();

@@ -741,6 +741,11 @@ MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-focused st
     outline: none;
   }
 }
+.MuiLoadingButton-loading {
+  .MuiLoadingButton-loadingIndicator {
+    left: 38%;
+  }
+}
 
 @media #{$smWidth} {
   .MuiModal-root {

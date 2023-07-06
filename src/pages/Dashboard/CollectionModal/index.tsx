@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Modal, Box, TextField } from "@mui/material";
-
+import LoadingButton from '@mui/lab/LoadingButton';
 import { useActiveWeb3React } from "../../../web3";
 import { saveCollection } from "../../../services/createNFTManage"
 import Snackbar from "components/SnackMessage"
@@ -34,16 +34,13 @@ const TextInput = styled(TextField)`
     color: #7A9283;
   }
 `
-export default function CollectionModal({ visible, closeModal }) {
+export default function CollectionModal({ visible, closeModal,collectionInfo }) {
   const { account } = useActiveWeb3React()
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false)
   const [msg, setMsg] = useState('')
-  const [severity,setSeverity] = useState('success')
-  const [collectionForm, setcollectionForm] = useState({
-    name: '',
-    description: '',
-    tokenSymbol: ''
-  });
+  const [severity, setSeverity] = useState('success')
+  const [loading, setLoading] = useState(false)
+  const [collectionForm, setCollectionForm] = useState<any>();
   const [errors, setErrors] = useState({
     name: false,
     description: false,
@@ -54,14 +51,21 @@ export default function CollectionModal({ visible, closeModal }) {
     closeModal()
   }
   const handleChange = (event) => {
+    console.log(event);
+    console.log(event.target);
+    
     const { name, value } = event.target;
-    setcollectionForm((prevFormData) => ({
+    console.log(name);
+    console.log(value);
+
+    setCollectionForm((prevFormData) => ({
       ...prevFormData,
       [name]: value,
     }));
+    console.log(collectionForm);
+    
   };
   const handelSubmit = async () => {
-    console.log(collectionForm);
     const formErrors = {
       name: collectionForm.name === '',
       description: collectionForm.description === '',
@@ -71,26 +75,48 @@ export default function CollectionModal({ visible, closeModal }) {
     if (Object.values(formErrors).some((error) => error)) {
       return;
     }
+    setLoading(true)
     let formData = new FormData();
     formData.append('name', collectionForm.name)
     formData.append('description', collectionForm.description)
     formData.append('tokenSymbol', collectionForm.tokenSymbol)
     formData.append('artistName', account)
     formData.append('category', 'gaming')
-
-    let res = saveCollection(formData)
+    if(collectionInfo){
+      formData.append('collectionId', collectionForm.id)
+    }
+    let res = await saveCollection(formData)
     console.log(res);
     initMsg('Success')
     closeModal()
+    setLoading(false)
+    setCollectionForm({
+      name: '',
+      description: '',
+      tokenSymbol: ''
+    })
   }
   const initMsg = (msg) => {
     setMsg(msg)
-    setSeverity('success!')
+    setSeverity('success')
     setIsSnackbarOpen(true)
   }
   const closeSnackbar = () => {
     setIsSnackbarOpen(false)
   }
+  useEffect(() => {
+    if(collectionInfo){
+      setCollectionForm(collectionInfo)
+    }else {
+      setCollectionForm(
+        {
+          name: '',
+          description: '',
+          tokenSymbol: ''
+        }
+      )
+    }
+  },[])
 
   return (
     <>
@@ -99,6 +125,8 @@ export default function CollectionModal({ visible, closeModal }) {
         open={visible}
         onClose={handleCancel}
       >
+        {
+          collectionForm?
         <Box sx={{ ...style }}>
           <div>Create Collection</div>
           <TextInput fullWidth id="collection-name" label="Collection Name" name={'name'}
@@ -142,9 +170,12 @@ export default function CollectionModal({ visible, closeModal }) {
             <span>ERC-721</span>
           </div>
           <div className='mt20 mb20'>
-            <Button className='wp100 h36 mt20 mb20 btn_themeColor' onClick={handelSubmit}>Confirm</Button>
+            <LoadingButton loading={loading} className='wp100 h36 mt20 mb20 btn_themeColor' onClick={handelSubmit}>{loading?'Loading':'Confirm'}</LoadingButton>
+            {/* <Button className='wp100 h36 mt20 mb20 btn_themeColor' onClick={handelSubmit}>Confirm</Button> */}
           </div>
-        </Box>
+        </Box>:
+        <div></div>
+        }
       </Modal>
     </>
   )

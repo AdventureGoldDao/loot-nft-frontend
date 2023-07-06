@@ -54,6 +54,7 @@ const StatusItem = styled.div<{ active: boolean }>`
 `
 const ManageMain = styled.div`
   display: flex;
+  flex-wrap: wrap;
   margin-top: 40px;
 `
 const CardCreate = styled.div`
@@ -62,9 +63,10 @@ const CardCreate = styled.div`
   justify-content: center;
   align-items: center;
   width: 24%;
-  min-width: 300px;
+  min-width: 250px;
   height: 256px;
   margin-right: 1%;
+  margin-bottom: 10px;
   border-radius: 10px;
   border: 1px solid #4B5954;
   background: #111211;
@@ -82,9 +84,10 @@ const IconCreate = styled.div`
 `
 const CardItem = styled.div`
   width: 24%;
-  min-width: 300px;
+  min-width: 250px;
   height: 256px;
   margin-right: 1%;
+  margin-bottom: 10px;
   padding: 24px;
   border-radius: 10px;
   border: 1px solid var(--line-color-2, #4B5954);
@@ -97,8 +100,8 @@ const ItemDes = styled.div`
 const ItemInfo = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: 16px;
-  margin-bottom: 16px;
+  margin-top: 18px;
+  margin-bottom: 18px;
   padding: 10px 16px;
   font-size: 14px;
   border-radius: 8px;
@@ -107,7 +110,6 @@ const ItemInfo = styled.div`
 const ColorGreenLight = styled.span`
   color: #7A9283;
 `
-
 const ListHeader = styled.div`
   display: flex;
   width: 100%;
@@ -144,17 +146,6 @@ export default function NFTManage() {
   const [pageSize, setPageSize] = useState(100)
   const [refreshList, setRefreshList] = useState(1)
   const { list, total } = useOwnerCollectionList(pageNo, pageSize, setLoading, activeStatus, refreshList)
-  const [collectionForm, setcollectionForm] = useState({
-    name: '',
-    description: '',
-    tokenSymbol: ''
-  });
-  const [publishForm, setPublishForm] = useState<any>({})
-  const [errors, setErrors] = useState({
-    name: false,
-    description: false,
-    tokenSymbol: false,
-  });
   const [collectionId, setCollectionId] = useState()
 
   const changeStatus = (type) => {
@@ -174,47 +165,15 @@ export default function NFTManage() {
     setRefreshList(a)
   }
   const openPush = (event, id) => {
-    // console.log(event);
     event.stopPropagation()
     setVisible2(true)
     setCollectionId(id)
-    // queryInfo()
-  }
-  const handleChange = (event) => {
-    // console.log(event.target);
-    const { name, value } = event.target;
-    setcollectionForm((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
-  const handelSubmit = async () => {
-    const formErrors = {
-      name: collectionForm.name === '',
-      description: collectionForm.description === '',
-      tokenSymbol: collectionForm.tokenSymbol === '',
-    };
-    setErrors(formErrors);
-    if (Object.values(formErrors).some((error) => error)) {
-      return;
-    }
-    let formData = new FormData();
-    formData.append('name', collectionForm.name)
-    formData.append('description', collectionForm.description)
-    formData.append('tokenSymbol', collectionForm.tokenSymbol)
-    formData.append('artistName', account)
-
-    let res = saveCollection(formData)
-
   }
   const goToDetail = (collectionId) => {
     console.log(collectionId);
-
     history.push(`/collectionManage/${collectionId}`)
   }
-  useEffect(() => {
-    // console.log(list);
-  })
+
   return (
     <>
       <NftManage>
@@ -222,9 +181,9 @@ export default function NFTManage() {
           <Title className='f1'>Dashboard</Title>
           <Status className='f2'>
             <StatusItem active={activeStatus === 'draft'} onClick={() => { changeStatus('draft') }}>Draft</StatusItem>
-            <StatusItem active={activeStatus === 'scheduled'} onClick={() => { changeStatus('scheduled') }}>Scheduled</StatusItem>
-            <StatusItem active={activeStatus === 'ongoing'} onClick={() => { changeStatus('ongoing') }}>Ongoing</StatusItem>
-            <StatusItem active={activeStatus === 'completed'} onClick={() => { changeStatus('completed') }}>Completed</StatusItem>
+            <StatusItem active={activeStatus === 'soon'} onClick={() => { changeStatus('soon') }}>Scheduled</StatusItem>
+            <StatusItem active={activeStatus === 'active'} onClick={() => { changeStatus('active') }}>Ongoing</StatusItem>
+            <StatusItem active={activeStatus === 'ended'} onClick={() => { changeStatus('ended') }}>Completed</StatusItem>
           </Status>
           <div className='f1'>&nbsp;</div>
         </ManageHeader>
@@ -238,7 +197,7 @@ export default function NFTManage() {
             {
               list.map(item => (
                 <CardItem onClick={() => { goToDetail(item.id) }}>
-                  <div className='c_green'>{item.name}</div>
+                  <div className='c_green fs20'>{item.name}</div>
                   <ItemDes className='lh20 mt10 text_hidden_3'>{item.description ? item.description : '--'}</ItemDes>
                   <ItemInfo>
                     <div><span className='c_green'>{item.typeCount}</span><ColorGreenLight className={`pl4`}>NFTs</ColorGreenLight></div>
@@ -279,7 +238,7 @@ export default function NFTManage() {
           </div>
         }
       </NftManage>
-      <CollectionModal visible={visible} closeModal={handleCancel}></CollectionModal>
+      <CollectionModal visible={visible} closeModal={handleCancel} collectionInfo={false}></CollectionModal>
       <PushModal visiblePush={visible2} closePushModal={handleCancel2} collectionId={collectionId}></PushModal>
     </>
   )

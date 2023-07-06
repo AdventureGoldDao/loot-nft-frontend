@@ -80,7 +80,7 @@ export const delNFT  = async (collectionId,typeId) => {
   let res = await http.delete(`/collections/${collectionId}/types/${typeId}`)
   return res
 }
-export const useOwnerNFTList = (collectionId,pageNo, pageSize, setLoading,refreshList) => {
+export const useOwnerNFTTypesList = (collectionId,pageNo, pageSize, setLoading,refreshList) => {
   const [list, setList] = useState([])
   const [total, setTotal] = useState(0)
 
@@ -105,6 +105,33 @@ export const useOwnerNFTList = (collectionId,pageNo, pageSize, setLoading,refres
     }, 10);
     return () => clearTimeout(timer);
   }, [pageNo, pageSize,refreshList])
+  return { list, total }
+}
+export const useNFTList = (owner,collectionId,pageNo, pageSize, setLoading) => {
+  const [list, setList] = useState([])
+  const [total, setTotal] = useState(0)
+
+  const queryData = () => {
+    if(pageNo===1){
+      setLoading(true)
+    }
+    http.get(`/nfts/?owner=${owner}&collectionId=${collectionId}&pageNo=${pageNo}&pageSize=${pageSize}`).then(res => {
+      if (pageNo === 1) {
+        setList(res.list)
+      } else {
+        setList(oldList => [...oldList, ...res.list])
+      }
+      setTotal(res.totalCount)
+      setLoading(false)
+    })
+  }
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      queryData()
+    }, 10);
+    return () => clearTimeout(timer);
+  }, [pageNo, pageSize])
   return { list, total }
 }
 

@@ -4,7 +4,7 @@ import styled from 'styled-components/macro';
 
 import { clearLocalStorage } from '../../utils/txSign'
 import { useActiveWeb3React } from "../../web3"
-import { useBadgeProjectList } from "../../services/badge"
+import { useNFTList } from "../../services/createNFTManage"
 import BadgeCard from "components/BadgeCard";
 import { ReactComponent as DisconnectIcon } from 'assets/img/disconnect.svg'
 import { abbrTxHash } from "../../utils/format";
@@ -72,9 +72,9 @@ const Text = styled.span`
 export default function Collector() {
   const [pageNo, setPageNo] = useState(1)
   const [loading, setLoading] = useState(false)
-  const { list, total } = useBadgeProjectList(pageNo, 50, setLoading, '', '', '')
-  const history = useHistory()
   const { account } = useActiveWeb3React()
+  const { list, total } = useNFTList(account,'',pageNo, 50, setLoading)
+  const history = useHistory()
 
   const clearStorage = () => {
     clearLocalStorage(window.localStorage.getItem('now_selected_chain'))

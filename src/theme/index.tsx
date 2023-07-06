@@ -15,7 +15,10 @@ export const customTheme = createTheme({
   palette: {
     primary: {
       main: '#A5FFBE',
-    }
+    },
+    error: {
+      main: '#ff7d7d',
+    },
   },
   components: {
     MuiSelect: {

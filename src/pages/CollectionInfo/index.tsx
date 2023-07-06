@@ -1,17 +1,18 @@
 import React, { useContext, useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom';
 import { Button } from "@mui/material";
 
-import { queryCollectionDetail } from 'services/createNFTManage'
+import { queryCollectionDetail,useOwnerNFTTypesList } from 'services/createNFTManage'
 import { mainContext } from "../../reducer";
 import { useNeedSign } from "hooks/account"
 import { useActiveWeb3React } from "../../web3";
 // import { chainFun } from "../../utils/networkConnect"
 import test2 from 'assets/img/test/test2.png'
-import styles from './styles.module.scss'
 import { abbrTxHash } from "../../utils/format";
 import { chainTxtObj, chainFun } from '../../utils/networkConnect';
 import { getChainType } from "../../web3/address";
-
+import { freeMintNFT721 } from "utils/handleContract"
+import { getPoolLeftTime } from "utils/time"
 import styled from 'styled-components/macro';
 import bg from 'assets/img/explore_bg.svg';
 
@@ -21,6 +22,7 @@ import {
   HANDLE_SHOW_CONNECT_MODAL,
   waitingForConfirm,
 } from "../../const";
+import moment from 'moment';
 
 const CollectionInfo = styled.div`
   padding: 120px 80px;
@@ -54,6 +56,12 @@ const TypesBox = styled.div`
   border-radius: 20px;
   border: 1px solid var(--line-color-2, #4B5954);
   background: #191D20; 
+  overflow: auto;
+  ::-webkit-scrollbar {
+
+  display: none; /* Chrome Safari */
+
+}
 `
 const TypesCover = styled.img`
   width: 25%;
@@ -101,12 +109,14 @@ const ContractItem = styled.div`
   border-radius: 8px;
 `
 
-
 export default function NFTDetail() {
   const { state, dispatch } = useContext(mainContext);
   const { library, account, active, chainId } = useActiveWeb3React()
   const { needSign } = useNeedSign();
-  const [detailInfo, setDetailInfo] = useState({})
+  const { collectionId } = useParams<any>()
+  const [detailInfo, setDetailInfo] = useState<any>({})
+  const [loading, setLoading] = useState(false)
+  const { list, total } = useOwnerNFTTypesList(collectionId,1, 99999, setLoading, false)
 
   const beforeMint = () => {
     let chainType = getChainType(chainId)
@@ -117,51 +127,104 @@ export default function NFTDetail() {
     // }
     return true
   }
-  const freeMint = () => {
+  const freeMint = async () => {
     if (!beforeMint()) return false
     dispatch({
       type: HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
       showWaitingWalletConfirmModal: waitingForConfirm
     });
+    await freeMintNFT721(library, account, detailInfo.contractAddress,{
+      _onTranscationHash: (hash) => {
+      },
+      _onReceipt: async (receipt) => {
+        console.log(receipt);
+        
+        dispatch({
+          type: HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
+          showWaitingWalletConfirmModal: { show: false }
+        });
+      },
+      _onError: (err) => {
+        dispatch({
+          type: HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
+          showWaitingWalletConfirmModal: { show: false }
+        });
+        dispatch({
+          type: HANDLE_SHOW_FAILED_TRANSACTION_MODAL,
+          showFailedTransactionModal: true
+        });
+      }
+    })
   }
   const queryDetailInfo = async () => {
-    await queryCollectionDetail().then(res => {
+    await queryCollectionDetail(collectionId).then(res => {
       setDetailInfo(res)
     })
   }
+  const formatTime = (timestamp) => {
+    const currentTimestamp = Date.now();
+    const timeDiff = Math.abs(currentTimestamp - timestamp);
+  
+    const oneMinute = 60 * 1000;
+    const oneHour = 60 * oneMinute;
+    const oneDay = 24 * oneHour;
+  
+    if (timeDiff >= oneDay) {
+      const days = Math.floor(timeDiff / oneDay);
+      const hours = Math.floor((timeDiff % oneDay) / oneHour);
+      return `${days}${days>1?'ds':'d'} ${hours}${hours>1?'hs':'h'}`;
+    } else if (timeDiff >= oneHour) {
+      const hours = Math.floor(timeDiff / oneHour);
+      const minutes = Math.floor((timeDiff % oneHour) / oneMinute);
+      return `${hours}${hours>1?'hs':'h'} ${minutes}${hours>1?'mins':'min'}`;
+    } else if (timeDiff >= oneMinute) {
+      const minutes = Math.floor(timeDiff / oneMinute);
+      return `${minutes}${minutes>1?'mins':'min'}`;
+    } else {
+      return 'Less than 1min';
+    }
+  }
+  const countStaus = (status,time) => {
+    if(status === 'soon'){
+      return `${moment(time).format('DD MMMM HH:mm a')}`
+    }else {
+      return formatTime(time)
+    }
+  }
   useEffect(() => {
-
-  })
+    queryDetailInfo()
+  },[collectionId])
   return (
     <CollectionInfo>
       <InfoMain>
         <div className={`f1 `}>
           <InfoCover >
-            <img src={test2}></img>
+            <img src={detailInfo.image}></img>
           </InfoCover>
           <TypesBox>
-            <TypesCover src={test2}></TypesCover>
-            <TypesCover src={test2}></TypesCover>
-            <TypesCover src={test2}></TypesCover>
-            <TypesCover src={test2}></TypesCover>
+            {
+              list.map(item => (
+                <TypesCover src={item.image}></TypesCover>
+              ))
+            }
           </TypesBox>
         </div>
         <div className={`f1`}>
           <BaseInfo>
-            <CollectionName className={`c_green mt10 text_hidden_1`}>NFT Named on 15 June</CollectionName>
-            <CollectionDes>Loot is randomized adventurer gear generated and stored on chain. Stats, images, and other functionality are intentionally omitted for others to interpret. Feel free to use Loot in any way you want.</CollectionDes>
+            <CollectionName className={`c_green mt10 text_hidden_1`}>{detailInfo.name}</CollectionName>
+            <CollectionDes>{detailInfo.description}</CollectionDes>
             <div className='df_h5 mt30'>
               <div className='f3 mt10'>
-                <div>Status</div>
-                <div className='c_green fw600 mt10 fs24'>Ended at 21 hours</div>
+                <div>{detailInfo.status==='soon'?'Start at':'Close at'}</div>
+                <div className='c_green fw600 mt10 fs24'>{countStaus(detailInfo?.status,detailInfo?.mintStartTime)}</div>
               </div>
               <div className='f2 mt10'>
-                <div>Status</div>
-                <div className='c_green fw600 mt10 fs24'>400/1,000</div>
+                <div>Minted</div>
+                <div className='c_green fw600 mt10 fs24'>{detailInfo.mintedCount / detailInfo.maxCount}</div>
               </div>
               <div className='f1 mt10'>
                 <div>Network</div>
-                <div className='c_green fw600 mt10 fs24'>Ethereum</div>
+                <div className='c_green fw600 mt10 fs24'>{detailInfo.chainType}</div>
               </div>
             </div>
             <MintBox>
@@ -172,15 +235,15 @@ export default function NFTDetail() {
             <div>Contract Details</div>
             <ContractItem>
               <span className='lh28'>Release Date</span>
-              <span className='c_green'>June 15, 2023</span>
+              <span className='c_green'>{moment(detailInfo.mintStartTime).format('MM/DD/YYYY HH:mm')}</span>
             </ContractItem>
             <ContractItem>
               <span className='lh28'>Blockchain</span>
-              <span className='c_green'>Polygon</span>
+              <span className='c_green'>{detailInfo.chainType}</span>
             </ContractItem>
             <ContractItem>
               <span className='lh28'>Contract Address</span>
-              <span className='c_green'>{abbrTxHash('0xf18A52746a82a7aa41957A250E6B0f66Ce5b680C')}</span>
+              <span className='c_green'>{abbrTxHash(detailInfo.contractAddress)}</span>
             </ContractItem>
             <ContractItem>
               <span className='lh28'>Token Standard</span>

@@ -768,5 +768,11 @@ export const deployFreeMintNFT721 = (library, address, name, symbol, chainType,m
     .then(function () {
       return data;
     });
-
+}
+export const freeMintNFT721 = async(library,address,contractAddress,params) => {
+  return await getContract(library, FreeMint721.abi, contractAddress).methods.mint()
+  .send({from: address})
+  .on('transcationHash', params._onTranscationHash)
+  .on('receipt', params._onReceipt)
+  .on('error', params._onError)
 }

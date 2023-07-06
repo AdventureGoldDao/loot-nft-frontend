@@ -9,7 +9,7 @@ import CollectionModal from '../CollectionModal';
 import PushModal from '../PushModal'
 import Snackbar from "components/SnackMessage"
 import { useActiveWeb3React } from '../../../web3';
-import { delCollection, queryCollectionDetail, saveNFT,useOwnerNFTList } from "../../../services/createNFTManage"
+import { delCollection, queryCollectionDetail, saveNFT, useOwnerNFTTypesList } from "../../../services/createNFTManage"
 import { dataURLtoBlob } from 'utils/dataURLtoBlob';
 import { ReactComponent as IconEdit } from "assets/img/nftManage/icon_edit.svg";
 import BadgeCard from 'components/BadgeCard';
@@ -58,7 +58,9 @@ const CollectionTitle = styled.div`
   font-weight: 600;
 `
 const CollectionFunc = styled.div`
-  
+  .css-15pnunx-MuiButtonBase-root-MuiButton-root.Mui-disabled{
+    background-color: #a5ffbefa;
+  }
 `
 const BtnMr = styled(Button)`
   margin-right: 10px !important;
@@ -224,10 +226,10 @@ export default function CollectionManageIndex() {
   const chooseImg = useRef(null)
   const [loading, setLoading] = useState(false)
   const [refreshList, setRefreshList] = useState(1)
-  const { list, total } = useOwnerNFTList(collectionId,1, 10, setLoading, refreshList)
+  const { list, total } = useOwnerNFTTypesList(collectionId, 1, 10, setLoading, refreshList)
   const [visible, setVisible] = useState(false)
   const [visibleNFT, setVisibleNFT] = useState(false)
-  const [visible2, setVisible2] = useState(false)
+  const [visiblePush, setVisiblePush] = useState(false)
   const label = { inputProps: { 'aria-label': 'Switch demo' } };
   const [nftForm, setNftForm] = useState<any>({})
   const [selectedImage, setSelectedImage] = useState(null);
@@ -239,19 +241,20 @@ export default function CollectionManageIndex() {
   ])
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false)
   const [msg, setMsg] = useState('')
-  const [severity,setSeverity] = useState('success')
+  const [severity, setSeverity] = useState('success')
 
   const openModal = () => {
     setVisibleNFT(true)
   }
   const handleCancel = () => {
     setVisible(false)
+    queryInfo()
+  }
+  const handleCancel2 = () => {
+    setVisiblePush(false)
   }
   const handleCancelNFT = () => {
     setVisibleNFT(false)
-  }
-  const handleCancel2 = () => {
-    setVisible2(false)
   }
   const openFile = () => {
     chooseImg.current.click()
@@ -275,8 +278,9 @@ export default function CollectionManageIndex() {
   }
   const openEdit = () => {
     setVisible(true)
-    console.log('hhh');
-    console.log(visible);
+  }
+  const openDeploy = () => {
+    setVisiblePush(true)
   }
   const queryInfo = async () => {
     let res = await queryCollectionDetail(collectionId)
@@ -317,11 +321,13 @@ export default function CollectionManageIndex() {
     formData.append('attributes', JSON.stringify(obj))
 
     let res = await saveNFT(collectionId, formData)
-    console.log(res);
+    // console.log(res);
     initMsg('Success!')
     handleCancelNFT()
     let a = refreshList + 1
     setRefreshList(a)
+    setNftForm({})
+    queryInfo()
   }
   const initMsg = (msg) => {
     setMsg(msg)
@@ -331,17 +337,9 @@ export default function CollectionManageIndex() {
   const closeSnackbar = () => {
     setIsSnackbarOpen(false)
   }
-  const handleChangeArrt = (event,idx,type) => {
-    console.log(event);
-    console.log(idx);
+  const handleChangeArrt = (event, idx, type) => {
     let arr = [...arrts]
     arr[idx][type] = event.target.value
-    // arrts.map((item,index) =>{
-    //   if(index === idx){
-    //     item[type] = event.target.value
-    //   }
-    // } )
-    console.log(arr);
     setAttrs(arr)
   }
 
@@ -359,7 +357,7 @@ export default function CollectionManageIndex() {
               <ThemeProvider theme={theme}>
                 <BtnMr variant="outlined" color="error" onClick={deleteCollection}>Delete</BtnMr>
                 <BtnMr variant="outlined" color="primary" onClick={openEdit}><IconEdit /> &nbsp;Edit</BtnMr>
-                <Button disabled={collectionInfo.maxCount === 0} variant="contained" color="primary">Deploy & Push</Button>
+                <Button disabled={collectionInfo.maxCount === 0} variant="contained" color="primary" onClick={openDeploy}>Deploy & Push</Button>
               </ThemeProvider>
             </CollectionFunc>
           </CollectionItem>
@@ -382,8 +380,13 @@ export default function CollectionManageIndex() {
           }
         </ManageMain>
       </CollectionManage>
-      <CollectionModal visible={visible} closeModal={handleCancel}></CollectionModal>
-      <PushModal visiblePush={visible2} closePushModal={handleCancel2} collectionId={'555'}></PushModal>
+      {
+        visible &&
+        <CollectionModal visible={visible} closeModal={handleCancel} collectionInfo={collectionInfo}></CollectionModal>
+      }
+      {
+        <PushModal visiblePush={visiblePush} closePushModal={handleCancel2} collectionId={collectionInfo.id}></PushModal>
+      }
 
       <Modal
         open={visibleNFT}
@@ -444,7 +447,7 @@ export default function CollectionManageIndex() {
                     placeholder="Key"
                     multiline
                     variant="standard"
-                    onChange={(event)=>{handleChangeArrt(event,index,'key')}}
+                    onChange={(event) => { handleChangeArrt(event, index, 'key') }}
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -455,17 +458,19 @@ export default function CollectionManageIndex() {
                     placeholder="Value"
                     multiline
                     variant="standard"
-                    onChange={(event)=>{handleChangeArrt(event,index,'value')}}
+                    onChange={(event) => { handleChangeArrt(event, index, 'value') }}
                     InputLabelProps={{
                       shrink: true,
                     }}
                   />
                   <ItemFunc>
                     {
-                      index > 0 &&
                       <ItemAdd onClick={() => { removeItem(index) }}>-</ItemAdd>
                     }
-                    <ItemAdd onClick={addItem}>+</ItemAdd>
+                    {
+                      index === (arrts.length - 1) &&
+                      <ItemAdd onClick={addItem}>+</ItemAdd>
+                    }
                   </ItemFunc>
                 </ItemVal>
               </ArrtItem>

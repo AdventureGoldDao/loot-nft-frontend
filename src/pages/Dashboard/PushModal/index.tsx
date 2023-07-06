@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
+import { useHistory } from 'react-router-dom';
 import { Button, Modal, Box, TextField } from "@mui/material";
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -73,7 +74,7 @@ const ImgBox = styled.img`
 export default function CollectionModal({ visiblePush, closePushModal, collectionId }) {
   const { library, account, chainId } = useActiveWeb3React()
   const { dispatch } = useContext(mainContext);
-
+  const history = useHistory()
   const { needSign } = useNeedSign();
   const [startTime, setStartTime] = useState(null)
   const [endTime, setEndTime] = useState(null)
@@ -140,10 +141,11 @@ export default function CollectionModal({ visiblePush, closePushModal, collectio
 
   }
   const pushcollection = async (mintStartTime, mintEndTime, chainType, contractInfo) => {
-    let res = publishCollection(collectionId, mintStartTime, mintEndTime, chainType, contractInfo.contractAddress, contractInfo.txHash, contractInfo.blockNumber)
+    let res = publishCollection(collectionId, mintStartTime, mintEndTime, chainType, contractInfo.address, contractInfo.transactionHash, contractInfo.blockNumber)
     console.log(res);
     initMsg("Success!")
     closePushModal()
+    history.push(`/collectionDetail/${collectionId}`)
   }
   const initMsg = (msg) => {
     setMsg(msg)
