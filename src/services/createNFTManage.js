@@ -129,9 +129,9 @@ export const useNFTList = (owner,collectionId,pageNo, pageSize, setLoading) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       queryData()
-    }, 10);
+    }, 100);
     return () => clearTimeout(timer);
-  }, [pageNo, pageSize])
+  }, [pageNo, pageSize, owner])
   return { list, total }
 }
 export const queryNFTDetail = async (chainType,contractAddress,tokenId) => {

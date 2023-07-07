@@ -67,6 +67,7 @@ const ItemFooter = styled.div`
 const NftName = styled.div<{ collector: boolean }>`
   display: ${props => props.collector ? 'block' : 'none'};
   color: #A5FFBE;
+  line-height: 2;
 `
 const CollectionName = styled.div`
   color: #ebebeb;
@@ -123,7 +124,17 @@ export default function BadgeCard({ item, type = '' }) {
   const history = useHistory()
 
   const goToBadgeDetail = (item) => {
-    history.push(`/collectionDetail/${item.id}`)
+    if (type === 'game') {
+      if (item.collectionLink) {
+        window.open(item.collectionLink)
+      } else if (item.id) {
+        history.push(`/collectionDetail/${item.id}`)
+      }
+    } else if (type === 'collector') {
+      history.push(`/NFTDetail/${item.chainType}/${item.contractAddress}/${item.id}`)
+    } else if (type === 'explore') {
+      history.push(`/collectionDetail/${item.id}`)
+    }
   }
 
   const dealTime = () => {
@@ -161,7 +172,7 @@ export default function BadgeCard({ item, type = '' }) {
             type === 'collector' && <ChainImg src={chainTypeImgObj[item.chainType]} />
           }
           <ItemFooter>
-            <NftName className={`ell`} collector={type === 'collector'}>{item.name}</NftName>
+            <NftName className={`ell`} collector={type === 'collector'}>{item.collectionName}</NftName>
             <CollectionName>{item.name}</CollectionName>
             {
               type === 'game' && <ChainName>

@@ -181,7 +181,7 @@ export default function Home() {
         <div className={styles.content}>
           {
             list.map(item => (
-              <BadgeCard key={item.project} item={item} />
+              <BadgeCard key={item.project} item={item} type="explore" />
             ))
           }
         </div>

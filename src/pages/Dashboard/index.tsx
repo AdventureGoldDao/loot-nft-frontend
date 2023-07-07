@@ -119,7 +119,7 @@ const ListHeader = styled.div`
   background: #111211;
   border-radius: 10px;
 `
-const ListItem= styled.div`
+const ListItem = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
@@ -159,13 +159,13 @@ export default function NFTManage() {
   const [refreshList, setRefreshList] = useState(1)
   const { list, total } = useOwnerCollectionList(pageNo, pageSize, setLoading, activeStatus, refreshList)
   const [collectionId, setCollectionId] = useState()
-  const {needSign} = useNeedSign()
+  const { needSign } = useNeedSign()
 
   const changeStatus = (type) => {
     setActiveStatus(type)
   }
   const openModal = () => {
-    needSign(()=>{
+    needSign(() => {
       setVisible(true)
     })
   }
@@ -185,7 +185,6 @@ export default function NFTManage() {
     setCollectionId(id)
   }
   const goToDetail = (collectionId) => {
-    console.log(collectionId);
     history.push(`/collectionManage/${collectionId}`)
   }
 
@@ -238,32 +237,32 @@ export default function NFTManage() {
               <ColorGreenLight className='f2 tal'>Start at</ColorGreenLight>
             </ListHeader>
             {
-              loading?
-              <ListItem>
-                <Skeleton variant="text"></Skeleton>
-                <Skeleton variant="rectangular" width={210} height={60} />
-              </ListItem>:
-              <>
-              {
-                list.length>0 && list.map(item => (
-                  <ListItem>
-                    <ImgBox className='f1'>
-                     <img width={76} src={item.image}></img>
-                    </ImgBox>
-                    <div className='f3 c_green'>{item.name}</div>
-                    <div className='f1 df_align_center'><img className='mr8' width={24} src={chainTypeComImgObj[item.chainType]}></img>{item.chainType}</div>
-                    <div className='f1'>{item.maxCount}</div>
-                    <div className='f2'>{moment(item.mintStartTime).format('MM/DD/YYYY hh:mm')}</div>
-                  </ListItem>
-                ))
-              }
-              {
-                list.length === 0 &&
-                <NoData>
-                  <ColorGreenLight>No Data</ColorGreenLight>
-                </NoData>
-              }
-              </>
+              loading ?
+                <ListItem>
+                  <Skeleton variant="text"></Skeleton>
+                  <Skeleton variant="rectangular" width={210} height={60} />
+                </ListItem> :
+                <>
+                  {
+                    list.length > 0 && list.map(item => (
+                      <ListItem>
+                        <ImgBox className='f1'>
+                          <img width={76} src={item.image}></img>
+                        </ImgBox>
+                        <div className='f3 c_green'>{item.name}</div>
+                        <div className='f1 df_align_center'><img className='mr8' width={24} src={chainTypeComImgObj[item.chainType]}></img>{item.chainType}</div>
+                        <div className='f1'>{item.mintedCount} /{item.maxCount}</div>
+                        <div className='f2'>{moment(item.mintStartTime).format('MM/DD/YYYY hh:mm')}</div>
+                      </ListItem>
+                    ))
+                  }
+                  {
+                    list.length === 0 &&
+                    <NoData>
+                      <ColorGreenLight>No Data</ColorGreenLight>
+                    </NoData>
+                  }
+                </>
             }
           </div>
         }

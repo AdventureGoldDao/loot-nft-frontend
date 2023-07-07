@@ -51,7 +51,7 @@ export default function Explore() {
       <Content>
         {
           list.map(item => (
-            <BadgeCard key={item.project} item={item} />
+            <BadgeCard key={item.project} item={item} type="explore" />
           ))
         }
       </Content>

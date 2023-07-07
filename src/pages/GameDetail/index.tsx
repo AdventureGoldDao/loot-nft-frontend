@@ -405,7 +405,7 @@ export default function GameDetail() {
             <BoxHr />
             <LinkA href={gameInfo.twitter} target='_blank'><TwitterIcon /></LinkA>
           </LinkBox>
-          <Button onClick={goPlay} style={{ paddingLeft: 55, paddingRight: 55, height: 40 }} className="btn_multicolour">Paly Now<ShareIcon width={9} height={9} style={{ marginLeft: 8 }} /></Button>
+          <Button onClick={goPlay} style={{ paddingLeft: 55, paddingRight: 55, height: 40 }} className="btn_multicolour">Play Now<ShareIcon width={9} height={9} style={{ marginLeft: 8 }} /></Button>
         </div>
       </PageHeader>
 
