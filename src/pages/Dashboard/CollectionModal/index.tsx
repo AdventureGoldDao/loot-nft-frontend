@@ -51,12 +51,8 @@ export default function CollectionModal({ visible, closeModal,collectionInfo }) 
     closeModal()
   }
   const handleChange = (event) => {
-    console.log(event);
-    console.log(event.target);
     
     const { name, value } = event.target;
-    console.log(name);
-    console.log(value);
 
     setCollectionForm((prevFormData) => ({
       ...prevFormData,

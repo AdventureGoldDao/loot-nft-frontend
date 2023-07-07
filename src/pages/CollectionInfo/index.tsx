@@ -119,12 +119,13 @@ export default function NFTDetail() {
   const { list, total } = useOwnerNFTTypesList(collectionId,1, 99999, setLoading, false)
 
   const beforeMint = () => {
-    let chainType = getChainType(chainId)
-    // if (eventInfo.chainType !== chainType) {
-    //   message.error(`please switch to ${chainTxtObj[eventInfo.chainType]}`)
-    //   chainFun[chainTxtObj[eventInfo.chainType]] && chainFun[chainTxtObj[eventInfo.chainType]]()
-    //   return false
-    // }
+    needSign()
+    if (detailInfo.chainType !== getChainType(chainId)) {
+      if (chainFun[detailInfo.chainType]) {
+        chainFun[detailInfo.chainType]()
+      }
+      return false
+    }
     return true
   }
   const freeMint = async () => {
@@ -138,7 +139,6 @@ export default function NFTDetail() {
       },
       _onReceipt: async (receipt) => {
         console.log(receipt);
-        
         dispatch({
           type: HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
           showWaitingWalletConfirmModal: { show: false }
@@ -184,11 +184,11 @@ export default function NFTDetail() {
       return 'Less than 1min';
     }
   }
-  const countStaus = (status,time) => {
+  const countStaus = (status,data) => {
     if(status === 'soon'){
-      return `${moment(time).format('DD MMMM HH:mm a')}`
+      return `${moment(data.mintStartTime).format('DD MMMM HH:mm a')}`
     }else {
-      return formatTime(time)
+      return formatTime(data.mintEndTime)
     }
   }
   useEffect(() => {
@@ -216,11 +216,11 @@ export default function NFTDetail() {
             <div className='df_h5 mt30'>
               <div className='f3 mt10'>
                 <div>{detailInfo.status==='soon'?'Start at':'Close at'}</div>
-                <div className='c_green fw600 mt10 fs24'>{countStaus(detailInfo?.status,detailInfo?.mintStartTime)}</div>
+                <div className='c_green fw600 mt10 fs24'>{countStaus(detailInfo?.status,detailInfo)}</div>
               </div>
               <div className='f2 mt10'>
                 <div>Minted</div>
-                <div className='c_green fw600 mt10 fs24'>{detailInfo.mintedCount / detailInfo.maxCount}</div>
+                <div className='c_green fw600 mt10 fs24'>{detailInfo.mintedCount} / {detailInfo.maxCount}</div>
               </div>
               <div className='f1 mt10'>
                 <div>Network</div>
@@ -228,7 +228,7 @@ export default function NFTDetail() {
               </div>
             </div>
             <MintBox>
-              <Button className={`w200_h5 h40 btn_multicolour`} onClick={freeMint}>Free Mint</Button>
+              <Button disabled={detailInfo.status != 'active'} className={`w200_h5 h40 btn_multicolour`} onClick={freeMint}>Free Mint</Button>
             </MintBox>
           </BaseInfo>
           <ContractionInfo>

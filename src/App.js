@@ -57,6 +57,9 @@ const routeArr = [
   {
     component: CollectionDetail, path: '/collectionDetail/:collectionId'
   },
+  {
+    component: NFTDetail, path: '/NFTDetail/:chainType/:contractAddress/:tokenId'
+  },
 ]
 
 function App() {

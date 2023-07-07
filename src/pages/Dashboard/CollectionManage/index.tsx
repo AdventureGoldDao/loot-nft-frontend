@@ -385,6 +385,7 @@ export default function CollectionManageIndex() {
         <CollectionModal visible={visible} closeModal={handleCancel} collectionInfo={collectionInfo}></CollectionModal>
       }
       {
+        visiblePush &&
         <PushModal visiblePush={visiblePush} closePushModal={handleCancel2} collectionId={collectionInfo.id}></PushModal>
       }
 

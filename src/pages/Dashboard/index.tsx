@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { Button, Modal, Box, TextField } from "@mui/material";
+import { Button, Skeleton, Box, TextField } from "@mui/material";
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
@@ -15,6 +15,7 @@ import { chainTypeComImgObj } from "utils/networkConnect"
 import eth from "assets/img/chain/com_eth.svg"
 import bg from 'assets/img/explore_bg.svg'
 import styled from 'styled-components/macro';
+import { useNeedSign } from 'hooks/account';
 
 const style = {
   position: 'absolute',
@@ -116,6 +117,7 @@ const ListHeader = styled.div`
   margin-bottom: 8px;
   line-height: 32px;
   background: #111211;
+  border-radius: 10px;
 `
 const ListItem= styled.div`
   display: flex;
@@ -134,6 +136,16 @@ const ImgBox = styled.div`
     border-radius: 6px;
   }
 `
+const NoData = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 400px;
+  border-radius: 10px;
+  border: 1px solid var(--line-color-2, #4B5954);
+  background: #111211;
+`
 
 export default function NFTManage() {
   const { account } = useActiveWeb3React()
@@ -147,12 +159,15 @@ export default function NFTManage() {
   const [refreshList, setRefreshList] = useState(1)
   const { list, total } = useOwnerCollectionList(pageNo, pageSize, setLoading, activeStatus, refreshList)
   const [collectionId, setCollectionId] = useState()
+  const {needSign} = useNeedSign()
 
   const changeStatus = (type) => {
     setActiveStatus(type)
   }
   const openModal = () => {
-    setVisible(true)
+    needSign(()=>{
+      setVisible(true)
+    })
   }
   const handleCancel = () => {
     setVisible(false)
@@ -216,24 +231,39 @@ export default function NFTManage() {
           activeStatus != 'draft' &&
           <div className='mt40'>
             <ListHeader>
-              <div className='f1 tac'></div>
-              <div className='f3 tal'>Name</div>
-              <div className='f1 '>Network</div>
-              <div className='f1 '>Minted</div>
-              <div className='f2 tal'>Start at</div>
+              <ColorGreenLight className='f1 tac'></ColorGreenLight>
+              <ColorGreenLight className='f3 tal'>Name</ColorGreenLight>
+              <ColorGreenLight className='f1 '>Network</ColorGreenLight>
+              <ColorGreenLight className='f1 '>Minted</ColorGreenLight>
+              <ColorGreenLight className='f2 tal'>Start at</ColorGreenLight>
             </ListHeader>
             {
-              list.map(item => (
-                <ListItem>
-                  <ImgBox className='f1'>
-                   <img width={76} src={item.image}></img>
-                  </ImgBox>
-                  <div className='f3 c_green'>{item.name}</div>
-                  <div className='f1 df_align_center'><img className='mr8' width={24} src={chainTypeComImgObj[item.chainType]}></img>{item.chainType}</div>
-                  <div className='f1'>{item.maxCount}</div>
-                  <div className='f2'>{moment(item.mintStartTime).format('MM/DD/YYYY hh:mm')}</div>
-                </ListItem>
-              ))
+              loading?
+              <ListItem>
+                <Skeleton variant="text"></Skeleton>
+                <Skeleton variant="rectangular" width={210} height={60} />
+              </ListItem>:
+              <>
+              {
+                list.length>0 && list.map(item => (
+                  <ListItem>
+                    <ImgBox className='f1'>
+                     <img width={76} src={item.image}></img>
+                    </ImgBox>
+                    <div className='f3 c_green'>{item.name}</div>
+                    <div className='f1 df_align_center'><img className='mr8' width={24} src={chainTypeComImgObj[item.chainType]}></img>{item.chainType}</div>
+                    <div className='f1'>{item.maxCount}</div>
+                    <div className='f2'>{moment(item.mintStartTime).format('MM/DD/YYYY hh:mm')}</div>
+                  </ListItem>
+                ))
+              }
+              {
+                list.length === 0 &&
+                <NoData>
+                  <ColorGreenLight>No Data</ColorGreenLight>
+                </NoData>
+              }
+              </>
             }
           </div>
         }

@@ -60,7 +60,7 @@ export const useOwnerCollectionList = (pageNo, pageSize, setLoading, status,refr
         setList(oldList => [...oldList, ...res.list])
       }
       setTotal(res.totalCount)
-      setLoading(false)
+      // setLoading(false)
     })
   }
 
@@ -134,4 +134,9 @@ export const useNFTList = (owner,collectionId,pageNo, pageSize, setLoading) => {
   }, [pageNo, pageSize])
   return { list, total }
 }
+export const queryNFTDetail = async (chainType,contractAddress,tokenId) => {
+  let res = await http.get(`/nfts/${chainType}/${contractAddress}/${tokenId}`)
+  return res
+}
+
 

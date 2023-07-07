@@ -17,6 +17,7 @@ import { getChainType } from 'web3/address';
 import { mainContext } from "../../../reducer";
 import styled from 'styled-components/macro';
 import { HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL, HANDLE_SHOW_TRANSACTION_MODAL } from "const";
+import moment from 'moment';
 
 
 const style = {
@@ -119,18 +120,13 @@ export default function CollectionModal({ visiblePush, closePushModal, collectio
       type: HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
       showWaitingWalletConfirmModal: true
     })
-
-    let formData = new FormData();
-    formData.append('collectionId', publishForm.id)
-    // @ts-ignore
-    formData.append('mintStartTime', new Date(startTime).getTime())
-    // @ts-ignore
-    formData.append('mintEndTime', new Date(endTime).getTime())
-    let mintStartTime = new Date(startTime).getTime()
-    let mintEndTime = new Date(endTime).getTime()
+    
+    let mintStartTime = startTime.valueOf()
+    let mintEndTime =  endTime.valueOf()
     let userLimit = mintLimit
     let acceptCurrency = '0x0000000000000000000000000000000000000000'
     let mintPrice = 0
+    
     let res = await deployFreeMintNFT721(library, account, publishForm.name, publishForm.tokenSymbol, selectChainType, publishForm.maxCount, mintStartTime / 1000, mintEndTime / 1000, userLimit, acceptCurrency, mintPrice)
     console.log(res);
     pushcollection(mintStartTime, mintEndTime, selectChainType, res)
@@ -138,7 +134,6 @@ export default function CollectionModal({ visiblePush, closePushModal, collectio
       type: HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
       showWaitingWalletConfirmModal: false
     })
-
   }
   const pushcollection = async (mintStartTime, mintEndTime, chainType, contractInfo) => {
     let res = publishCollection(collectionId, mintStartTime, mintEndTime, chainType, contractInfo.address, contractInfo.transactionHash, contractInfo.blockNumber)
@@ -164,6 +159,17 @@ export default function CollectionModal({ visiblePush, closePushModal, collectio
   const closeSnackbar = () => {
     setIsSnackbarOpen(false)
   }
+  const changeTime = (e) => {
+    console.log(e);
+    
+    console.log(moment(e));
+    console.log(moment(e).format("YYYY-MM-DD HH:mm:ss"));
+    console.log();
+    
+    console.log(new Date(e).getTime());
+    
+  }
+  
   useEffect(() => {
     collectionId && queryInfo(collectionId)
   }, [collectionId])
@@ -209,16 +215,16 @@ export default function CollectionModal({ visiblePush, closePushModal, collectio
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <div className={'df'} >
               <BlackBox isDate={true} activeChain={false} className='mr6 p10'>
-                <DateTimePicker label={'Claiming Time'} ampm={false}
+                <DateTimePicker label={'Start Time'} ampm={false}
                   value={startTime}
-                  defaultValue={dayjs(new Date())}
+                  format='MM/DD/YYYY HH:mm'
                   onChange={(newValue) => setStartTime(newValue)}
                 />
               </BlackBox>
               <BlackBox isDate={true} activeChain={false}>
-                <DateTimePicker label={'Claiming Time'} ampm={false}
+                <DateTimePicker label={'End Time'} ampm={false}
                   value={endTime}
-                  defaultValue={dayjs(new Date())}
+                  format='MM/DD/YYYY HH:mm'
                   onChange={(newValue) => setEndTime(newValue)}
                 />
               </BlackBox>
