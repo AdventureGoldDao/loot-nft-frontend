@@ -211,48 +211,48 @@ export const gamesArr = [
         name: 'Hero 1',
         image: collection,
         collectionLink: 'https://mighty-magic-dao.vercel.app/mint',
-        eventStartTime: 1688376305000,
-        eventEndTime: 1688376305000 + 3600000 * 24 * 1,
+        mintStartTime: 1688376305000,
+        mintEndTime: 1688376305000 + 3600000 * 24 * 1,
         chainType: 'goerli'
       },
       {
         name: 'Hero 2',
         image: collection,
         collectionLink: 'https://mighty-magic-dao.vercel.app/mint',
-        eventStartTime: 1688376305000,
-        eventEndTime: 1688376305000 + 3600000 * 24 * 6,
+        mintStartTime: 1688376305000,
+        mintEndTime: 1688376305000 + 3600000 * 24 * 6,
         chainType: 'loottest'
       },
       {
         name: 'Hero 3',
         image: collection,
         collectionLink: 'https://mighty-magic-dao.vercel.app/mint',
-        eventStartTime: 1688376305000 + 3600000 * 24 * 20,
-        eventEndTime: 1688376305000 + 3600000 * 24 * 30,
+        mintStartTime: 1688376305000 + 3600000 * 24 * 20,
+        mintEndTime: 1688376305000 + 3600000 * 24 * 30,
         chainType: 'loottest'
       },
       {
         name: 'Hero 4',
         image: collection,
         collectionLink: 'https://mighty-magic-dao.vercel.app/mint',
-        eventStartTime: 1688376305000,
-        eventEndTime: 1688376305000 + 3600000 * 24 * 5,
+        mintStartTime: 1688376305000,
+        mintEndTime: 1688376305000 + 3600000 * 24 * 5,
         chainType: 'goerli'
       },
       {
         name: 'Hero 5',
         image: collection,
         collectionLink: 'https://mighty-magic-dao.vercel.app/mint',
-        eventStartTime: 1688376305000,
-        eventEndTime: 1688376305000 + 3600000 * 24 * 3,
+        mintStartTime: 1688376305000,
+        mintEndTime: 1688376305000 + 3600000 * 24 * 3,
         chainType: 'loottest'
       },
       {
         name: 'Hero 6',
         image: collection,
         collectionLink: 'https://mighty-magic-dao.vercel.app/mint',
-        eventStartTime: 1688376305000,
-        eventEndTime: 1688376305000 + 3600000 * 24 * 4,
+        mintStartTime: 1688376305000,
+        mintEndTime: 1688376305000 + 3600000 * 24 * 4,
         chainType: 'loottest'
       }
     ]
@@ -275,8 +275,8 @@ export const gamesArr = [
         name: 'Hero',
         image: collection,
         collectionLink: 'https://mighty-magic-dao.vercel.app/mint',
-        eventStartTime: 1688376305000 + 3600000 * 24 * 2,
-        eventEndTime: 1688376305000 + 3600000 * 24 * 3,
+        mintStartTime: 1688376305000 + 3600000 * 24 * 2,
+        mintEndTime: 1688376305000 + 3600000 * 24 * 3,
         chainType: 'loottest'
       }
     ]
@@ -299,8 +299,8 @@ export const gamesArr = [
         name: 'Hero',
         image: collection,
         collectionLink: 'https://mighty-magic-dao.vercel.app/mint',
-        eventStartTime: 1688376305000,
-        eventEndTime: 1688376305000 + 3600000 * 24 * 3,
+        mintStartTime: 1688376305000,
+        mintEndTime: 1688376305000 + 3600000 * 24 * 3,
         chainType: 'loottest'
       }
     ]
@@ -323,8 +323,8 @@ export const gamesArr = [
         name: 'Hero',
         image: collection,
         collectionLink: 'https://mighty-magic-dao.vercel.app/mint',
-        eventStartTime: 1688376305000,
-        eventEndTime: 1688376305000 + 3600000 * 24 * 3,
+        mintStartTime: 1688376305000,
+        mintEndTime: 1688376305000 + 3600000 * 24 * 3,
         chainType: 'loottest'
       }
     ]
@@ -347,8 +347,8 @@ export const gamesArr = [
         name: 'Hero',
         image: collection,
         collectionLink: 'https://mighty-magic-dao.vercel.app/mint',
-        eventStartTime: 1701142200000,
-        eventEndTime: 1701142200000 + 3600000 * 24 * 3,
+        mintStartTime: 1701142200000,
+        mintEndTime: 1701142200000 + 3600000 * 24 * 3,
         chainType: 'loottest'
       }
     ]

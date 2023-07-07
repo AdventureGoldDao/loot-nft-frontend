@@ -55,7 +55,7 @@ const ItemFooter = styled.div`
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-start;
-  padding: 18px;
+  padding: 16px 18px;
   position: absolute;
   left: 1px;
   bottom: 1px;
@@ -70,6 +70,7 @@ const NftName = styled.div<{ collector: boolean }>`
 `
 const CollectionName = styled.div`
   color: #ebebeb;
+  line-height: 1.4;
 `
 const ChainName = styled.div`
   display: flex;
@@ -128,14 +129,14 @@ export default function BadgeCard({ item, type = '' }) {
   const dealTime = () => {
     const now = Date.now();
     const info = item;
-    if (info && info.eventStartTime && info.eventEndTime) {
+    if (info && info.mintStartTime && info.mintEndTime) {
       let date;
-      if (info.eventStartTime - now > 0) {
-        date = info.eventStartTime;
+      if (info.mintStartTime - now > 0) {
+        date = info.mintStartTime;
         setTime(date)
         setShowCountDown(false)
       } else {
-        date = info.eventEndTime;
+        date = info.mintEndTime;
         setTimeType('end')
         if (date - now > 0) {
           setTime(date)
@@ -161,7 +162,7 @@ export default function BadgeCard({ item, type = '' }) {
           }
           <ItemFooter>
             <NftName className={`ell`} collector={type === 'collector'}>{item.name}</NftName>
-            <CollectionName>CollectionName</CollectionName>
+            <CollectionName>{item.name}</CollectionName>
             {
               type === 'game' && <ChainName>
                 <img src={chainTypeImgObj[item.chainType]} />
