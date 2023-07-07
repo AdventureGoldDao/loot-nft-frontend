@@ -46,13 +46,10 @@ const routeArr = [
     component: Collector, path: '/collector'
   },
   {
-    component: NFTDetail, path: '/badge/:nftId'
-  },
-  {
     component: Dashboard, path: '/dashboard', parent: 'dashboard'
   },
   {
-    component: CollectionManageIndex, path: '/collectionManage/:collectionId'
+    component: CollectionManageIndex, path: '/collectionManage/:collectionId', parent: 'dashboard'
   },
   {
     component: CollectionDetail, path: '/collectionDetail/:collectionId'

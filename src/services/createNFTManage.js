@@ -60,7 +60,7 @@ export const useOwnerCollectionList = (pageNo, pageSize, setLoading, status,refr
         setList(oldList => [...oldList, ...res.list])
       }
       setTotal(res.totalCount)
-      // setLoading(false)
+      setLoading(false)
     })
   }
 
