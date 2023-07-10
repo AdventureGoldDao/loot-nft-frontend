@@ -1,6 +1,6 @@
 const development = {
   "ENV": "development",
-  "API_URL": "http://13.229.74.96:8080"
+  "API_URL": "https://test.adventuregold.org/api"
   // "API_URL": "https://staging-api.de-fine.art/v3"
 }
 // const development = {
@@ -14,7 +14,7 @@ const development = {
 // }
 const production = {
   "ENV": "production",
-  "API_URL": "http://13.229.74.96:8080"
+  "API_URL": "https://test.adventuregold.org/api"
 }
 
 const env = { development, production }[process.env.NODE_ENV || 'development']
