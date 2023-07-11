@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { Button, Skeleton, Box, TextField } from "@mui/material";
+import { Button, Skeleton, Backdrop, CircularProgress } from "@mui/material";
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
@@ -187,6 +187,9 @@ export default function NFTManage() {
   const goToDetail = (collectionId) => {
     history.push(`/collectionManage/${collectionId}`)
   }
+  const handleCloseLoading = () => {
+    setLoading(false)
+  }
 
   return (
     <>
@@ -237,38 +240,36 @@ export default function NFTManage() {
               <ColorGreenLight className='f2 tal'>Start at</ColorGreenLight>
             </ListHeader>
             {
-              loading ?
+              list.length > 0 && list.map(item => (
                 <ListItem>
-                  <Skeleton variant="text"></Skeleton>
-                  <Skeleton variant="rectangular" width={210} height={60} />
-                </ListItem> :
-                <>
-                  {
-                    list.length > 0 && list.map(item => (
-                      <ListItem>
-                        <ImgBox className='f1'>
-                          <img width={76} src={item.image}></img>
-                        </ImgBox>
-                        <div className='f3 c_green'>{item.name}</div>
-                        <div className='f1 df_align_center'><img className='mr8' width={24} src={chainTypeComImgObj[item.chainType]}></img>{item.chainType}</div>
-                        <div className='f1'>{item.mintedCount} /{item.maxCount}</div>
-                        <div className='f2'>{moment(item.mintStartTime).format('MM/DD/YYYY hh:mm')}</div>
-                      </ListItem>
-                    ))
-                  }
-                  {
-                    list.length === 0 &&
-                    <NoData>
-                      <ColorGreenLight>No Data</ColorGreenLight>
-                    </NoData>
-                  }
-                </>
+                  <ImgBox className='f1'>
+                    <img width={76} src={item.image}></img>
+                  </ImgBox>
+                  <div className='f3 c_green'>{item.name}</div>
+                  <div className='f1 df_align_center'><img className='mr8' width={24} src={chainTypeComImgObj[item.chainType]}></img>{item.chainType}</div>
+                  <div className='f1'>{item.mintedCount} /{item.maxCount}</div>
+                  <div className='f2'>{moment(item.mintStartTime).format('MM/DD/YYYY hh:mm')}</div>
+                </ListItem>
+              ))
+            }
+            {
+              list.length === 0 &&
+              <NoData>
+                <ColorGreenLight>No Data</ColorGreenLight>
+              </NoData>
             }
           </div>
         }
       </NftManage>
       <CollectionModal visible={visible} closeModal={handleCancel} collectionInfo={false}></CollectionModal>
       <PushModal visiblePush={visible2} closePushModal={handleCancel2} collectionId={collectionId}></PushModal>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+        onClick={handleCloseLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </>
   )
 }

@@ -4,7 +4,6 @@ import {Button, Stack, Typography} from "@mui/material";
 import {useNeedSign} from "hooks/account"
 import {useActiveWeb3React} from "../../web3";
 import {chainFun, SUPPORTED_CHAINS} from '../../utils/networkConnect';
-import styles from "./styles.module.scss";
 import {ReactComponent as DownIcon} from "assets/img/down.svg";
 import {
     HANDLE_SHOW_FAILED_TRANSACTION_MODAL,
@@ -389,13 +388,16 @@ export default function Bridge() {
                                 <NFTCard onClick={openNFTModal}/> :
                                 <SelectFrame onClick={openNFTModal}>+ Select NFT</SelectFrame>
                         }
-                        <Button sx={{
+                        <Button
+                          sx={{
                             width: '100%',
                             height: 50,
                             borderRadius: '8px',
                             fontSize: '20px'
-                        }} onClick={confirmBridge}
-                                className={`${styles.confirm_btn} btn_multicolour`}>
+                          }}
+                          onClick={confirmBridge}
+                          className={`btn_multicolour`}
+                        >
                             {fromChainType !== getChainType(chainId) ? `Connect to ${fromChainType}` : approved ? 'Bright' : 'Approve'}
                         </Button>
                         {/*<Button onClick={deployMintableContract}>deploy</Button>*/}

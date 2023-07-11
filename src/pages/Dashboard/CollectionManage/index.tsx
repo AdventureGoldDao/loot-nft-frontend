@@ -6,7 +6,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import CollectionModal from '../CollectionModal';
-import PushModal from '../PushModal'
+import PushModal from '../PushModal';
+import DeleteModal from '../DeleteModal';
 import Snackbar from "components/SnackMessage"
 import { useActiveWeb3React } from '../../../web3';
 import { delCollection, queryCollectionDetail, saveNFT, useOwnerNFTTypesList } from "../../../services/createNFTManage"
@@ -220,6 +221,7 @@ const ItemRemove = styled.div`
 `
 
 export default function CollectionManageIndex() {
+  const history = useHistory()
   const { account } = useActiveWeb3React()
   const { collectionId } = useParams<any>()
   const [collectionInfo, setCollectionInfo] = useState<any>({})
@@ -230,6 +232,7 @@ export default function CollectionManageIndex() {
   const [visible, setVisible] = useState(false)
   const [visibleNFT, setVisibleNFT] = useState(false)
   const [visiblePush, setVisiblePush] = useState(false)
+  const [visibleDel, setVisibleDel] = useState(false)
   const label = { inputProps: { 'aria-label': 'Switch demo' } };
   const [nftForm, setNftForm] = useState<any>({})
   const [selectedImage, setSelectedImage] = useState(null);
@@ -241,7 +244,7 @@ export default function CollectionManageIndex() {
   ])
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false)
   const [msg, setMsg] = useState('')
-  const [severity, setSeverity] = useState('success')
+  const [severity, setSeverity] = useState('success') 
 
   const openModal = () => {
     setVisibleNFT(true)
@@ -255,6 +258,9 @@ export default function CollectionManageIndex() {
   }
   const handleCancelNFT = () => {
     setVisibleNFT(false)
+  }
+  const handelDel = () => {
+    setVisibleDel(false)
   }
   const openFile = () => {
     chooseImg.current.click()
@@ -271,10 +277,15 @@ export default function CollectionManageIndex() {
     arr.splice(index, 1)
     setAttrs(arr)
   }
-  const deleteCollection = async (collectionId) => {
+  const deleteCollection = async () => {
     let res = await delCollection(collectionId)
+    handelDel()
+    initMsg("Success!")
+    history.push('/dashboard')
     console.log(res);
-
+  }
+  const openDelModal = () => {
+    setVisibleDel(true)
   }
   const openEdit = () => {
     setVisible(true)
@@ -355,7 +366,7 @@ export default function CollectionManageIndex() {
             <CollectionTitle>{collectionInfo.name ? collectionInfo.name : '--'}</CollectionTitle>
             <CollectionFunc>
               <ThemeProvider theme={theme}>
-                <BtnMr variant="outlined" color="error" onClick={deleteCollection}>Delete</BtnMr>
+                <BtnMr variant="outlined" color="error" onClick={openDelModal}>Delete</BtnMr>
                 <BtnMr variant="outlined" color="primary" onClick={openEdit}><IconEdit /> &nbsp;Edit</BtnMr>
                 <Button disabled={collectionInfo.maxCount === 0} variant="contained" color="primary" onClick={openDeploy}>Deploy & Push</Button>
               </ThemeProvider>
@@ -387,6 +398,9 @@ export default function CollectionManageIndex() {
       {
         visiblePush &&
         <PushModal visiblePush={visiblePush} closePushModal={handleCancel2} collectionId={collectionInfo.id}></PushModal>
+      }
+      {
+        <DeleteModal visible={visibleDel} closeDel={handelDel} delFunc={deleteCollection}></DeleteModal>
       }
 
       <Modal

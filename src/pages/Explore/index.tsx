@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Select, MenuItem } from "@mui/material";
 import styled from 'styled-components/macro';
 
-import { useBadgeProjectList } from "../../services/badge"
 import { useCollectionList } from "../../services/createNFTManage"
 import BadgeCard from "components/BadgeCard";
 import bg from 'assets/img/explore_bg.svg'

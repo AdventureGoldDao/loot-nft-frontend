@@ -1,15 +1,15 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
-import { Button, Backdrop, CircularProgress } from "@mui/material";
+import { Button } from "@mui/material";
 
-import { queryCollectionDetail, useOwnerNFTTypesList } from 'services/createNFTManage'
+import { queryNFTDetail, useOwnerNFTTypesList } from 'services/createNFTManage'
 import { mainContext } from "../../reducer";
 import { useNeedSign } from "hooks/account"
 import { useActiveWeb3React } from "../../web3";
 // import { chainFun } from "../../utils/networkConnect"
 import test2 from 'assets/img/test/test2.png'
 import { abbrTxHash } from "../../utils/format";
-import { chainTxtObj, chainFun } from '../../utils/networkConnect';
+import { chainTxtObj,chainTypeComImgObj, chainFun } from '../../utils/networkConnect';
 import { getChainType } from "../../web3/address";
 import { freeMintNFT721 } from "utils/handleContract"
 import { getPoolLeftTime } from "utils/time"
@@ -24,7 +24,7 @@ import {
 } from "../../const";
 import moment from 'moment';
 
-const CollectionInfo = styled.div`
+const NFTInfo = styled.div`
   padding: 120px 80px;
   background-repeat: no-repeat;
   background-position: center top;
@@ -41,49 +41,12 @@ const InfoCover = styled.div`
   background: #191D20;
   border: 1px solid #4B5954;
   border-radius: 20px;
-  overflow: hidden; 
-`
-const CoverBox = styled.div`
-  position: relative;
-  /* width: 100%; */
-  height: 0px;
-  padding-bottom: 100%;
-`
-const Cover = styled.div`
-  inset: 0px;
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   overflow: hidden;
-  background-size: cover;
+
   img {
-    width: auto;
-    height: auto;
-    max-width: 100%;
-    max-height: 100%;
-    margin: 0 auto;
-  }
-`
-const TypesBox = styled.div`
-  display: flex;
-  margin-top: 10px;
-  margin-right: 26px;
-  padding: 24px 19px;
-  border-radius: 20px;
-  border: 1px solid var(--line-color-2, #4B5954);
-  background: #191D20; 
-  overflow: auto;
-  ::-webkit-scrollbar {
-
-  display: none; /* Chrome Safari */
-
-}
-`
-const TypesCover = styled.div`
-  width: 25%;
-  padding: 0 5px;
-  border-radius: 10px;
+    width: 100%;
+    border-radius: 20px;
+  } 
 `
 const BaseInfo = styled.div`
   padding: 25px 30px;
@@ -92,15 +55,24 @@ const BaseInfo = styled.div`
   border: 1px solid #4B5954;
   border-radius: 20px;
 `
-const CollectionName = styled.div`
+const NFTName = styled.div`
   font-weight: 600;
   font-size: 40px;
   line-height: 42px;
 `
-const CollectionDes = styled.div`
-  margin-top: 10px;
+const NFTDes = styled.div`
   font-size: 16px;
   line-height: 24px;
+`
+const CollectionDiv = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+`
+const ChainDiv = styled.div`
+  width: 1px;
+  margin: 0 28px;
+  background: #4B5954;
 `
 const MintBox = styled.div`
   margin-top: 40px;
@@ -125,15 +97,19 @@ const ContractItem = styled.div`
   background: #111315;
   border-radius: 8px;
 `
+const ColorGreenLight = styled.span`
+  color: #7A9283;
+`
 
 export default function NFTDetail() {
   const { state, dispatch } = useContext(mainContext);
   const { library, account, active, chainId } = useActiveWeb3React()
+  const { chainType, contractAddress, tokenId } = useParams<any>()
   const { needSign } = useNeedSign();
-  const { collectionId } = useParams<any>()
+  // const { collectionId } = useParams<any>()
   const [detailInfo, setDetailInfo] = useState<any>({})
   const [loading, setLoading] = useState(false)
-  const { list, total } = useOwnerNFTTypesList(collectionId, 1, 99999, setLoading, false)
+  // const { list, total } = useOwnerNFTTypesList(collectionId,1, 99999, setLoading, false)
 
   const beforeMint = () => {
     needSign()
@@ -174,7 +150,7 @@ export default function NFTDetail() {
     })
   }
   const queryDetailInfo = async () => {
-    await queryCollectionDetail(collectionId).then(res => {
+    await queryNFTDetail(chainType, contractAddress, tokenId).then(res => {
       setDetailInfo(res)
     })
   }
@@ -208,57 +184,47 @@ export default function NFTDetail() {
       return formatTime(data.mintEndTime)
     }
   }
-  const handleCloseLoading = () => {
-    setLoading(false)
-  }
   useEffect(() => {
     queryDetailInfo()
-  }, [collectionId])
+  }, [chainType])
   return (
-    <CollectionInfo>
+    <NFTInfo>
       <InfoMain>
         <div className={`f1 `}>
           <InfoCover >
-            <CoverBox>
-              <Cover>
-                <img src={detailInfo.image}></img>
-              </Cover>
-            </CoverBox>
+            <img src={detailInfo.image}></img>
           </InfoCover>
-          <TypesBox>
+          <ContractionInfo className='mt10 mr24'>
+            <div>Properties</div>
             {
-              list.map(item => (
-                <TypesCover >
-                  <CoverBox>
-                    <Cover style={{backgroundImage:`url(${item.image})`}}>
-                    </Cover>
-                  </CoverBox>
-                </TypesCover>
+              detailInfo?.attributes?.map(item => (
+                <ContractItem>
+                  <div>
+                    <ColorGreenLight className='lh28'>{item.name}</ColorGreenLight>
+                    <span className='lh28 pl10'>{item.value}</span>
+                  </div>
+                  <span className='c_green'>{item.rarity}%</span>
+                </ContractItem>
               ))
             }
-          </TypesBox>
+          </ContractionInfo>
         </div>
         <div className={`f1`}>
           <BaseInfo>
-            <CollectionName className={`c_green mt10 text_hidden_1`}>{detailInfo.name}</CollectionName>
-            <CollectionDes>{detailInfo.description}</CollectionDes>
-            <div className='df_h5 mt30'>
-              <div className='f3 mt10'>
-                <div>{detailInfo.status === 'soon' ? 'Start at' : 'Close at'}</div>
-                <div className='c_green fw600 mt10 fs24'>{countStaus(detailInfo?.status, detailInfo)}</div>
+            <NFTName className={`c_green mt10 text_hidden_1`}>{detailInfo.name}</NFTName>
+            <CollectionDiv>
+              <div className='df'>
+                <span className='pr10'>Collection Name</span>
+                <span className='c_green text_hidden_1'>{detailInfo.collectionName}</span>
               </div>
-              <div className='f2 mt10'>
-                <div>Minted</div>
-                <div className='c_green fw600 mt10 fs24'>{detailInfo.mintedCount} / {detailInfo.maxCount}</div>
+              <ChainDiv>&nbsp;</ChainDiv>
+              <div className='df_align_center'>
+                <span className='pr10'>Network</span>
+                <img width={20} src={chainTypeComImgObj[detailInfo.chainType]}></img>
+                <span className='c_green pl10 text_hidden_1'>{chainTxtObj[detailInfo.chainType]}</span>
               </div>
-              <div className='f2 mt10'>
-                <div>Network</div>
-                <div className='c_green fw600 mt10 fs24'>{chainTxtObj[detailInfo.chainType]}</div>
-              </div>
-            </div>
-            <MintBox>
-              <Button disabled={detailInfo.status != 'active'} className={`w200_h5 h40 btn_multicolour`} onClick={freeMint}>Free Mint</Button>
-            </MintBox>
+            </CollectionDiv>
+            <NFTDes className='mb10'>{detailInfo.description}</NFTDes>
           </BaseInfo>
           <ContractionInfo>
             <div>Contract Details</div>
@@ -281,13 +247,6 @@ export default function NFTDetail() {
           </ContractionInfo>
         </div>
       </InfoMain>
-      <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loading}
-        onClick={handleCloseLoading}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    </CollectionInfo>
+    </NFTInfo>
   )
 }

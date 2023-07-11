@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import http from '../utils/http';
+import moment from 'moment';
 
 export const saveCollection = async (formData) => {
   let res = await http.put(`/collections`, formData)
@@ -17,6 +18,37 @@ export const publishCollection = async (collectionId,mintStartTime,mintEndTime,c
   let res = await http.put(`/collections/${collectionId}/publish?mintStartTime=${mintStartTime}&mintEndTime=${mintEndTime}&chainType=${chainType}&contractAddress=${contractAddress}&txHash=${txHash}&blockNumber=${blockNumber}`)
   return res
 }
+const formatTime = (timestamp) => {
+  const currentTimestamp = Date.now();
+  const timeDiff = Math.abs(currentTimestamp - timestamp);
+
+  const oneMinute = 60 * 1000;
+  const oneHour = 60 * oneMinute;
+  const oneDay = 24 * oneHour;
+
+  if (timeDiff >= oneDay) {
+    const days = Math.floor(timeDiff / oneDay);
+    const hours = Math.floor((timeDiff % oneDay) / oneHour);
+    return `${days}${days > 1 ? 'ds' : 'd'} ${hours}${hours > 1 ? 'hs' : 'h'}`;
+  } else if (timeDiff >= oneHour) {
+    const hours = Math.floor(timeDiff / oneHour);
+    const minutes = Math.floor((timeDiff % oneHour) / oneMinute);
+    return `${hours}${hours > 1 ? 'hs' : 'h'} ${minutes}${hours > 1 ? 'mins' : 'min'}`;
+  } else if (timeDiff >= oneMinute) {
+    const minutes = Math.floor(timeDiff / oneMinute);
+    return `${minutes}${minutes > 1 ? 'mins' : 'min'}`;
+  } else {
+    return 'Less than 1min';
+  }
+}
+const countStaus = (status, data) => {
+  // console.log(data);
+  if (status === 'soon') {
+    return `${moment(data?.mintStartTime).format('DD MMMM HH:mm a')}`
+  } else {
+    return formatTime(data?.mintEndTime)
+  }
+}
 export const useCollectionList = (pageNo, pageSize, setLoading, status) => {
   const [list, setList] = useState([])
   const [total, setTotal] = useState(0)
@@ -26,6 +58,9 @@ export const useCollectionList = (pageNo, pageSize, setLoading, status) => {
       setLoading(true)
     }
     http.get(`/collections/published?pageNo=${pageNo}&pageSize=${pageSize}&status=${status}`).then(res => {
+       res.list.forEach(item => {
+        item.statusTxt = countStaus(item.status, item)
+      })
       if (pageNo === 1) {
         setList(res.list)
       } else {
