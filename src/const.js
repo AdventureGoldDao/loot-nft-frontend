@@ -42,3 +42,6 @@ export const waitingForApprove = {show: true, title: 'Waiting for Approve' ,cont
 export const waitingForConfirm = {show: true, title: 'Waiting For Confirmation' ,content: 'Confirm this transaction in your wallet'}
 
 export const waitingPending = {show: true, title: 'Transaction submitted' ,content: ''}
+
+export const transactionSubmitted = {show: true, title: 'Transaction submitted' ,content: ''}
+

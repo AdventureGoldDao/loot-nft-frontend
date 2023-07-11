@@ -48,8 +48,8 @@ export const WaitingWalletConfirmModal = ({ visible }) => {
     >
       <Box sx={{ ...style }}>
         <LoadingIcon />
-        <Title style={{ color: '#A5FFBE' }}>Minting in progress</Title>
-        <div style={{ color: '#76AB8B' }}>Please confirm the transaction with your wallet.</div>
+        <Title style={{ color: '#A5FFBE' }}>{showWaitingWalletConfirmModal.title? showWaitingWalletConfirmModal.title : 'Minting in progress'}</Title>
+        <div style={{ color: '#76AB8B' }}>{showWaitingWalletConfirmModal.content? showWaitingWalletConfirmModal.content :'Please confirm the transaction with your wallet.'}</div>
       </Box>
     </Modal>
   );

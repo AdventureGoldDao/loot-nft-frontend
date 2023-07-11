@@ -115,8 +115,8 @@ export const chains = env.ENV === 'development' ? [
 ]
 
 export const chainArr = [
-  { name: 'Ethereum Goerli', icon: eth, value: 'goerli' },
-  { name: 'Loot Test', icon: loot, value: 'loottest' },
+  { name: 'Ethereum Goerli', icon: eth, value: 'goerli', chainId: 5 },
+  { name: 'Loot Test', icon: loot, value: 'loottest', chainId: 9088912 },
   // { name: 'Base Goerli', icon: base },
   // { name: 'Optimism', icon: op },
   // { name: 'Arbitrum', icon: arb },
@@ -126,6 +126,21 @@ export const chainArr = [
   // { name: 'Klaytn', icon: klaytn },
   // { name: 'Tron', icon: tron }
 ]
+
+export const SUPPORTED_CHAINS = {
+  5: {
+    chainId: 5,
+    name: 'Goerli Ethereum',
+    icon: eth,
+    value: 'goerli'
+  },
+  9088912: {
+    chainId: 9088912,
+    name: 'Loot Chain Testnet',
+    icon: loot,
+    value: 'loottest'
+  }
+}
 
 export const chainTxtObj = {
   mainnet: "Ethereum",

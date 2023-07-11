@@ -27,7 +27,7 @@ const style = {
 
 export const TransactionModal = ({ visible }) => {
   const { dispatch, state } = useContext(mainContext);
-  const { t } = useTranslation()
+  const { showTransactionModal } = state;
 
   const handleCancel = () => {
     dispatch({
@@ -43,8 +43,8 @@ export const TransactionModal = ({ visible }) => {
     >
       <Box sx={{ ...style }}>
         <SuccessIcon />
-        <Title style={{ color: '#A5FFBE' }}>SUCCESS</Title>
-        <div style={{ color: '#76AB8B' }}>You have successfully claim NFT</div>
+        <Title style={{ color: '#A5FFBE' }}>{showTransactionModal.title? showTransactionModal.title: 'SUCCESS'}</Title>
+        <div style={{ color: '#76AB8B' }}>{showTransactionModal.content? showTransactionModal.content : 'You have successfully claim NFT'}</div>
       </Box>
     </Modal>
   );
