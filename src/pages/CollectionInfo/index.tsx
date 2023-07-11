@@ -75,7 +75,6 @@ const TypesBox = styled.div`
   background: #191D20; 
   overflow: auto;
   ::-webkit-scrollbar {
-
   display: none; /* Chrome Safari */
 
 }

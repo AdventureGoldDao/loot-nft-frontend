@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom';
 import { Button, Modal, Box, TextField, Switch } from "@mui/material";
+import LoadingButton from '@mui/lab/LoadingButton';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -10,7 +11,7 @@ import PushModal from '../PushModal';
 import DeleteModal from '../DeleteModal';
 import Snackbar from "components/SnackMessage"
 import { useActiveWeb3React } from '../../../web3';
-import { delCollection, queryCollectionDetail, saveNFT, useOwnerNFTTypesList } from "../../../services/createNFTManage"
+import { delCollection, queryCollectionDetail, saveNFT, useOwnerNFTTypesList,queryNFTTypeDetail } from "../../../services/createNFTManage"
 import { dataURLtoBlob } from 'utils/dataURLtoBlob';
 import { ReactComponent as IconEdit } from "assets/img/nftManage/icon_edit.svg";
 import BadgeCard from 'components/BadgeCard';
@@ -142,16 +143,18 @@ const TextInput = styled(TextField)`
     color: #7A9283 !important;
   }
   .MuiInput-input {
-    margin-top: 8px;
-    padding: 18px;
+    margin-top: 2px;
+    padding: 14px 18px;
     border: none;
     border-radius: 8px;
     background: #242926;
-    color: #7A9283;
+    color: #fff;
   }
 `
 const SwitchGroup = styled(FormGroup)`
-  width: 100px;
+  width: 120px;
+  margin-top: 20px;
+  margin-bottom: -10px;
   .MuiFormControlLabel-root {
     margin-left: 0px;
   }
@@ -173,7 +176,14 @@ const GreenSwitch = styled(Switch)(({ theme }) => ({
     backgroundColor: '#A5FFBE',
   },
 }));
-
+const ArrtList = styled.div`
+  /* display: flex; */
+  max-height: 160px;
+  overflow: auto;
+  ::-webkit-scrollbar {
+    display: none; /* Chrome Safari */
+  }
+`
 const ArrtItem = styled.div`
   display: flex;
 `
@@ -191,7 +201,7 @@ const ItemFunc = styled.div`
   margin-top: 10px;
   background-color: #242926;
   position: absolute;
-  top: 24px;
+  top: 10px;
   right: 14px;
 `
 const ItemAdd = styled.div`
@@ -206,6 +216,9 @@ const ItemAdd = styled.div`
   font-size: 36px;
   color: #7A9283;
   cursor: pointer;
+  &:hover {
+    border: 1px solid #A5FFBE;
+  }
 `
 const ItemRemove = styled.div`
   width: 36px;
@@ -236,15 +249,16 @@ export default function CollectionManageIndex() {
   const label = { inputProps: { 'aria-label': 'Switch demo' } };
   const [nftForm, setNftForm] = useState<any>({})
   const [selectedImage, setSelectedImage] = useState(null);
+  const [isEditNFT,setIsEditNFT] = useState(false);
   const [arrts, setAttrs] = useState([
     {
-      key: '',
+      name: '',
       value: ''
     }
   ])
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false)
   const [msg, setMsg] = useState('')
-  const [severity, setSeverity] = useState('success') 
+  const [severity, setSeverity] = useState('success')
 
   const openModal = () => {
     setVisibleNFT(true)
@@ -267,10 +281,12 @@ export default function CollectionManageIndex() {
   }
   const addItem = () => {
     let obj = {
-      key: '',
+      name: '',
       value: ''
     }
     setAttrs([...arrts, obj])
+    console.log(arrts);
+    
   }
   const removeItem = (index) => {
     let arr = [...arrts]
@@ -280,7 +296,7 @@ export default function CollectionManageIndex() {
   const deleteCollection = async () => {
     let res = await delCollection(collectionId)
     handelDel()
-    initMsg("Success!")
+    initMsg("Success!", 'success')
     history.push('/dashboard')
     console.log(res);
   }
@@ -295,11 +311,9 @@ export default function CollectionManageIndex() {
   }
   const queryInfo = async () => {
     let res = await queryCollectionDetail(collectionId)
-    console.log(res);
     setCollectionInfo(res)
   }
   const changeFile = (event) => {
-    console.log(event.target.files);
     const file = event.target.files[0];
     const reader = new FileReader();
 
@@ -310,9 +324,10 @@ export default function CollectionManageIndex() {
     if (file) {
       reader.readAsDataURL(file);
     }
-    // setSelectedImage(URL.createObjectURL(file))
   }
   const handleChange = (event) => {
+    console.log(event);
+    
     const { name, value } = event.target;
     setNftForm((prevFormData) => ({
       ...prevFormData,
@@ -320,29 +335,64 @@ export default function CollectionManageIndex() {
     }));
   };
   const handelSubmit = async () => {
-    console.log(nftForm);
+    if (!selectedImage) {
+      initMsg("Image is required", 'error')
+      return false
+    }
+    if (!nftForm.name) {
+      initMsg("Name is required", 'error')
+      return false
+    }
+    if (!nftForm.description) {
+      initMsg("Description is required", 'error')
+      return false
+    }
+    if (!nftForm.count) {
+      initMsg("Total Supply is required", 'error')
+      return false
+    }
     const formData = new FormData()
-    formData.append('image', dataURLtoBlob(selectedImage))
+    let reg = /https:\/\//
+    if (selectedImage && !reg.test(selectedImage)) {
+      formData.append('image', dataURLtoBlob(selectedImage))
+    }
+    // formData.append('image', dataURLtoBlob(selectedImage))
     formData.append('name', nftForm.name)
     formData.append('description', nftForm.description)
     formData.append('count', nftForm.count)
-    formData.append('count', nftForm.count)
+    formData.append('typeId', nftForm.id)
 
-    let obj = Object.fromEntries(arrts.map(item => [item.key, item.value]));
+    try {
+      arrts.map(item => {
+        if (!item.name || !item.value) {
+          initMsg("Please add properties", 'error')
+          throw Error();
+        }
+      })
+    } catch (error) {
+      return false
+    }
+    setLoading(true)
+    let obj = Object.fromEntries(arrts.map(item => [item.name, item.value]));
     formData.append('attributes', JSON.stringify(obj))
 
-    let res = await saveNFT(collectionId, formData)
-    // console.log(res);
-    initMsg('Success!')
-    handleCancelNFT()
-    let a = refreshList + 1
-    setRefreshList(a)
-    setNftForm({})
-    queryInfo()
+    try {
+      let res = await saveNFT(collectionId, formData)
+      initMsg('Success!', 'success')
+      handleCancelNFT()
+      let a = refreshList + 1
+      setRefreshList(a)
+      setNftForm({})
+      setLoading(false)
+      queryInfo()
+    } catch (error) {
+      setLoading(false)
+      initMsg(error, 'error')
+    }
   }
-  const initMsg = (msg) => {
+  const initMsg = (msg, status) => {
     setMsg(msg)
-    setSeverity('success')
+    setSeverity(status)
     setIsSnackbarOpen(true)
   }
   const closeSnackbar = () => {
@@ -352,6 +402,32 @@ export default function CollectionManageIndex() {
     let arr = [...arrts]
     arr[idx][type] = event.target.value
     setAttrs(arr)
+  }
+  const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.checked);
+    if (!event.target.checked) {
+      setAttrs([])
+    } else {
+      setAttrs([{
+        name: '',
+        value: ''
+      }])
+    }
+  }
+  const openNFTEdit = (item) => {
+    setVisibleNFT(true)
+    setIsEditNFT(true)
+    console.log(item);
+    
+    queryTypeDetail(item.collectionId,item.id)
+  }
+  const queryTypeDetail = async (collectionId,typeId) => {
+    let res = await queryNFTTypeDetail(collectionId,typeId)
+    setNftForm(res)
+    // @ts-ignore
+    setSelectedImage(res.image)
+     // @ts-ignore
+    setAttrs(res.attributes)
   }
 
   useEffect(() => {
@@ -386,7 +462,7 @@ export default function CollectionManageIndex() {
           </CreateBox>
           {
             list.map(item => (
-              <BadgeCard key={item.project} item={item} />
+              <BadgeCard key={item.project} item={item} type='' clickEvent={openNFTEdit} />
             ))
           }
         </ManageMain>
@@ -407,7 +483,7 @@ export default function CollectionManageIndex() {
         open={visibleNFT}
         onClose={handleCancelNFT}>
         <Box sx={{ ...style }}>
-          <div className='mb20'>Create NFT</div>
+          <div className='mb20'>Edit NFT</div>
           <CreateNftBaseBox>
             <UploadBox className='df_column_center cp' onClick={openFile}>
               <div className='df_column_center'>
@@ -431,7 +507,7 @@ export default function CollectionManageIndex() {
                 }} />
               <TextInput fullWidth id="standard-helperText" name={'description'}
                 label="Description (Optional)"
-                placeholder="Default Value"
+                placeholder="Description"
                 rows={4}
                 multiline
                 variant="standard"
@@ -442,57 +518,65 @@ export default function CollectionManageIndex() {
                 }}
               />
               <TextInput fullWidth id="collection-name" label="Total Supply" name={'count'}
-                placeholder={`e.g. "Loot Collection"`}
+                placeholder={`e.g. "Total Supply"`}
                 variant="standard"
                 value={nftForm.count}
                 onChange={handleChange}
+                type='number'
                 InputLabelProps={{
                   shrink: true,
                 }} />
             </div>
           </CreateNftBaseBox>
-          <SwitchGroup>
-            <FormControlLabel control={<GreenSwitch defaultChecked />} label="Properties" labelPlacement="start" />
+          <SwitchGroup >
+            <FormControlLabel control={<GreenSwitch defaultChecked onChange={handleSwitchChange} />} label="Properties" labelPlacement="start" />
           </SwitchGroup>
-          {
-            arrts.map((item, index) => (
-              <ArrtItem>
-                <ItemKey>
-                  <TextInput fullWidth id="standard-helperText"
-                    placeholder="Key"
-                    multiline
-                    variant="standard"
-                    onChange={(event) => { handleChangeArrt(event, index, 'key') }}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />
-                </ItemKey>
-                <ItemVal>
-                  <TextInput fullWidth id="standard-helperText"
-                    placeholder="Value"
-                    multiline
-                    variant="standard"
-                    onChange={(event) => { handleChangeArrt(event, index, 'value') }}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />
-                  <ItemFunc>
-                    {
-                      <ItemAdd onClick={() => { removeItem(index) }}>-</ItemAdd>
-                    }
-                    {
-                      index === (arrts.length - 1) &&
-                      <ItemAdd onClick={addItem}>+</ItemAdd>
-                    }
-                  </ItemFunc>
-                </ItemVal>
-              </ArrtItem>
-            ))
-          }
+          <ArrtList>
+            {
+              arrts.map((item, index) => (
+                <ArrtItem>
+                  <ItemKey>
+                    <TextInput fullWidth id="standard-helperText"
+                      placeholder="Key"
+                      multiline
+                      variant="standard"
+                      value={item.name}
+                      onChange={(event) => { handleChangeArrt(event, index, 'name') }}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      size="small"
+                    />
+                  </ItemKey>
+                  <ItemVal>
+                    <TextInput fullWidth id="standard-helperText"
+                      placeholder="Value"
+                      multiline
+                      variant="standard"
+                      value={item.value}
+                      onChange={(event) => { handleChangeArrt(event, index, 'value') }}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      size="small"
+                    />
+                    <ItemFunc>
+                      {
+                        <ItemAdd onClick={() => { removeItem(index) }}>-</ItemAdd>
+                      }
+                      {
+                        index === (arrts.length - 1) &&
+                        <ItemAdd onClick={addItem}>+</ItemAdd>
+                      }
+                    </ItemFunc>
+                  </ItemVal>
+                </ArrtItem>
+              ))
+            }
+          </ArrtList>
           <div className='mt20 mb20 tar'>
-            <Button className='w200 btn_themeColor' onClick={handelSubmit}>Save</Button>
+            <LoadingButton loading={loading} className='w200 h36 mt20 mb20 btn_themeColor' onClick={handelSubmit}>{loading ? 'Loading' : 'Save'}</LoadingButton>
+            {/* <Button className='w200 btn_themeColor' onClick={handelSubmit}>Save</Button> */}
           </div>
         </Box>
       </Modal>

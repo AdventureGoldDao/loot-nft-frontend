@@ -142,6 +142,10 @@ export const useOwnerNFTTypesList = (collectionId,pageNo, pageSize, setLoading,r
   }, [pageNo, pageSize,refreshList])
   return { list, total }
 }
+export const queryNFTTypeDetail = async (collectionId,typeId) => {
+  let res = await http.get(`/collections/${collectionId}/types/${typeId}`)
+  return res
+}
 export const useNFTList = (owner,collectionId,pageNo, pageSize, setLoading) => {
   const [list, setList] = useState([])
   const [total, setTotal] = useState(0)

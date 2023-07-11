@@ -117,13 +117,14 @@ const ItemForeshow = styled.div`
   background: linear-gradient(89.89deg, #C19700 3.69%, #FFEE53 15.21%, #FDFFAC 57.81%, #FFEE53 83.86%, #C19700 99.9%);
 `
 
-export default function BadgeCard({ item, type = '' }) {
+export default function BadgeCard({ item, type = '',clickEvent=(a)=>{}}) {
   const [showCountDown, setShowCountDown] = useState(false)
   const [time, setTime] = useState(0)
   const [timeType, setTimeType] = useState('start')
   const history = useHistory()
 
   const goToBadgeDetail = (item) => {
+    clickEvent(item)
     if (type === 'game') {
       if (item.collectionLink) {
         window.open(item.collectionLink)
