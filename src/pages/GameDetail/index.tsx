@@ -25,6 +25,7 @@ import { ReactComponent as WebsiteIcon } from 'assets/img/games/website.svg'
 import { ReactComponent as TwitterIcon } from 'assets/img/games/twitter.svg'
 import { Tag } from 'pages/Games'
 import BadgeCard from "components/BadgeCard";
+import NoData from "../../components/NoData";
 
 const Main = styled.div`
   position: relative;
@@ -186,6 +187,7 @@ const ScreenImg = styled.img`
   }
 `
 const CollectionBox = styled.div`
+  min-height: 300px;
   display: flex;
   flex-wrap: wrap;
   margin: -10px -10px 30px;
@@ -336,6 +338,9 @@ export default function GameDetail() {
               gameInfo.collections.map(item => (
                 <BadgeCard key={item.name} item={item} type='game' />
               ))
+            }
+            {
+               gameInfo.collections.length === 0 && <NoData></NoData>
             }
           </CollectionBox>
         }

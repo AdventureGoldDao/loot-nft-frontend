@@ -7,13 +7,15 @@ const Box = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  color: #7A9283;
+  width: 100%;
 `
 
-const NoData = ({ text }) => {
+const NoData = ({ text = '' }) => {
   return (
     <Box>
       <EmptyIcon />
-      <p className={`fw600 mt14 c_9a fs16`}>{text ? text : 'No Data'}</p>
+      <p className={`fw600 mt14 fs16`}>{text ? text : 'No Data'}</p>
     </Box>
   )
 }
