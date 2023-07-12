@@ -54,7 +54,7 @@ const BgBox = styled.div`
   background-position: center top;
   background-size: cover;
   &::before {
-    background: linear-gradient(rgba(19, 19, 19, 0.1), rgba(19, 19, 19, 1));
+    background: linear-gradient(rgba(19, 19, 19, 0.6), rgba(19, 19, 19, 1));
     display: block;
     content: "";
     position: absolute;
@@ -203,7 +203,7 @@ export const gamesArr = [
     description: `Welcome to the exciting world of "Mighty Magic"! In this captivating project, users have the opportunity to unleash their creativity and strategic prowess by participating in the minting and acquisition of unique Non-Fungible Tokens (NFTs) representing mighty heroes. These heroes are destined for epic battles, where their abilities, strengths, and weaknesses come into play. As a participant, you have the chance to mint your own personalized heroes as NFTs through the intuitive "Mighty Magic" platform. Each hero holds distinct attributes and powers, making them truly one-of-a-kind. Prepare to dive into a realm brimming with mystical creatures and legendary warriors. Once you have assembled your team of heroes, it's time to engage in exhilarating battles. Pit your NFT heroes against other participants' creations and witness intense clashes. Victory brings forth rewards in the form of gold, symbolizing your hero's triumph and dominance in the battlefield. However, it is crucial to bear in mind that defeat is also a possibility. If your hero falls in battle, they will be considered defeated, and the spoils of victory will be granted to the opposing side. Embark on this thrilling journey with "Mighty Magic" as you explore the realm of NFTs and engage in epic battles where only the mightiest heroes prevail. Sharpen your strategy, unleash the magic within, and let your heroes claim victory and glory!`,
     logo: logo1,
     banner: banner1,
-    tags: ['AVG', 'Free Mint', 'Free to Play'],
+    tags: ['ADV', 'Free Mint', 'Free to Play'],
     supportChains: ['loot', 'zksyncera'],
     playLink: 'https://mighty-magic-dao.vercel.app/',
     website: 'https://mighty-magic-dao.vercel.app/',
@@ -312,7 +312,7 @@ export default function GameDetail() {
             <BoxHr />
             <LinkA href={gameInfo.twitter} target='_blank'><TwitterIcon /></LinkA>
           </LinkBox>
-          <Button onClick={goPlay} style={{ paddingLeft: 55, paddingRight: 55, height: 40 }} className="btn_multicolour">Play Now<ShareIcon width={9} height={9} style={{ marginLeft: 8 }} /></Button>
+          <Button onClick={goPlay} style={{ height: 40 }} className="w180 btn_multicolour">Play Now<ShareIcon width={9} height={9} style={{ marginLeft: 8 }} /></Button>
         </div>
       </PageHeader>
 

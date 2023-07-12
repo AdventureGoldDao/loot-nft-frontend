@@ -6,6 +6,8 @@ import { useHistory } from 'react-router-dom'
 import { BREAKPOINTS } from 'theme';
 import { gamesArr } from 'pages/GameDetail'
 import upcoming from 'assets/img/home/icon_upcoming.png'
+import banner3 from 'assets/img/games/banner3.jpg'
+import banner4 from 'assets/img/games/banner4.jpg'
 
 const EnlargementBgBox = styled.div`
   position: absolute;
@@ -117,6 +119,18 @@ const GamesRightBoxItem = styled.div`
   }
   &:hover ${EnlargementBgBox} {
     transform: scale(1.2, 1.2);
+  }
+`
+const ComingSoonBox = styled.div`
+  position: relative;
+  top: 0;
+  width: 180px;
+  height: 105px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 25px;
+  &:last-child {
+    margin-bottom: 0;
   }
 `
 export const Tag = styled.div`
@@ -241,6 +255,12 @@ export default function Games() {
               </GamesRightBoxItem>
             )
           }
+          <ComingSoonBox>
+            <EnlargementBgBox style={{ backgroundImage: `url(${banner3})` }} />
+          </ComingSoonBox>
+          <ComingSoonBox>
+            <EnlargementBgBox style={{ backgroundImage: `url(${banner4})` }} />
+          </ComingSoonBox>
         </GamesRightBox>
       </GamesBox>
       <div className='df_align_center mt24 mb24' style={{ marginLeft: '-15px' }}>

@@ -10,6 +10,7 @@ import Header from '../Header'
 import HeaderSpecial from '../HeaderSpecial'
 import { WalletConnect } from '../WalletConnect'
 import { gamesArr } from 'pages/GameDetail'
+import comingSoon from '../../assets/img/games/logo.svg'
 import {
   FailedTransactionModal, TransactionModal, WaitingWalletConfirmModal
 } from '../Modals'
@@ -111,6 +112,9 @@ const Layout = ({ children, routeArr }) => {
                   </NavLink>
                 )
               }
+              <Tooltip title={'coming soon'} placement="right" arrow>
+                <img src={comingSoon} />
+              </Tooltip>
             </LeftNav>
             <HeaderSpecial />
             <Main>{children}</Main>

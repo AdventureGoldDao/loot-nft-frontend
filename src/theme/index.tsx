@@ -21,6 +21,13 @@ export const customTheme = createTheme({
     },
   },
   components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: '10px',
+        }
+      },
+    },
     MuiSelect: {
       styleOverrides: {
         // @ts-ignore
