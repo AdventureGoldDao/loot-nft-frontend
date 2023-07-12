@@ -112,7 +112,7 @@ const Layout = ({ children, routeArr }) => {
                   </NavLink>
                 )
               }
-              <Tooltip title={'coming soon'} placement="right" arrow>
+              <Tooltip title={'Coming soon'} placement="right" arrow>
                 <img src={comingSoon} />
               </Tooltip>
             </LeftNav>

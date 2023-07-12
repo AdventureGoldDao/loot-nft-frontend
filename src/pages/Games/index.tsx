@@ -144,6 +144,13 @@ export const Tag = styled.div`
   font-size: 16px;
   font-weight: 500;
   margin-right: 12px;
+  :last-of-type {
+    margin-right: 0px;
+  }
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    margin-right: 10px;
+    padding: 0 14px;
+  }
 `
 const Content = styled.div`
   display: flex;
@@ -175,6 +182,16 @@ const ContentItem = styled.div`
   &:hover ${EnlargementBgBox} {
     transform: scale(1.2, 1.2);
   }
+`
+const ContentItemComingSoon =  styled.div`
+  position: relative;
+  top: 0;
+  transition: top 0.2s;
+  padding-bottom: 50%;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid #4B5954;
 `
 const ShadeCard = styled.div`
   background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.88));
@@ -275,13 +292,29 @@ export default function Games() {
               <ContentItem onClick={() => { goGameDetail(item) }}>
                 <EnlargementBgBox style={{ backgroundImage: `url(${item.banner})` }} />
                 <ShadeCard>
-                  <NameTag>{item.name}</NameTag>
+                  <NameTag className='text_hidden_1'>{item.name}</NameTag>
                   <DetailLine className='ell'>{item.description}</DetailLine>
                 </ShadeCard>
               </ContentItem>
             </ContentItemBox>
           )
         }
+        <ContentItemBox>
+          <ContentItemComingSoon >
+            <EnlargementBgBox style={{ backgroundImage: `url(${banner3})` }} />
+            <ShadeCard>
+              <NameTag>Coming Soon...</NameTag>
+            </ShadeCard>
+          </ContentItemComingSoon>
+        </ContentItemBox>
+        <ContentItemBox>
+          <ContentItemComingSoon >
+            <EnlargementBgBox style={{ backgroundImage: `url(${banner4})` }} />
+            <ShadeCard>
+              <NameTag>Coming Soon...</NameTag>
+            </ShadeCard>
+          </ContentItemComingSoon>
+        </ContentItemBox>
       </Content>
     </Main>
   )

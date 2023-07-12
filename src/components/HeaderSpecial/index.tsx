@@ -107,6 +107,18 @@ const PopMyItem = styled.div`
   line-height: 50px;
   font-size: 16px;
 `
+const GoogleForms = styled.a`
+  display: inline-block;
+  width: 120px;
+  height: 28px;
+  line-height: 28px;
+  text-align: center;
+  margin-right: 10px;
+  border-radius: 50px;
+  background-color: rgba(165, 255, 190, 0.1);
+  text-decoration: none;
+  font-size: 14px;
+`
 
 const HeaderSpecial = () => {
   const [showBox, setShowBox] = useState('');
@@ -160,6 +172,7 @@ const HeaderSpecial = () => {
           </div>
 
           <div className="df aic">
+            <GoogleForms target="_blank" href="https://forms.gle/eKeyD2VzRYKCMksM7">Submit Game</GoogleForms>
             {
               (active) &&
               <Select
@@ -207,7 +220,7 @@ const HeaderSpecial = () => {
         showBox && <NavH5Body>
           {
             (active) &&
-            <PopMyBox>
+            <PopMyBox className="mt20">
               <Select
                 onChange={handleSwitchChain}
                 value={chainName}
@@ -236,6 +249,9 @@ const HeaderSpecial = () => {
                 >Connect Wallet</Button> :
                 <AccountBox onClick={cancel} to="/collector">{abbrTxHash(account, 5, 4)}</AccountBox>
             }
+          </PopMyBox>
+          <PopMyBox>
+            <GoogleForms target="_blank" href="https://forms.gle/eKeyD2VzRYKCMksM7">Submit Game</GoogleForms>
           </PopMyBox>
         </NavH5Body>
       }
