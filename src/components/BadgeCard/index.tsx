@@ -6,15 +6,23 @@ import { BREAKPOINTS } from 'theme';
 import { chainTypeImgObj, chainTxtObj } from '../../utils/networkConnect';
 import CountDown from "components/CountDown";
 
+const EnlargementBgBox = styled.div`
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  transition: transform 0.5s;
+`
 const BadgeItem = styled.div`
+  position: relative;
   width: 100%;
   padding-bottom: 100%;
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  transition: background-size 0.5s;
 `
 const CardBox = styled.div`
   width: 20%;
@@ -25,8 +33,8 @@ const CardBox = styled.div`
   &:hover {
     top: -5px;
   }
-  &:hover ${BadgeItem} {
-    background-size: 120% 120%;
+  &:hover ${EnlargementBgBox} {
+    transform: scale(1.2, 1.2);
   }
   @media screen and (max-width: ${BREAKPOINTS.md}px) {
     width: 50%;
@@ -117,7 +125,7 @@ const ItemForeshow = styled.div`
   background: linear-gradient(89.89deg, #C19700 3.69%, #FFEE53 15.21%, #FDFFAC 57.81%, #FFEE53 83.86%, #C19700 99.9%);
 `
 
-export default function BadgeCard({ item, type = '',clickEvent=(a)=>{}}) {
+export default function BadgeCard({ item, type = '', clickEvent = (a) => { } }) {
   const [showCountDown, setShowCountDown] = useState(false)
   const [time, setTime] = useState(0)
   const [timeType, setTimeType] = useState('start')
@@ -168,40 +176,41 @@ export default function BadgeCard({ item, type = '',clickEvent=(a)=>{}}) {
   return (
     <CardBox>
       <DefaultBorder active={showCountDown && type !== 'collector'} onClick={() => { goToBadgeDetail(item) }}>
-        <BadgeItem style={{ backgroundImage: `url(${item.image})` }}>
+        <BadgeItem>
+          <EnlargementBgBox style={{ backgroundImage: `url(${item.image})` }} />
           {
             type === 'collector' && <ChainImg src={chainTypeImgObj[item.chainType]} />
           }
-          <ItemFooter>
-            <NftName className={`ell`} collector={type === 'collector'}>{item.collectionName}</NftName>
-            <CollectionName>{item.name}</CollectionName>
-            {
-              type === 'game' && <ChainName>
-                <img src={chainTypeImgObj[item.chainType]} />
-                <span>{chainTxtObj[item.chainType]}</span>
-              </ChainName>
-            }
-          </ItemFooter>
-
-
+        </BadgeItem>
+        <ItemFooter>
+          <NftName className={`ell`} collector={type === 'collector'}>{item.collectionName}</NftName>
+          <CollectionName>{item.name}</CollectionName>
           {
-            type !== 'collector' && (
-              showCountDown ? (
-                <ItemActivity>
-                  {timeType === 'end' && <span>Close at </span>}
-                  <CountDown onEnd={dealTime} time={time / 1000} type="word" />
-                </ItemActivity>
-              ) : (
-                !!time && (
-                  <ItemForeshow title={`Start at ${new Date(time).toLocaleString()}`} className="ell">
-                    <span>Start at </span>
-                    {new Date(time).toLocaleString()}
-                  </ItemForeshow>
-                )
+            type === 'game' && <ChainName>
+              <img src={chainTypeImgObj[item.chainType]} />
+              <span>{chainTxtObj[item.chainType]}</span>
+            </ChainName>
+          }
+        </ItemFooter>
+
+
+        {
+          type !== 'collector' && (
+            showCountDown ? (
+              <ItemActivity>
+                {timeType === 'end' && <span>Close at </span>}
+                <CountDown onEnd={dealTime} time={time / 1000} type="word" />
+              </ItemActivity>
+            ) : (
+              !!time && (
+                <ItemForeshow title={`Start at ${new Date(time).toLocaleString()}`} className="ell">
+                  <span>Start at </span>
+                  {new Date(time).toLocaleString()}
+                </ItemForeshow>
               )
             )
-          }
-        </BadgeItem>
+          )
+        }
       </DefaultBorder>
     </CardBox>
   )

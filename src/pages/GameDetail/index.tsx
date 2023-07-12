@@ -6,7 +6,7 @@ import { Link, NavLink, useLocation, useHistory, useParams } from "react-router-
 import { BREAKPOINTS } from 'theme';
 import { chainTypeImgObj, chainFun, symbolImgObj } from '../../utils/networkConnect';
 import logo1 from 'assets/img/games/logo1.jpg'
-import logo2 from 'assets/img/games/logo2.jpg'
+import logo2 from 'assets/img/games/logo2.png'
 import logo3 from 'assets/img/games/logo3.jpg'
 import logo4 from 'assets/img/games/logo4.jpg'
 import logo5 from 'assets/img/games/logo5.jpg'
@@ -18,6 +18,8 @@ import banner5 from 'assets/img/games/banner5.jpg'
 import collection from 'assets/img/games/collection.jpg'
 import screen1 from 'assets/img/games/screen1.jpg'
 import screen2 from 'assets/img/games/screen2.jpg'
+import land1 from 'assets/img/games/land1.png'
+import land2 from 'assets/img/games/land2.png'
 import { ReactComponent as ShareIcon } from 'assets/img/games/share.svg'
 import { ReactComponent as WebsiteIcon } from 'assets/img/games/website.svg'
 import { ReactComponent as TwitterIcon } from 'assets/img/games/twitter.svg'
@@ -194,165 +196,68 @@ const CollectionBox = styled.div`
 
 export const gamesArr = [
   {
-    id: '1',
+    id: 'magic',
     name: 'Mighty Magic HEROES',
-    description: 'Embark on this thrilling journey with "Mighty Magic" as you explore the realm of NFTs and engage in epic battles where only the mightiest heroes prevail. Sharpen your strategy, unleash the magic within, and let your heroes claim victory and glory!',
+    description: `Welcome to the exciting world of "Mighty Magic"! In this captivating project, users have the opportunity to unleash their creativity and strategic prowess by participating in the minting and acquisition of unique Non-Fungible Tokens (NFTs) representing mighty heroes. These heroes are destined for epic battles, where their abilities, strengths, and weaknesses come into play. As a participant, you have the chance to mint your own personalized heroes as NFTs through the intuitive "Mighty Magic" platform. Each hero holds distinct attributes and powers, making them truly one-of-a-kind. Prepare to dive into a realm brimming with mystical creatures and legendary warriors. Once you have assembled your team of heroes, it's time to engage in exhilarating battles. Pit your NFT heroes against other participants' creations and witness intense clashes. Victory brings forth rewards in the form of gold, symbolizing your hero's triumph and dominance in the battlefield. However, it is crucial to bear in mind that defeat is also a possibility. If your hero falls in battle, they will be considered defeated, and the spoils of victory will be granted to the opposing side. Embark on this thrilling journey with "Mighty Magic" as you explore the realm of NFTs and engage in epic battles where only the mightiest heroes prevail. Sharpen your strategy, unleash the magic within, and let your heroes claim victory and glory!`,
     logo: logo1,
     banner: banner1,
-    tags: ['AVG', 'Free Mint'],
-    supportChains: ['loottest', 'zksynceratest'],
-    playLink: 'https://mighty-magic-dao.vercel.app/mint',
+    tags: ['AVG', 'Free Mint', 'Free to Play'],
+    supportChains: ['loot', 'zksyncera'],
+    playLink: 'https://mighty-magic-dao.vercel.app/',
     website: 'https://mighty-magic-dao.vercel.app/',
-    twitter: 'https://twitter.com/home',
+    twitter: '',
     screenshots: [screen1, screen2],
     leaderboardLink: 'https://mighty-magic-dao.vercel.app/leaderboard',
     collections: [
       {
-        name: 'Hero 1',
+        name: 'Hero',
         image: collection,
         collectionLink: 'https://mighty-magic-dao.vercel.app/mint',
-        mintStartTime: 1688376305000,
-        mintEndTime: 1688376305000 + 3600000 * 24 * 1,
-        chainType: 'goerli'
+        mintStartTime: 0,
+        mintEndTime: 0,
+        chainType: 'loot'
       },
-      {
-        name: 'Hero 2',
-        image: collection,
-        collectionLink: 'https://mighty-magic-dao.vercel.app/mint',
-        mintStartTime: 1688376305000,
-        mintEndTime: 1688376305000 + 3600000 * 24 * 6,
-        chainType: 'loottest'
-      },
-      {
-        name: 'Hero 3',
-        image: collection,
-        collectionLink: 'https://mighty-magic-dao.vercel.app/mint',
-        mintStartTime: 1688376305000 + 3600000 * 24 * 20,
-        mintEndTime: 1688376305000 + 3600000 * 24 * 30,
-        chainType: 'loottest'
-      },
-      {
-        name: 'Hero 4',
-        image: collection,
-        collectionLink: 'https://mighty-magic-dao.vercel.app/mint',
-        mintStartTime: 1688376305000,
-        mintEndTime: 1688376305000 + 3600000 * 24 * 5,
-        chainType: 'goerli'
-      },
-      {
-        name: 'Hero 5',
-        image: collection,
-        collectionLink: 'https://mighty-magic-dao.vercel.app/mint',
-        mintStartTime: 1688376305000,
-        mintEndTime: 1688376305000 + 3600000 * 24 * 3,
-        chainType: 'loottest'
-      },
-      {
-        name: 'Hero 6',
-        image: collection,
-        collectionLink: 'https://mighty-magic-dao.vercel.app/mint',
-        mintStartTime: 1688376305000,
-        mintEndTime: 1688376305000 + 3600000 * 24 * 4,
-        chainType: 'loottest'
-      }
     ]
   },
   {
-    id: '2',
-    name: 'Game Name 2',
-    description: 'Embark on this thrilling journey with "Mighty Magic" as you explore the realm of NFTs and engage in epic battles where only the mightiest heroes prevail. Sharpen your strategy, unleash the magic within, and let your heroes claim victory and glory!',
+    id: 'land',
+    name: 'Land, Labor and Capitol (LLC)',
+    description: `Tycoon style game where players can enjoy the gameplay with many different levels of involvement, from simply buying in-game stock in player-owned companies, to holding land in areas they think will appreciate in value, to actively managing a portfolio of firms and optimizing their operations based on their predictions of the macroeconomy.`,
     logo: logo2,
     banner: banner2,
-    tags: ['AVG', 'Free Mint'],
-    supportChains: ['loottest', 'zksynceratest'],
-    playLink: 'https://mighty-magic-dao.vercel.app/mint',
-    website: 'https://mighty-magic-dao.vercel.app/',
-    twitter: 'https://twitter.com/home',
-    screenshots: [screen1, screen2],
-    leaderboardLink: 'https://mighty-magic-dao.vercel.app/leaderboard',
-    collections: [
-      {
-        name: 'Hero',
-        image: collection,
-        collectionLink: 'https://mighty-magic-dao.vercel.app/mint',
-        mintStartTime: 1688376305000 + 3600000 * 24 * 2,
-        mintEndTime: 1688376305000 + 3600000 * 24 * 3,
-        chainType: 'loottest'
-      }
-    ]
+    tags: ['Free to Play'],
+    supportChains: ['polygon'],
+    playLink: 'https://llcgame.io/',
+    website: 'https://llcgame.io/',
+    twitter: 'https://twitter.com/0xNetherGames',
+    screenshots: [land1, land2],
+    leaderboardLink: '',
+    collections: []
   },
-  {
-    id: '3',
-    name: 'Game Name 3',
-    description: 'Embark on this thrilling journey with "Mighty Magic" as you explore the realm of NFTs and engage in epic battles where only the mightiest heroes prevail. Sharpen your strategy, unleash the magic within, and let your heroes claim victory and glory!',
-    logo: logo3,
-    banner: banner3,
-    tags: ['AVG', 'Free Mint'],
-    supportChains: ['loottest', 'zksynceratest'],
-    playLink: 'https://mighty-magic-dao.vercel.app/mint',
-    website: 'https://mighty-magic-dao.vercel.app/',
-    twitter: 'https://twitter.com/home',
-    screenshots: [screen1, screen2],
-    leaderboardLink: 'https://mighty-magic-dao.vercel.app/leaderboard',
-    collections: [
-      {
-        name: 'Hero',
-        image: collection,
-        collectionLink: 'https://mighty-magic-dao.vercel.app/mint',
-        mintStartTime: 1688376305000,
-        mintEndTime: 1688376305000 + 3600000 * 24 * 3,
-        chainType: 'loottest'
-      }
-    ]
-  },
-  {
-    id: '4',
-    name: 'Game Name 4',
-    description: 'Embark on this thrilling journey with "Mighty Magic" as you explore the realm of NFTs and engage in epic battles where only the mightiest heroes prevail. Sharpen your strategy, unleash the magic within, and let your heroes claim victory and glory!',
-    logo: logo4,
-    banner: banner4,
-    tags: ['AVG', 'Free Mint'],
-    supportChains: ['loottest', 'zksynceratest'],
-    playLink: 'https://mighty-magic-dao.vercel.app/mint',
-    website: 'https://mighty-magic-dao.vercel.app/',
-    twitter: 'https://twitter.com/home',
-    screenshots: [screen1, screen2],
-    leaderboardLink: 'https://mighty-magic-dao.vercel.app/leaderboard',
-    collections: [
-      {
-        name: 'Hero',
-        image: collection,
-        collectionLink: 'https://mighty-magic-dao.vercel.app/mint',
-        mintStartTime: 1688376305000,
-        mintEndTime: 1688376305000 + 3600000 * 24 * 3,
-        chainType: 'loottest'
-      }
-    ]
-  },
-  {
-    id: '5',
-    name: 'Game Name 5',
-    description: 'Embark on this thrilling journey with "Mighty Magic" as you explore the realm of NFTs and engage in epic battles where only the mightiest heroes prevail. Sharpen your strategy, unleash the magic within, and let your heroes claim victory and glory!',
-    logo: logo5,
-    banner: banner5,
-    tags: ['AVG', 'Free Mint'],
-    supportChains: ['loottest', 'zksynceratest'],
-    playLink: 'https://mighty-magic-dao.vercel.app/mint',
-    website: 'https://mighty-magic-dao.vercel.app/',
-    twitter: 'https://twitter.com/home',
-    screenshots: [screen1, screen2],
-    leaderboardLink: 'https://mighty-magic-dao.vercel.app/leaderboard',
-    collections: [
-      {
-        name: 'Hero',
-        image: collection,
-        collectionLink: 'https://mighty-magic-dao.vercel.app/mint',
-        mintStartTime: 1701142200000,
-        mintEndTime: 1701142200000 + 3600000 * 24 * 3,
-        chainType: 'loottest'
-      }
-    ]
-  },
+  // {
+  //   id: '2',
+  //   name: 'Game Name 2',
+  //   description: 'Embark on this thrilling journey with "Mighty Magic" as you explore the realm of NFTs and engage in epic battles where only the mightiest heroes prevail. Sharpen your strategy, unleash the magic within, and let your heroes claim victory and glory!',
+  //   logo: logo2,
+  //   banner: banner2,
+  //   tags: ['AVG', 'Free Mint'],
+  //   supportChains: ['loottest', 'zksynceratest'],
+  //   playLink: 'https://mighty-magic-dao.vercel.app/mint',
+  //   website: 'https://mighty-magic-dao.vercel.app/',
+  //   twitter: 'https://twitter.com/home',
+  //   screenshots: [screen1, screen2],
+  //   leaderboardLink: 'https://mighty-magic-dao.vercel.app/leaderboard',
+  //   collections: [
+  //     {
+  //       name: 'Hero',
+  //       image: collection,
+  //       collectionLink: 'https://mighty-magic-dao.vercel.app/mint',
+  //       mintStartTime: 1688376305000 + 3600000 * 24 * 2,
+  //       mintEndTime: 1688376305000 + 3600000 * 24 * 3,
+  //       chainType: 'loottest'
+  //     }
+  //   ]
+  // },
 ]
 
 const tabArr = ['Overview', 'Collections', 'Leaderboard', 'Play']

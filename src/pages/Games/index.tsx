@@ -7,6 +7,17 @@ import { BREAKPOINTS } from 'theme';
 import { gamesArr } from 'pages/GameDetail'
 import upcoming from 'assets/img/home/icon_upcoming.png'
 
+const EnlargementBgBox = styled.div`
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  transition: transform 0.5s;
+`
 const Main = styled.div`
   position: relative;
   min-height: 100vh;
@@ -64,18 +75,17 @@ const ShadeBox = styled.div`
 const GameInfoBox = styled.div`
   position: relative;
   top: 0;
-  transition: background-size 0.5s, top 0.2s;
+  transition: top 0.2s;
   flex: auto;
   margin-right: 35px;
   height: 495px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 100% 100%;
   border-radius: 20px;
   overflow: hidden;
   &:hover {
     top: -5px;
-    background-size: 120% 120%;
+  }
+  &:hover ${EnlargementBgBox} {
+    transform: scale(1.2, 1.2);
   }
   @media screen and (max-width: ${BREAKPOINTS.md}px) {
     margin-right: 0;
@@ -84,7 +94,6 @@ const GameInfoBox = styled.div`
 const GamesRightBox = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   @media screen and (max-width: ${BREAKPOINTS.md}px) {
     display: none;
   }
@@ -92,12 +101,9 @@ const GamesRightBox = styled.div`
 const GamesRightBoxItem = styled.div`
   position: relative;
   top: 0;
-  transition: background-size 0.5s, top 0.2s;
+  transition: top 0.2s;
   width: 180px;
   height: 105px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 100% 100%;
   border-radius: 10px;
   overflow: hidden;
   cursor: pointer;
@@ -107,8 +113,10 @@ const GamesRightBoxItem = styled.div`
   }
   &:hover {
     top: -5px;
-    background-size: 120% 120%;
     border: 1px solid #A5FFBE;
+  }
+  &:hover ${EnlargementBgBox} {
+    transform: scale(1.2, 1.2);
   }
 `
 export const Tag = styled.div`
@@ -139,20 +147,19 @@ const ContentItemBox = styled.div`
 const ContentItem = styled.div`
   position: relative;
   top: 0;
-  transition: background-size 0.5s, top 0.2s;
+  transition: top 0.2s;
   padding-bottom: 50%;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 100% 100%;
   border-radius: 10px;
   overflow: hidden;
   cursor: pointer;
   border: 1px solid #4B5954;
   &:hover {
     top: -5px;
-    background-size: 120% 120%;
     border: 1px solid #A5FFBE;
     box-shadow: 0px 4px 24px 0px rgba(165, 255, 190, 0.40);
+  }
+  &:hover ${EnlargementBgBox} {
+    transform: scale(1.2, 1.2);
   }
 `
 const ShadeCard = styled.div`
@@ -194,6 +201,7 @@ const DetailLine = styled.div`
 `
 
 
+
 export default function Games() {
   const [selectGame, setSelectGame] = useState(gamesArr[0]);
   const history = useHistory()
@@ -212,7 +220,8 @@ export default function Games() {
     <Main>
       <BgBox style={{ backgroundImage: `url(${selectGame.banner})` }} />
       <GamesBox>
-        <GameInfoBox style={{ backgroundImage: `url(${selectGame.banner})` }}>
+        <GameInfoBox>
+          <EnlargementBgBox style={{ backgroundImage: `url(${selectGame.banner})` }} />
           <ShadeBox>
             <div style={{ color: '#A5FFBE', fontSize: 46, fontWeight: 800, marginBottom: 20 }}>{selectGame.name}</div>
             <div className='df_align_center mb20'>
@@ -220,14 +229,16 @@ export default function Games() {
                 selectGame.tags.map(item => <Tag>{item}</Tag>)
               }
             </div>
-            <div style={{ color: '#EBEBEB', fontWeight: 400, marginBottom: 30, lineHeight: 1.5 }}>{selectGame.description}</div>
+            <div className='text_hidden_3' style={{ color: '#EBEBEB', fontWeight: 400, marginBottom: 30, lineHeight: 1.5 }}>{selectGame.description}</div>
             <Button onClick={goGameWebsite} className='btn_themeColor' style={{ paddingLeft: 32, paddingRight: 32 }}>Learn More</Button>
           </ShadeBox>
         </GameInfoBox>
         <GamesRightBox>
           {
             gamesArr.slice(0, 4).map(item =>
-              <GamesRightBoxItem onClick={() => { setSelectGame(item) }} style={{ backgroundImage: `url(${item.banner})` }} />
+              <GamesRightBoxItem onClick={() => { setSelectGame(item) }}>
+                <EnlargementBgBox style={{ backgroundImage: `url(${item.banner})` }} />
+              </GamesRightBoxItem>
             )
           }
         </GamesRightBox>
@@ -241,7 +252,8 @@ export default function Games() {
         {
           gamesArr.map(item =>
             <ContentItemBox>
-              <ContentItem onClick={() => { goGameDetail(item) }} style={{ backgroundImage: `url(${item.banner})` }}>
+              <ContentItem onClick={() => { goGameDetail(item) }}>
+                <EnlargementBgBox style={{ backgroundImage: `url(${item.banner})` }} />
                 <ShadeCard>
                   <NameTag>{item.name}</NameTag>
                   <DetailLine className='ell'>{item.description}</DetailLine>
