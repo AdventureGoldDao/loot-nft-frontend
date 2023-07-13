@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Select, MenuItem, Button } from "@mui/material";
 import styled from 'styled-components/macro';
 import { Link, NavLink, useLocation, useHistory, useParams } from "react-router-dom";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 import { BREAKPOINTS } from 'theme';
 import { chainTypeImgObj, chainFun, symbolImgObj } from '../../utils/networkConnect';
@@ -195,7 +197,7 @@ const CollectionBox = styled.div`
     margin: -5px -5px 20px;
   }
 `
-
+AOS.init();
 export const gamesArr = [
   {
     id: 'magic',
@@ -283,7 +285,7 @@ export default function GameDetail() {
   return (
     <Main>
       <BgBox style={{ backgroundImage: `url(${gameInfo.banner})` }} />
-      <PageHeader>
+      <PageHeader  key={id} data-aos="ease-out" data-aos-duration={5000}>
         <div className="df_align_center_h5">
           <HeaderImg src={gameInfo.logo} />
           <div>
@@ -316,15 +318,15 @@ export default function GameDetail() {
         </div>
       </PageHeader>
 
-      <ContentBox>
+      <ContentBox >
         <TabBox className="df_align_center">
           {
             tabArr.map(item => <TabItem key={item} active={item === currentTab}><span onClick={() => { setCurrentTab(item) }}>{item}</span></TabItem>)
           }
         </TabBox>
         {
-          currentTab === tabArr[0] && <div>
-            <ScreenBox>
+          currentTab === tabArr[0] && <div key={id} data-aos="fade-up" data-aos-duration={500}>
+            <ScreenBox >
               {
                 gameInfo.screenshots.map(item => <ScreenImg src={item} />)
               }

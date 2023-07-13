@@ -24,7 +24,7 @@ const Main = styled.div`
   height: 72px;
   z-index: 10;
   border-bottom: 1px solid #4B5954;
-
+  backdrop-filter: blur(30px);
   @media screen and (max-width: ${BREAKPOINTS.md}px) {
     height: 60px;
     left: 0;

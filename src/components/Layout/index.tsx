@@ -31,6 +31,7 @@ const LeftNav = styled.div`
   background-color: rgba(26, 30, 30, 0.50);
   border-right: 1px solid #4B5954;
   min-height: 100vh;
+  backdrop-filter: blur(30px);
   @media screen and (max-width: ${BREAKPOINTS.md}px) {
     display: none;
   }
