@@ -13,6 +13,7 @@ import eth from "assets/img/chain/com_eth.svg"
 import bg from 'assets/img/explore_bg.svg'
 import styled from 'styled-components/macro';
 import { useNeedSign } from 'hooks/account';
+import NoData from "../../components/NoData";
 
 const style = {
   position: 'absolute',
@@ -171,7 +172,7 @@ const ImgBox = styled.div`
     height: 38px;
   }
 `
-const NoData = styled.div`
+const NoDataBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -289,9 +290,9 @@ export default function NFTManage() {
             }
             {
               list.length === 0 &&
-              <NoData>
-                <ColorGreenLight>No Data</ColorGreenLight>
-              </NoData>
+              <NoDataBox>
+                <NoData></NoData>
+              </NoDataBox>
             }
           </div>
         }

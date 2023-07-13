@@ -190,5 +190,29 @@ export const queryNFTDetail = async (chainType,contractAddress,tokenId) => {
   let res = await http.get(`/nfts/${chainType}/${contractAddress}/${tokenId}`)
   return res
 }
+export const putFullMetadata = async (collectionId, formData) => {
+  let res = await http.put(`/collections/${collectionId}/metadata/full`, formData)
+  return res
+}
+export const putNftImg = async (collectionId, formData) => {
+  let res = await http.put(`/collections/${collectionId}/metadata/image`, formData)
+  return res
+}
+export const getMetadataList = async (collectionId, hasImage, pageNo, pageSize) => {
+  let res = await http.get(`/collections/${collectionId}/metadata?hasImage=${hasImage}&pageNo=${pageNo}&pageSize=${pageSize}`)
+  return res
+}
+export const getOneMetadata = async (collectionId, nftId) => {
+  let res = await http.get(`/collections/${collectionId}/nfts/${nftId}/metadata`)
+  return res
+}
+export const putOneMetadata = async (collectionId, nftId, formData) => {
+  let res = await http.put(`/collections/${collectionId}/nfts/${nftId}/metadata`, formData)
+  return res
+}
+export const delOneMetadata = async (collectionId, nftId) => {
+  let res = await http.delete(`/collections/${collectionId}/nfts/${nftId}/metadata`)
+  return res
+}
 
 

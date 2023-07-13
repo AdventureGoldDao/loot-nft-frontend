@@ -19,13 +19,17 @@ export const customTheme = createTheme({
     error: {
       main: '#ff7d7d',
     },
+    secondary: {
+      main: '#85A391',
+    }
   },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
           borderRadius: '10px',
-        }
+          textTransform: 'none'
+        },
       },
     },
     MuiSelect: {
@@ -66,6 +70,13 @@ export const customTheme = createTheme({
           }
         }
       }
-    }
+    },
+    MuiPaginationItem: {
+      styleOverrides: {
+        root: {
+          color: '#fff',
+        }
+      }
+    },
   },
 });

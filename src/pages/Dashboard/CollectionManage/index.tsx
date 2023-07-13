@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom';
-import { Button, Modal, Box, TextField, Switch } from "@mui/material";
+import { Button, Modal, Box, TextField, Switch, Pagination } from "@mui/material";
 import LoadingButton from '@mui/lab/LoadingButton';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -11,13 +11,19 @@ import PushModal from '../PushModal';
 import DeleteModal from '../DeleteModal';
 import Snackbar from "components/SnackMessage"
 import { useActiveWeb3React } from '../../../web3';
-import { delCollection, queryCollectionDetail, saveNFT, useOwnerNFTTypesList,queryNFTTypeDetail } from "../../../services/createNFTManage"
+import {
+  delCollection, queryCollectionDetail, saveNFT, putNftImg, getOneMetadata, putOneMetadata,
+  useOwnerNFTTypesList, queryNFTTypeDetail, putFullMetadata, getMetadataList, delOneMetadata
+} from "../../../services/createNFTManage"
 import { dataURLtoBlob } from 'utils/dataURLtoBlob';
 import { ReactComponent as IconEdit } from "assets/img/nftManage/icon_edit.svg";
+import { ReactComponent as IconImg } from "assets/img/nftManage/icon_img.svg";
+import { ReactComponent as IconJson } from "assets/img/nftManage/icon_json.svg";
 import BadgeCard from 'components/BadgeCard';
 import { useBadgeProjectList } from "../../../services/badge"
 import bg from 'assets/img/explore_bg.svg'
 import styled from 'styled-components/macro';
+import { abbrTxHash, formatAmount } from "utils/format";
 
 const style = {
   position: 'absolute',
@@ -39,7 +45,11 @@ const theme = createTheme({
     },
   },
 });
+const PrimaryTextDiv = styled.div`
+  color: #A5FFBE;
+`
 const CollectionManage = styled.div`
+  min-height: 100vh;
   padding: 120px 100px;
   background-repeat: no-repeat;
   background-position: center top;
@@ -75,6 +85,8 @@ const CollectionDes = styled.div`
 `
 const ManageMain = styled.div`
   display: flex;
+  flex-wrap: wrap;
+  margin: 10px -10px;
 `
 const CreateBox = styled.div`
   width: 20%;
@@ -232,6 +244,115 @@ const ItemRemove = styled.div`
   color: #7A9283;
   cursor: pointer;
 `
+const BulkBody = styled.div`
+  border-radius: 20px;
+  background: #111211;
+  padding: 25px 50px;
+
+  .title {
+    color: #FFF;
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 25px;
+  }
+  .back {
+    color: #7A9283;
+    font-weight: 600;
+    cursor: pointer;
+  }
+`
+const StepBox = styled.div<{ active: boolean }>`
+  width: 50%;
+  padding: 0 20px;
+  font-size: 20px;
+  font-weight: 500;
+
+  .step-item {
+    border-radius: 10px;
+    border: 1px solid ${props => props.active ? '#A5FFBE' : '#4B5954'};
+    background: ${props => props.active ? '#1B1F1C' : '#111211'};
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .step-title {
+    margin-top: 27px;
+    color: '#fff';
+  }
+`
+const DisabledBtn = styled.div`
+  font-size: 16px;
+  width: 180px;
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
+  border-radius: 8px;
+  background: #4B5954;
+  color: #000;
+  cursor: default;
+`
+const CenterBox = styled.div`
+  height: 237px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
+const FileBox = styled.div`
+  display: flex;
+  padding: 10px;
+  align-items: center;
+  border-radius: 10px;
+  background: #111211;
+`
+const ShowBlockImg = styled.img`
+  display: block;
+  width: 60px;
+  height: 60px;
+  margin-right: 7px;
+  border-radius: 10px;
+  &:last-child {
+    margin-right: 0;
+  }
+`
+const ShowBlockDiv = styled.div`
+  width: 60px;
+  height: 60px;
+  margin-left: 7px;
+  border-radius: 10px;
+  background: #111211;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7A9283;
+  font-weight: bold;
+`
+const BadBox = styled.div`
+  margin-top: 20px;
+  border-radius: 10px;
+  border: 1px solid #724E4E;
+  background: #231D1D;
+  color: #FF7D7D;
+  padding: 24px 50px;
+`
+const BadItemBox = styled.div`
+  width: 16.66666%;
+  padding: 9px;
+`
+const BadItem = styled.div`
+  height: 44px;
+  line-height: 42px;
+  text-align: center;
+  border-radius: 8px;
+  border: 1px solid #FF7D7D;
+  background: #161212;
+  cursor: pointer;
+`
+const BadListBox = styled.div`
+  display: flex;
+  margin: 11px -9px -9px;
+  flex-wrap: wrap;
+`
 
 export default function CollectionManageIndex() {
   const history = useHistory()
@@ -241,7 +362,10 @@ export default function CollectionManageIndex() {
   const chooseImg = useRef(null)
   const [loading, setLoading] = useState(false)
   const [refreshList, setRefreshList] = useState(1)
-  const { list, total } = useOwnerNFTTypesList(collectionId, 1, 10, setLoading, refreshList)
+  const [pageCount, setPageCount] = useState(1)
+  const [list, setList] = useState([])
+  const [badList, setBadList] = useState([])
+  // const { list, total } = useOwnerNFTTypesList(collectionId, 1, 10, setLoading, refreshList)
   const [visible, setVisible] = useState(false)
   const [visibleNFT, setVisibleNFT] = useState(false)
   const [visiblePush, setVisiblePush] = useState(false)
@@ -249,7 +373,21 @@ export default function CollectionManageIndex() {
   const label = { inputProps: { 'aria-label': 'Switch demo' } };
   const [nftForm, setNftForm] = useState<any>({})
   const [selectedImage, setSelectedImage] = useState(null);
-  const [isEditNFT,setIsEditNFT] = useState(false);
+  const [isEditNFT, setIsEditNFT] = useState(false);
+  const [contentType, setContentType] = useState('');
+  const [currentStep, setCurrentStep] = useState(1);
+  const [jsonLoading, setJsonLoading] = useState(false);
+  const [imgLoading, setImgLoading] = useState(false);
+  const [jsonUploaded, setJsonUploaded] = useState(false);
+  const [jsonName, setJsonName] = useState('');
+  const [jsonDataLength, setJsonDataLength] = useState(0);
+  const [imgsUploaded, setImgsUploaded] = useState(false);
+  const [imgsUploadedNum, setImgsUploadedNum] = useState(0);
+  const [imgsAmount, setImgsAmount] = useState(0);
+  const [imgsSowArr, setImgsSowArr] = useState([]);
+  const [hadImgUpload, setHadImgUpload] = useState(false);
+  const [hadJsonUpload, setHadJsonUpload] = useState(false);
+  const [visibleJsonReload, setVisibleJsonReload] = useState(false);
   const [arrts, setAttrs] = useState([
     {
       name: '',
@@ -261,7 +399,8 @@ export default function CollectionManageIndex() {
   const [severity, setSeverity] = useState('success')
 
   const openModal = () => {
-    setVisibleNFT(true)
+    // setVisibleNFT(true)
+    setContentType('bulk')
   }
   const handleCancel = () => {
     setVisible(false)
@@ -272,6 +411,11 @@ export default function CollectionManageIndex() {
   }
   const handleCancelNFT = () => {
     setVisibleNFT(false)
+    setNftForm({})
+    // @ts-ignore
+    setSelectedImage(null)
+    // @ts-ignore
+    setAttrs([{ name: '', value: '' }])
   }
   const handelDel = () => {
     setVisibleDel(false)
@@ -286,7 +430,7 @@ export default function CollectionManageIndex() {
     }
     setAttrs([...arrts, obj])
     console.log(arrts);
-    
+
   }
   const removeItem = (index) => {
     let arr = [...arrts]
@@ -312,22 +456,19 @@ export default function CollectionManageIndex() {
   const queryInfo = async () => {
     let res = await queryCollectionDetail(collectionId)
     setCollectionInfo(res)
+    /* @ts-expect-error */
+    if (res?.metadataUploaded) {
+      setHadJsonUpload(true)
+    }
   }
   const changeFile = (event) => {
     const file = event.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      setSelectedImage(reader.result);
-    };
 
     if (file) {
-      reader.readAsDataURL(file);
+      setSelectedImage(file);
     }
   }
   const handleChange = (event) => {
-    console.log(event);
-    
     const { name, value } = event.target;
     setNftForm((prevFormData) => ({
       ...prevFormData,
@@ -347,20 +488,19 @@ export default function CollectionManageIndex() {
       initMsg("Description is required", 'error')
       return false
     }
-    if (!nftForm.count) {
-      initMsg("Total Supply is required", 'error')
-      return false
-    }
+    // if (!nftForm.count) {
+    //   initMsg("Total Supply is required", 'error')
+    //   return false
+    // }
     const formData = new FormData()
     let reg = /https:\/\//
     if (selectedImage && !reg.test(selectedImage)) {
-      formData.append('image', dataURLtoBlob(selectedImage))
+      formData.append('image', selectedImage)
+      formData.append('imageName', nftForm.imageName)
     }
-    // formData.append('image', dataURLtoBlob(selectedImage))
     formData.append('name', nftForm.name)
     formData.append('description', nftForm.description)
-    formData.append('count', nftForm.count)
-    formData.append('typeId', nftForm.id)
+    // formData.append('count', nftForm.count)
 
     try {
       arrts.map(item => {
@@ -377,14 +517,11 @@ export default function CollectionManageIndex() {
     formData.append('attributes', JSON.stringify(obj))
 
     try {
-      let res = await saveNFT(collectionId, formData)
+      let res = await putOneMetadata(collectionId, nftForm.nftId, formData)
       initMsg('Success!', 'success')
       handleCancelNFT()
-      let a = refreshList + 1
-      setRefreshList(a)
-      setNftForm({})
       setLoading(false)
-      queryInfo()
+      getNftList()
     } catch (error) {
       setLoading(false)
       initMsg(error, 'error')
@@ -404,7 +541,6 @@ export default function CollectionManageIndex() {
     setAttrs(arr)
   }
   const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.checked);
     if (!event.target.checked) {
       setAttrs([])
     } else {
@@ -417,56 +553,340 @@ export default function CollectionManageIndex() {
   const openNFTEdit = (item) => {
     setVisibleNFT(true)
     setIsEditNFT(true)
-    console.log(item);
-    
-    queryTypeDetail(item.collectionId,item.id)
+    queryNFTDetail(item.collectionId, item.nftId)
   }
-  const queryTypeDetail = async (collectionId,typeId) => {
-    let res = await queryNFTTypeDetail(collectionId,typeId)
+  const queryNFTDetail = async (collectionId, nftId) => {
+    let res = await getOneMetadata(collectionId, nftId)
     setNftForm(res)
     // @ts-ignore
     setSelectedImage(res.image)
-     // @ts-ignore
-    setAttrs(res.attributes)
+    // @ts-ignore
+    setAttrs(res.attributes || [{ name: '', value: '' }])
+  }
+
+  const uploadJson = (e) => {
+    const fileText = e.target.files[0];
+    if (!fileText) {
+      return;
+    }
+
+    setJsonLoading(true)
+    let reader = new FileReader();
+    reader.readAsText(fileText, "UTF-8");
+    reader.onload = () => {
+      /* @ts-expect-error */
+      const content = JSON.parse(reader.result);
+      setJsonName(fileText.name)
+      setJsonDataLength(content.collection?.length);
+      reader = null;
+    }
+
+    const formData = new FormData()
+    formData.append('metadata', fileText)
+    putFullMetadata(collectionId, formData).then(res => {
+      if (res) {
+        setMsg('success')
+        setSeverity('success')
+        setIsSnackbarOpen(true)
+        setJsonLoading(false)
+        setJsonUploaded(true)
+        setCurrentStep(2)
+        setImgsUploaded(false)
+      }
+    })
+  }
+  const uploadImgs = (e) => {
+    let imgs = [...e.target.files]
+    imgs = imgs.filter(item => {
+      if (item.size < 10 * 1024 * 1024) {
+        return /^image/.test(item.type)
+      }
+    });
+
+    setImgsAmount(imgs.length)
+    setImgLoading(true)
+
+    const n = 4;
+    let flag = imgs.length < n ? imgs.length : n;
+
+    const uploadImgFun = (obj, index) => {
+      const formData = new FormData()
+      formData.append('imageName', obj.name);
+      formData.append('image', obj)
+      putNftImg(collectionId, formData).then(res => {
+        if (res) {
+          setImgsSowArr(old => {
+            if (old.length < 4) {
+              const arr = [...old];
+              if (old.length === 3) {
+                arr.push({})
+              } else {
+                arr.push(obj)
+              }
+              return arr
+            } else {
+              return old
+            }
+          })
+          setImgsUploadedNum(old => old + 1)
+        }
+      }).finally(() => {
+        if (imgs[index + n]) {
+          uploadImgFun(imgs[index + n], index + n)
+        } else {
+          flag--;
+          if (flag < 1) {
+            setImgLoading(false)
+            setImgsUploaded(true)
+          }
+        }
+      })
+    }
+
+    for (let i = 0; i < n; i++) {
+      if (imgs[i]) {
+        uploadImgFun(imgs[i], i);
+      }
+    }
+  }
+  const tipAlert = (e) => {
+    if (imgsUploaded || hadImgUpload) {
+      setVisibleJsonReload(true)
+    } else {
+      document.getElementById('json-upload-input').click();
+    }
+  }
+  const skipJson = () => {
+    setCurrentStep(2)
+  }
+  const backAndUpdate = () => {
+    setContentType('')
+    getNftList()
+  }
+  const handleReloadCancel = () => {
+    setVisibleJsonReload(false)
+  }
+  const handleContinue = () => {
+    setVisibleJsonReload(false)
+    document.getElementById('json-upload-input').click();
+  }
+  const getNftList = () => {
+    getMetadataList(collectionId, true, 1, 4).then(res => {
+      /* @ts-expect-error */
+      setList(res.list);
+      /* @ts-expect-error */
+      setPageCount(Math.ceil(res.totalCount / res.pageSize))
+      /* @ts-expect-error */
+      if (res?.list?.length > 0) {
+        setHadImgUpload(true)
+      }
+    })
+    getMetadataList(collectionId, false, 1, 1000).then(res => {
+      /* @ts-expect-error */
+      setBadList(res.list);
+    })
+  }
+  const pageNoChange = (e, pageNo) => {
+    getMetadataList(collectionId, true, pageNo, 4).then(res => {
+      /* @ts-expect-error */
+      setList(res.list);
+    })
   }
 
   useEffect(() => {
     queryInfo()
+    if (collectionId) {
+      getNftList()
+    }
   }, [collectionId])
 
   return (
     <>
-      <CollectionManage>
-        <ManageHeader>
-          <CollectionItem>
-            <CollectionTitle>{collectionInfo.name ? collectionInfo.name : '--'}</CollectionTitle>
-            <CollectionFunc>
-              <ThemeProvider theme={theme}>
-                <BtnMr variant="outlined" color="error" onClick={openDelModal}>Delete</BtnMr>
-                <BtnMr variant="outlined" color="primary" onClick={openEdit}><IconEdit /> &nbsp;Edit</BtnMr>
-                <Button disabled={collectionInfo.maxCount === 0} variant="contained" color="primary" onClick={openDeploy}>Deploy & Push</Button>
-              </ThemeProvider>
-            </CollectionFunc>
-          </CollectionItem>
-          <CollectionDes>{collectionInfo.description}</CollectionDes>
-        </ManageHeader>
-        <ManageMain>
-          <CreateBox>
-            <CreateBoxMian onClick={openModal}>
-              <Card></Card>
-              <CardMain>
-                <IconCreate>+</IconCreate>
-                <div className='c_green mt20 fs18'>Create a NFT</div>
-              </CardMain>
-            </CreateBoxMian>
-          </CreateBox>
-          {
-            list.map(item => (
-              <BadgeCard key={item.project} item={item} type='' clickEvent={openNFTEdit} />
-            ))
-          }
-        </ManageMain>
-      </CollectionManage>
+      {
+        !contentType ?
+          <CollectionManage>
+            <ManageHeader>
+              <CollectionItem>
+                <CollectionTitle>{collectionInfo.name ? collectionInfo.name : '--'}</CollectionTitle>
+                <CollectionFunc>
+                  <ThemeProvider theme={theme}>
+                    <BtnMr variant="outlined" color="error" onClick={openDelModal}>Delete Collection</BtnMr>
+                    <BtnMr variant="outlined" color="primary" onClick={openEdit}><IconEdit /> &nbsp;Edit</BtnMr>
+                    <Button disabled={collectionInfo.maxCount === 0} variant="contained" color="primary" onClick={openDeploy}>Deploy & Push</Button>
+                  </ThemeProvider>
+                </CollectionFunc>
+              </CollectionItem>
+              <CollectionDes>{collectionInfo.description}</CollectionDes>
+            </ManageHeader>
+            {
+              badList.length > 0 &&
+              <BadBox>
+                <div>Missing Information ({badList.length})</div>
+                <BadListBox>
+                  {
+                    badList.map(cell => (
+                      <BadItemBox key={cell.nftId}><BadItem onClick={() => { openNFTEdit(cell) }}>{cell.name}</BadItem></BadItemBox>
+                    ))
+                  }
+                </BadListBox>
+              </BadBox>
+            }
+            <ManageMain>
+              <CreateBox>
+                <CreateBoxMian onClick={openModal}>
+                  <Card></Card>
+                  <CardMain>
+                    <IconCreate>+</IconCreate>
+                    <div className='c_green mt20 fs18'>Create Batch</div>
+                  </CardMain>
+                </CreateBoxMian>
+              </CreateBox>
+              {
+                list.map(item => (
+                  <BadgeCard key={item.nftId} item={item} clickEvent={openNFTEdit} />
+                ))
+              }
+            </ManageMain>
+            {
+              pageCount > 1 &&
+              <div className='df_center'>
+                <Pagination onChange={pageNoChange} count={pageCount} variant="outlined" shape="rounded" color="primary" />
+              </div>
+            }
+          </CollectionManage> :
+          <CollectionManage>
+            <BulkBody>
+              <div className='space-between-center '>
+                <div className='title'>Bulk Create</div>
+                <div onClick={backAndUpdate} className='back'>Back to Collection &gt;</div>
+              </div>
+              <div className='space-between-center-h5'>
+                <StepBox active={currentStep === 1}>
+                  <div className='step-item'>
+                    <div className='step-title'>Step 1</div>
+                    <CenterBox>
+                      {
+                        jsonUploaded ?
+                          <>
+                            <PrimaryTextDiv style={{ marginTop: 47, marginBottom: 16 }}>Upload Success!</PrimaryTextDiv>
+                            <FileBox>
+                              <IconJson className='mr16' />
+                              <span>{jsonName}</span>
+                            </FileBox>
+                            <div style={{ fontSize: 14, marginTop: 16 }}>
+                              <ColorGreenLight>Total Items: </ColorGreenLight>
+                              <span>{formatAmount(jsonDataLength)}</span>
+                            </div>
+                          </> :
+                          <>
+                            <IconJson className='mt60 mb20' />
+                            <ColorGreenLight>Download the template</ColorGreenLight>
+                            <a className='mt12 mb50' href="/metadata.json" download>metadata.json ↓</a>
+                          </>
+                      }
+                    </CenterBox>
+                    <div>
+                      {
+                        jsonUploaded ?
+                          <LoadingButton
+                            loading={jsonLoading}
+                            className='w180'
+                            variant="outlined"
+                            onClick={tipAlert}
+                            color='secondary'
+                          >
+                            {jsonLoading ? 'Uploading' : 'Re-upload'}
+                          </LoadingButton>
+                          :
+                          <LoadingButton
+                            loading={jsonLoading}
+                            className='w180 btn_themeColor'
+                            onClick={tipAlert}
+                          >
+                            {jsonLoading ? 'Uploading' : 'Upload Metadata'}
+                          </LoadingButton>
+                      }
+                      <input
+                        disabled={jsonLoading}
+                        id="json-upload-input"
+                        style={{ display: 'none' }}
+                        onChange={uploadJson}
+                        type="file"
+                        accept="application/json"
+                      />
+                      {
+                        currentStep === 1 && !jsonUploaded && <Button onClick={skipJson} style={{ marginLeft: 20 }} className='w180' variant="outlined" color='secondary'>Skip</Button>
+                      }
+                    </div>
+                  </div>
+                </StepBox>
+                <StepBox active={currentStep === 2}>
+                  <div className='step-item'>
+                    <div style={{ color: currentStep !== 2 ? '#7A9283' : '#fff' }} className='step-title'>Step 2</div>
+                    <CenterBox>
+                      {
+                        (imgsUploaded || imgLoading) ?
+                          <>
+                            <PrimaryTextDiv style={{ marginTop: 47, marginBottom: 16 }}>Upload Success!</PrimaryTextDiv>
+                            <div className='df_center'>
+                              {
+                                imgsSowArr.map(item => {
+                                  if (item.name) {
+                                    return <ShowBlockImg src={window.URL.createObjectURL(item)} />
+                                  } else {
+                                    return <ShowBlockDiv>···</ShowBlockDiv>
+                                  }
+                                })
+                              }
+                            </div>
+                            <div style={{ fontSize: 14, marginTop: 16 }}>
+                              <span>{formatAmount(imgsUploadedNum)}</span>
+                              <ColorGreenLight> items uploaded, Total upload file: </ColorGreenLight>
+                              <span>{formatAmount(imgsAmount)}</span>
+                            </div>
+                          </> :
+                          <>
+                            <IconImg className='mt60 mb20'></IconImg>
+                            <ColorGreenLight style={{ lineHeight: '27px' }} className='tac'>Supports jpg, png, gif, webp<br />Max size: 10MB</ColorGreenLight>
+                          </>
+                      }
+                    </CenterBox>
+                    {
+                      !imgsUploaded && (
+                        currentStep === 2 ?
+                          <label htmlFor="img-upload-input">
+                            <LoadingButton
+                              loading={imgLoading}
+                              className='w180 btn_themeColor'
+                              component="span"
+                            >
+                              {imgLoading ? 'Uploading' : 'Choose file'}
+                            </LoadingButton>
+                          </label>
+                          :
+                          <DisabledBtn>After Step 1</DisabledBtn>
+                      )
+                    }
+                    <input
+                      id="img-upload-input"
+                      style={{ display: 'none' }}
+                      onChange={uploadImgs}
+                      type="file"
+                      multiple
+                      accept="image/png, image/jpg, image/jpeg, image/webp, image/gif"
+                      /* @ts-expect-error */
+                      directory=""
+                      webkitdirectory=""
+                    />
+                    {
+                      imgsUploaded && <Button onClick={backAndUpdate} className='w180 btn_themeColor'>View in collection</Button>
+                    }
+                  </div>
+                </StepBox>
+              </div>
+            </BulkBody>
+          </CollectionManage>
+      }
       {
         visible &&
         <CollectionModal visible={visible} closeModal={handleCancel} collectionInfo={collectionInfo}></CollectionModal>
@@ -478,6 +898,31 @@ export default function CollectionManageIndex() {
       {
         <DeleteModal visible={visibleDel} closeDel={handelDel} delFunc={deleteCollection}></DeleteModal>
       }
+
+      <Modal
+        open={visibleJsonReload}
+        onClose={handleReloadCancel}
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 496,
+            boxShadow: 24,
+            border: '1px solid #4B5954 !important',
+            padding: '50px 40px 30px',
+            textAlign: 'center'
+          }}
+        >
+          <span style={{ color: '#A5FFBE', fontSize: 20, fontWeight: 700, lineHeight: '26px' }}>If you want to re-upload the metadata, it will clear the uploaded NFT items, do you continue?</span>
+          <div className='mt40'>
+            <Button style={{ marginRight: 30 }} className='w160' variant="outlined" onClick={handleReloadCancel}>Cancel</Button>
+            <Button className='w160 btn_themeColor' onClick={handleContinue}>Continue</Button>
+          </div>
+        </Box>
+      </Modal>
 
       <Modal
         open={visibleNFT}
@@ -492,7 +937,7 @@ export default function CollectionManageIndex() {
                 <ColorGreenLight className='mt10'>Supported file types</ColorGreenLight>
                 <ColorGreenLight className='mt8'>include JPEG, PNG, and GIF.</ColorGreenLight>
               </div>
-              <ShowImg src={selectedImage}></ShowImg>
+              <ShowImg src={selectedImage && typeof selectedImage === 'object' ? window.URL.createObjectURL(selectedImage) : selectedImage}></ShowImg>
               {/* <img ></img> */}
               <UploadInput ref={chooseImg} type='file' accept='image/*' onChange={changeFile}></UploadInput>
             </UploadBox>
@@ -508,7 +953,7 @@ export default function CollectionManageIndex() {
               <TextInput fullWidth id="standard-helperText" name={'description'}
                 label="Description (Optional)"
                 placeholder="Description"
-                rows={4}
+                rows={6}
                 multiline
                 variant="standard"
                 value={nftForm.description}
@@ -517,7 +962,7 @@ export default function CollectionManageIndex() {
                   shrink: true,
                 }}
               />
-              <TextInput fullWidth id="collection-name" label="Total Supply" name={'count'}
+              {/* <TextInput fullWidth id="collection-name" label="Total Supply" name={'count'}
                 placeholder={`e.g. "Total Supply"`}
                 variant="standard"
                 value={nftForm.count}
@@ -525,7 +970,7 @@ export default function CollectionManageIndex() {
                 type='number'
                 InputLabelProps={{
                   shrink: true,
-                }} />
+                }} /> */}
             </div>
           </CreateNftBaseBox>
           <SwitchGroup >
@@ -574,9 +1019,11 @@ export default function CollectionManageIndex() {
               ))
             }
           </ArrtList>
-          <div className='mt20 mb20 tar'>
-            <LoadingButton loading={loading} className='w200 h36 mt20 mb20 btn_themeColor' onClick={handelSubmit}>{loading ? 'Loading' : 'Save'}</LoadingButton>
-            {/* <Button className='w200 btn_themeColor' onClick={handelSubmit}>Save</Button> */}
+          <div style={{ flexDirection: 'row-reverse' }} className='mt20 mb20 space-between-center'>
+            <LoadingButton loading={loading} className='w180 btn_themeColor' onClick={handelSubmit}>{loading ? 'Loading' : 'Save'}</LoadingButton>
+            {
+              !hadJsonUpload && <Button className='w180' variant="outlined" color='error'>Delete</Button>
+            }
           </div>
         </Box>
       </Modal>
