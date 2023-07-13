@@ -1,6 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
-import { Button } from "@mui/material";
+import Snackbar from "components/SnackMessage"
+import copy from 'copy-to-clipboard';
+import { BREAKPOINTS } from 'theme';
 
 import { queryNFTDetail, useOwnerNFTTypesList } from 'services/createNFTManage'
 import { mainContext } from "../../reducer";
@@ -9,13 +11,13 @@ import { useActiveWeb3React } from "../../web3";
 // import { chainFun } from "../../utils/networkConnect"
 import test2 from 'assets/img/test/test2.png'
 import { abbrTxHash } from "../../utils/format";
-import { chainTxtObj,chainTypeComImgObj, chainFun } from '../../utils/networkConnect';
+import { chainTxtObj, chainTypeComImgObj, chainFun, handleHistoryAddress } from '../../utils/networkConnect';
 import { getChainType } from "../../web3/address";
 import { freeMintNFT721 } from "utils/handleContract"
 import { getPoolLeftTime } from "utils/time"
 import styled from 'styled-components/macro';
 import bg from 'assets/img/explore_bg.svg';
-
+import copyIcon from "assets/img/header/copy.svg";
 import {
   HANDLE_SHOW_FAILED_TRANSACTION_MODAL,
   HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
@@ -29,31 +31,78 @@ const NFTInfo = styled.div`
   background-repeat: no-repeat;
   background-position: center top;
   background-image: url(${bg});
+
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    padding: 24px;
+  }
 `
 const InfoMain = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    flex-direction: column;
+  }
+`
+const MainF1 = styled.div`
+  flex: 1;
+  width: 100%;
 `
 const InfoCover = styled.div`
   margin-right: 26px;
   padding: 24px;
-  background: #191D20;
+  background: #111211;
   border: 1px solid #4B5954;
   border-radius: 20px;
   overflow: hidden;
-
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    margin-right: 0px;
+    margin-bottom: 10px;
+  }
+`
+const PropertiesInfo = styled.div`
+  padding: 25px 30px;
+  margin-top: 10px;
+  margin-right: 26px;
+  background: #111211;
+  border: 1px solid #4B5954;
+  border-radius: 20px;
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    margin-right: 0px;
+    margin-bottom: 10px;
+  }
+`
+const CoverBox = styled.div`
+  position: relative;
+  height: 0px;
+  padding-bottom: 100%;
+`
+const Cover = styled.div`
+  inset: 0px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background-size: cover;
   img {
-    width: 100%;
-    border-radius: 20px;
-  } 
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0 auto;
+    border-radius: 10px;
+  }
 `
 const BaseInfo = styled.div`
   padding: 25px 30px;
   margin-bottom: 30px;
-  background: #191D20;
+  background: #111211;
   border: 1px solid #4B5954;
   border-radius: 20px;
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    margin-bottom: 10px;
+  }
 `
 const NFTName = styled.div`
   font-weight: 600;
@@ -84,9 +133,12 @@ const MintBox = styled.div`
 const ContractionInfo = styled.div`
   padding: 25px 30px;
   margin-bottom: 30px;
-  background: #191D20;
+  background: #111211;
   border: 1px solid #4B5954;
   border-radius: 20px;
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    margin-bottom: 10px;
+  }
 `
 const ContractItem = styled.div`
   display: flex;
@@ -94,11 +146,14 @@ const ContractItem = styled.div`
   align-items: center;
   margin-top: 10px;
   padding: 10px 24px;
-  background: #111315;
+  background: #1B1F1C;
   border-radius: 8px;
 `
 const ColorGreenLight = styled.span`
   color: #7A9283;
+`
+const LinkAddress = styled.a`
+  text-decoration: none;
 `
 
 export default function NFTDetail() {
@@ -109,7 +164,9 @@ export default function NFTDetail() {
   // const { collectionId } = useParams<any>()
   const [detailInfo, setDetailInfo] = useState<any>({})
   const [loading, setLoading] = useState(false)
-  // const { list, total } = useOwnerNFTTypesList(collectionId,1, 99999, setLoading, false)
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false)
+  const [msg, setMsg] = useState('')
+  const [severity, setSeverity] = useState('')
 
   const beforeMint = () => {
     needSign()
@@ -184,69 +241,99 @@ export default function NFTDetail() {
       return formatTime(data.mintEndTime)
     }
   }
+  const handleCopy = () => {
+    copy(detailInfo.contractAddress);
+    initMsg('Copied!', 'success')
+  }
+  const initMsg = (msg, status) => {
+    setMsg(msg)
+    setSeverity(status)
+    setIsSnackbarOpen(true)
+  }
+  const closeSnackbar = () => {
+    setIsSnackbarOpen(false)
+  }
   useEffect(() => {
     queryDetailInfo()
   }, [chainType])
   return (
-    <NFTInfo>
-      <InfoMain>
-        <div className={`f1 `}>
-          <InfoCover >
-            <img src={detailInfo.image}></img>
-          </InfoCover>
-          <ContractionInfo className='mt10 mr24'>
-            <div>Properties</div>
-            {
-              detailInfo?.attributes?.map(item => (
-                <ContractItem>
-                  <div>
-                    <ColorGreenLight className='lh28'>{item.name}</ColorGreenLight>
-                    <span className='lh28 pl10'>{item.value}</span>
-                  </div>
-                  <span className='c_green'>{item.rarity}%</span>
-                </ContractItem>
-              ))
-            }
-          </ContractionInfo>
-        </div>
-        <div className={`f1`}>
-          <BaseInfo>
-            <NFTName className={`c_green mt10 text_hidden_1`}>{detailInfo.name}</NFTName>
-            <CollectionDiv>
-              <div className='df'>
-                <span className='pr10'>Collection Name</span>
-                <span className='c_green text_hidden_1'>{detailInfo.collectionName}</span>
-              </div>
-              <ChainDiv>&nbsp;</ChainDiv>
-              <div className='df_align_center'>
-                <span className='pr10'>Network</span>
-                <img width={20} src={chainTypeComImgObj[detailInfo.chainType]}></img>
-                <span className='c_green pl10 text_hidden_1'>{chainTxtObj[detailInfo.chainType]}</span>
-              </div>
-            </CollectionDiv>
-            <NFTDes className='mb10'>{detailInfo.description}</NFTDes>
-          </BaseInfo>
-          <ContractionInfo>
-            <div>Contract Details</div>
-            <ContractItem>
-              <span className='lh28'>Release Date</span>
-              <span className='c_green'>{moment(detailInfo.mintStartTime).format('MM/DD/YYYY HH:mm')}</span>
-            </ContractItem>
-            <ContractItem>
-              <span className='lh28'>Blockchain</span>
-              <span className='c_green'>{detailInfo.chainType}</span>
-            </ContractItem>
-            <ContractItem>
-              <span className='lh28'>Contract Address</span>
-              <span className='c_green'>{abbrTxHash(detailInfo.contractAddress)}</span>
-            </ContractItem>
-            <ContractItem>
-              <span className='lh28'>Token Standard</span>
-              <span className='c_green'>ERC-721</span>
-            </ContractItem>
-          </ContractionInfo>
-        </div>
-      </InfoMain>
-    </NFTInfo>
+    <>
+
+      <NFTInfo>
+        <InfoMain>
+          <MainF1 className={`f1 `}>
+            <InfoCover >
+              <CoverBox>
+                <Cover>
+                  <img src={detailInfo.image}></img>
+                </Cover>
+              </CoverBox>
+              {/* <img src={detailInfo.image}></img> */}
+            </InfoCover>
+            <PropertiesInfo>
+              <div>Properties</div>
+              {
+                detailInfo?.attributes?.map((item, index) => (
+                  <ContractItem key={index}>
+                    <div>
+                      <ColorGreenLight className='lh28'>{item.name}</ColorGreenLight>
+                      <span className='lh28 pl10'>{item.value}</span>
+                    </div>
+                    <span className='c_green'>{item.rarity}%</span>
+                  </ContractItem>
+                ))
+              }
+            </PropertiesInfo>
+          </MainF1>
+          <MainF1 className={`f1`}>
+            <BaseInfo>
+              <NFTName className={`c_green mt10 text_hidden_1`}>{detailInfo.name}</NFTName>
+              <CollectionDiv>
+                <div className='df'>
+                  <span className='pr10'>Collection Name</span>
+                  <span className='c_green text_hidden_1'>{detailInfo.collectionName}</span>
+                </div>
+                <ChainDiv>&nbsp;</ChainDiv>
+                <div className='df_align_center'>
+                  <span className='pr10'>Network</span>
+                  <img width={20} src={chainTypeComImgObj[detailInfo.chainType]}></img>
+                  <span className='c_green pl10 text_hidden_1'>{chainTxtObj[detailInfo.chainType]}</span>
+                </div>
+              </CollectionDiv>
+              <NFTDes className='mb10'>{detailInfo.description}</NFTDes>
+            </BaseInfo>
+            <ContractionInfo>
+              <div>Contract Details</div>
+              <ContractItem>
+                <span className='lh28'>Release Date</span>
+                <span className='c_green'>{moment(detailInfo.mintStartTime).format('MM/DD/YYYY HH:mm')}</span>
+              </ContractItem>
+              <ContractItem>
+                <span className='lh28'>Blockchain</span>
+                <span className='c_green'>{detailInfo.chainType}</span>
+              </ContractItem>
+              <ContractItem>
+                <span className='lh28'>Contract Address</span>
+                <div className='df_align_center'>
+                  <LinkAddress className={`c_green`} target="_blank" href={handleHistoryAddress(detailInfo.chainType, detailInfo.contractAddress)}>{abbrTxHash(detailInfo.contractAddress)}
+                  </LinkAddress>
+                  <img className='pl8 cp' src={copyIcon} onClick={handleCopy}></img>
+                </div>
+              </ContractItem>
+              <ContractItem>
+                <span className='lh28'>Token ID</span>
+                <span className='c_green'>{detailInfo.id}</span>
+              </ContractItem>
+              <ContractItem>
+                <span className='lh28'>Token Standard</span>
+                <span className='c_green'>ERC-721</span>
+              </ContractItem>
+            </ContractionInfo>
+          </MainF1>
+        </InfoMain>
+      </NFTInfo>
+      <Snackbar isSnackbarOpen={isSnackbarOpen} msg={msg} closeSnackbar={closeSnackbar} severity={severity}></Snackbar>
+
+    </>
   )
 }

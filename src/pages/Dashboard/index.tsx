@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { Button, Skeleton, Backdrop, CircularProgress } from "@mui/material";
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { Button, Backdrop, CircularProgress } from "@mui/material";
 import moment from 'moment';
+import { BREAKPOINTS } from 'theme';
 
 import CollectionModal from './CollectionModal';
 import PushModal from './PushModal'
@@ -31,10 +28,17 @@ const NftManage = styled.div`
   background-repeat: no-repeat;
   background-position: center top;
   background-image: url(${bg});
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    padding: 24px;
+  }
 `
 const ManageHeader = styled.div`
   display: flex;
   align-items: flex-end;
+   @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
 `
 const Title = styled.div`
   font-size: 48px;
@@ -72,6 +76,10 @@ const CardCreate = styled.div`
   border: 1px solid #4B5954;
   background: #111211;
   cursor: pointer;
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    width: 100%;
+    margin-right: 0;
+  }
 `
 const IconCreate = styled.div`
   width: 30px;
@@ -94,6 +102,10 @@ const CardItem = styled.div`
   border: 1px solid var(--line-color-2, #4B5954);
   background: var(--card-color, #242926);
   cursor: pointer;
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    width: 100%;
+    margin-right: 0;
+  }
 `
 const ItemDes = styled.div`
   height: 60px;
@@ -111,10 +123,22 @@ const ItemInfo = styled.div`
 const ColorGreenLight = styled.span`
   color: #7A9283;
 `
+const ColorGreenLightImg = styled(ColorGreenLight)`
+  width: 76px;
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    width: 38px;
+  }
+`
+const ColorGreenLightH5 = styled(ColorGreenLight)`
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    display: none;
+  }
+`
 const ListHeader = styled.div`
   display: flex;
   width: 100%;
   margin-bottom: 8px;
+  padding: 0 10px;
   line-height: 32px;
   background: #111211;
   border-radius: 10px;
@@ -129,11 +153,22 @@ const ListItem = styled.div`
   border: 1px solid #4B5954;
   background: #111211;
 `
+const ColH5 = styled.div`
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    display: none;
+  }
+`
 const ImgBox = styled.div`
   width: 76px;
   height: 76px;
+  overflow: hidden;
   img {
+    width: 100%;
     border-radius: 6px;
+  }
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    width: 38px !important;
+    height: 38px;
   }
 `
 const NoData = styled.div`
@@ -143,7 +178,7 @@ const NoData = styled.div`
   width: 100%;
   height: 400px;
   border-radius: 10px;
-  border: 1px solid var(--line-color-2, #4B5954);
+  border: 1px solid #4B5954;
   background: #111211;
 `
 
@@ -205,14 +240,14 @@ export default function NFTManage() {
           <div className='f1'>&nbsp;</div>
         </ManageHeader>
         {
-          activeStatus === 'draft' &&
+          activeStatus === 'draft' && 
           <ManageMain>
             <CardCreate onClick={openModal}>
               <IconCreate>+</IconCreate>
               <div className='c_green mt20 fs18'>Create a Collection</div>
             </CardCreate>
             {
-              list.map(item => (
+              !loading && list.map(item => (
                 <CardItem onClick={() => { goToDetail(item.id) }}>
                   <div className='c_green fs20'>{item.name}</div>
                   <ItemDes className='lh20 mt10 text_hidden_3'>{item.description ? item.description : '--'}</ItemDes>
@@ -233,22 +268,22 @@ export default function NFTManage() {
           activeStatus != 'draft' &&
           <div className='mt40'>
             <ListHeader>
-              <ColorGreenLight className='f1 tac'></ColorGreenLight>
-              <ColorGreenLight className='f3 tal'>Name</ColorGreenLight>
-              <ColorGreenLight className='f1 '>Network</ColorGreenLight>
+              <ColorGreenLightImg></ColorGreenLightImg>
+              <ColorGreenLight className='f3 tal pl10'>Name</ColorGreenLight>
+              <ColorGreenLightH5 className='f1 '>Network</ColorGreenLightH5>
               <ColorGreenLight className='f1 '>Minted</ColorGreenLight>
-              <ColorGreenLight className='f2 tal'>Start at</ColorGreenLight>
+              <ColorGreenLightH5 className='f2 tal'>Start at</ColorGreenLightH5>
             </ListHeader>
             {
               list.length > 0 && list.map(item => (
                 <ListItem>
-                  <ImgBox className='f1'>
-                    <img width={76} src={item.image}></img>
+                  <ImgBox>
+                    <img src={item.image}></img>
                   </ImgBox>
-                  <div className='f3 c_green'>{item.name}</div>
-                  <div className='f1 df_align_center'><img className='mr8' width={24} src={chainTypeComImgObj[item.chainType]}></img>{item.chainType}</div>
+                  <div className='f3 c_green pl10'>{item.name}</div>
+                  <ColH5 className='f1 df_align_center'><img className='mr8' width={24} src={chainTypeComImgObj[item.chainType]}></img>{item.chainType}</ColH5>
                   <div className='f1'>{item.mintedCount} /{item.maxCount}</div>
-                  <div className='f2'>{moment(item.mintStartTime).format('MM/DD/YYYY hh:mm')}</div>
+                  <ColH5 className='f2'>{moment(item.mintStartTime).format('MM/DD/YYYY hh:mm')}</ColH5>
                 </ListItem>
               ))
             }

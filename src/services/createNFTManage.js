@@ -49,26 +49,39 @@ const countStaus = (status, data) => {
     return formatTime(data?.mintEndTime)
   }
 }
+export  const queryCollectionData = async(pageNo,pageSize,status) => {
+  try {
+    let res = http.get(`/collections/published?pageNo=${pageNo}&pageSize=${pageSize}&status=${status}`)
+    return res
+  } catch (error) {
+    // console.log(error);
+  }
+}
 export const useCollectionList = (pageNo, pageSize, setLoading, status) => {
   const [list, setList] = useState([])
   const [total, setTotal] = useState(0)
 
   const queryData = () => {
-    if(pageNo===1){
-      setLoading(true)
-    }
-    http.get(`/collections/published?pageNo=${pageNo}&pageSize=${pageSize}&status=${status}`).then(res => {
-       res.list.forEach(item => {
-        item.statusTxt = countStaus(item.status, item)
-      })
-      if (pageNo === 1) {
-        setList(res.list)
-      } else {
-        setList(oldList => [...oldList, ...res.list])
+    try {
+      if(pageNo===1){
+        setLoading(true)
       }
-      setTotal(res.totalCount)
-      setLoading(false)
-    })
+      http.get(`/collections/published?pageNo=${pageNo}&pageSize=${pageSize}&status=${status}`).then(res => {
+         res.list.forEach(item => {
+          item.statusTxt = countStaus(item.status, item)
+        })
+        if (pageNo === 1) {
+          setList(res.list)
+        } else {
+          setList(oldList => [...oldList, ...res.list])
+        }
+        setTotal(res.totalCount)
+        setLoading(false)
+      })
+    } catch (error) {
+      console.log(error);
+        setLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -77,7 +90,7 @@ export const useCollectionList = (pageNo, pageSize, setLoading, status) => {
     }, 10);
     return () => clearTimeout(timer);
   }, [pageNo, pageSize, status])
-
+  console.log(666);
   return { list, total }
 }
 export const useOwnerCollectionList = (pageNo, pageSize, setLoading, status,refreshList) => {

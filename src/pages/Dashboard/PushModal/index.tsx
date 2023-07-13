@@ -46,12 +46,15 @@ const TextInput = styled(TextField)`
     color: #7A9283;
   }
 `
-const BlackBox = styled.div<{ isDate: boolean, activeChain: boolean }>`
+const BlackBox = styled.div<{ isDate: boolean }>`
+  height: 86px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   margin-top: 10px;
   padding: ${props => props.isDate ? '20px 10px 10px' : '10px 20px'};
   border-radius: 8px;
   background: #242926;
-  border: ${props => props.activeChain ? '1px solid #A5FFBE' : 'none'};
   .MuiTypography-root, .MuiInputLabel-root {
     color: #7A9283 !important;
     font-family: 'Inconsolata', 'Bai Jamjuree', sans-serif, Poppins;
@@ -66,6 +69,12 @@ const BlackBox = styled.div<{ isDate: boolean, activeChain: boolean }>`
   .MuiSvgIcon-root {
     fill: #4B5954;
   }
+`
+const BlackBoxChain = styled(BlackBox)<{activeChain: boolean}>`
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  border: ${props => props.activeChain ? '1px solid #A5FFBE' : 'none'};
 `
 const ImgBox = styled.img`
   width: 38px;
@@ -183,16 +192,16 @@ export default function CollectionModal({ visiblePush, closePushModal, collectio
       >
         <Box sx={{ ...style }}>
           <div>Deploy & Push</div>
-          <BlackBox isDate={false} activeChain={false}>
+          <BlackBox isDate={false} >
             <ColorGreenLight className='lh28'>{publishForm.name}</ColorGreenLight>
             <div className='c_green fs20 lh24 mb10'>{publishForm.name}</div>
           </BlackBox>
           <div className='df mb14'>
-            <BlackBox isDate={false} activeChain={false} className='mr6 f1'>
+            <BlackBox isDate={false} className='mr6 f1'>
               <ColorGreenLight className='lh28'>NFTs</ColorGreenLight>
               <div className='c_green fs20 lh24 mb10'>{publishForm.typeCount}</div>
             </BlackBox>
-            <BlackBox isDate={false} activeChain={false} className='f1'>
+            <BlackBox isDate={false} className='f1'>
               <ColorGreenLight className='lh28'>Total supply</ColorGreenLight>
               <div className='c_green fs20 lh24 mb10'>{publishForm.maxCount}</div>
             </BlackBox>
@@ -201,27 +210,27 @@ export default function CollectionModal({ visiblePush, closePushModal, collectio
           <div className='df'>
             {
               chainArr.map((item, index) => (
-                <BlackBox isDate={false} className='mr6 f1 df cp' activeChain={selectChainType === item.value} onClick={() => { selectChain(item.value) }}>
+                <BlackBoxChain isDate={false} className='mr6 f1 df cp' activeChain={selectChainType === item.value} onClick={() => { selectChain(item.value) }}>
                   <ImgBox src={item.icon}></ImgBox>
                   <div className='ml10 df_align_center'>
                     {/* <div className='mb6'>{item.name}</div> */}
                     {item.name}
                     {/* <ColorGreenLight className='fs12'>Balance: 300 AGLD</ColorGreenLight> */}
                   </div>
-                </BlackBox>
+                </BlackBoxChain>
               ))
             }
           </div>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <div className={'df'} >
-              <BlackBox isDate={true} activeChain={false} className='mr6 p10'>
+              <BlackBox isDate={true} className='mr6 p10'>
                 <DateTimePicker label={'Start Time'} ampm={false}
                   value={startTime}
                   format='MM/DD/YYYY HH:mm'
                   onChange={(newValue) => setStartTime(newValue)}
                 />
               </BlackBox>
-              <BlackBox isDate={true} activeChain={false}>
+              <BlackBox isDate={true}>
                 <DateTimePicker label={'End Time'} ampm={false}
                   value={endTime}
                   format='MM/DD/YYYY HH:mm'
@@ -230,7 +239,7 @@ export default function CollectionModal({ visiblePush, closePushModal, collectio
               </BlackBox>
             </div>
           </LocalizationProvider>
-          <BlackBox isDate={false} activeChain={false}>
+          <BlackBox isDate={false}>
             <TextInput fullWidth id="collection-name-1" label="Per-wallet Mint Limit" name={'mintLimit'}
               placeholder={``}
               value={mintLimit}

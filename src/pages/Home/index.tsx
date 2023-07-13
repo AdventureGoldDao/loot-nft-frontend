@@ -8,14 +8,10 @@ import "swiper/swiper-bundle.min.css";
 import moment from 'moment';
 import { BREAKPOINTS } from 'theme';
 
-import { useCollectionList } from "../../services/createNFTManage"
+import { useCollectionList, queryCollectionData } from "../../services/createNFTManage"
 import BadgeCard from 'components/BadgeCard';
 import { chainTxtObj, chainFun } from '../../utils/networkConnect';
 
-import test2 from 'assets/img/test/test2.png'
-import test3 from 'assets/img/test/test3.png'
-import test4 from 'assets/img/test/test4.png'
-import upcoming from 'assets/img/home/icon_upcoming.png'
 import recent from 'assets/img/home/icon_recent.png'
 import footBg from 'assets/img/home/foot_bg.png'
 import footShow from 'assets/img/home/foot_show.png'
@@ -148,7 +144,6 @@ const ViewAllH5 = styled.div`
   @media screen and (max-width: ${BREAKPOINTS.md}px) {
     display: block;
     text-align: center;
-
   }
 `
 const PageFoot = styled.div`
@@ -185,17 +180,19 @@ const FootShowImg = styled.img`
   width: 90%;
 `
 
-
 export default function Home() {
   const history = useHistory()
   const [swiperIndex, setSwiperIndex] = useState(0)
   const [pageNo, setPageNo] = useState(1)
-  const [recentList, setRecentList] = useState(5)
+  const [recentListNum, setRecentListNum] = useState(5)
   const [loading, setLoading] = useState(false)
-  const { list, total } = useCollectionList(pageNo, recentList, setLoading, '')
-  const { list: swiperList, total: swiperTotal } = useCollectionList(pageNo, 4, setLoading, 'active')
+  const [swiperList, setSwiperList] = useState([])
+  const [recentList, setRecentList] = useState([])
+  const [listTotal, setListTotal] = useState(0)
+  // const { list, total } = useCollectionList(pageNo, recentList, setLoading, '')
+  // const { list: swiperList, total: swiperTotal } = useCollectionList(pageNo, 4, setLoading, 'active')
+
   const slideChange = (event) => {
-    console.log(event);
     let a = countIndex(swiperList.length, event.activeIndex)
     setSwiperIndex(a - 1)
   }
@@ -216,106 +213,157 @@ export default function Home() {
   const goToMint = (collectionId) => {
     history.push(`/collectionDetail/${collectionId}`)
   }
+  const queryActiveList = async () => {
+    try {
+      setLoading(true)
+      let res = await queryCollectionData(1, 4, 'active')
+      setLoading(false)
+      // @ts-ignore
+      if (res) {
+        // @ts-ignore
+        setSwiperList(res?.list)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  const queryRecentList = async () => {
+    try {
+      setLoading(true)
+      let res = await queryCollectionData(1, recentListNum, '')
+      console.log(res);
+      setLoading(false)
+      // @ts-ignore
+      if (res) {
+        // @ts-ignore
+        setRecentList(res?.list)
+        // @ts-ignore
+        setListTotal(res.totalCount)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  const goToExplore = () => {
+    history.push('/explore')
+  }
   useEffect(() => {
+    queryActiveList()
+    queryRecentList()
     if (window.innerWidth < 800) {
-      setRecentList(4)
+      setRecentListNum(4)
     }
   }, [])
   return (
     <>
       <PageHome>
-        <HomeSwiper >
-          <SwiperBg style={{ backgroundImage: `url(${swiperList[swiperIndex]?.image})` }}></SwiperBg>
-          <Swiper modules={[Navigation, Autoplay]}
-            onSlideChange={slideChange}
-            navigation={true}
-            speed={4000}
-            autoplay={true}
-            loop={true}
-          >
-            {
-              list.map(item => (
-                <SwiperSlide key={item.name}>
-                  <Grid container className={`pl30 pt20 pr30`}>
-                    <Grid item xs={12} sm={12} md={4} lg={4} >
-                      <SwiperCover>
-                        <img src={item.image}></img>
-                      </SwiperCover>
+        {
+          swiperList.length > 0 &&
+          <HomeSwiper >
+            <SwiperBg style={{ backgroundImage: `url(${swiperList[swiperIndex]?.image})` }}></SwiperBg>
+            <Swiper modules={[Navigation, Autoplay]}
+              onSlideChange={slideChange}
+              navigation={true}
+              speed={4000}
+              autoplay={true}
+              loop={true}
+            >
+              {
+                swiperList.map(item => (
+                  <SwiperSlide key={item.name}>
+                    <Grid container className={`pl30 pt20 pr30`}>
+                      <Grid item xs={12} sm={12} md={4} lg={4} >
+                        <SwiperCover>
+                          <img src={item.image}></img>
+                        </SwiperCover>
+                      </Grid>
+                      <Grid item xs={12} sm={12} md={8} lg={8} className={`pl40`}>
+                        <NftName className={`c_green mt10 text_hidden_1`}>{item.name}</NftName>
+                        <NftDes className={`text_hidden_3`}>{item.description}</NftDes>
+                        <div className='df_h5 mt30'>
+                          <div className='f3 mt10'>
+                            <div>{item?.status === 'soon' ? 'Start at' : 'Close at'}</div>
+                            <div className='c_green fw600 mt10 fs24'>{item?.statusTxt}</div>
+                          </div>
+                          <div className='f2 mt10'>
+                            <div>Minted</div>
+                            <div className='c_green fw600 mt10 fs24'>{item.mintedCount} / {item.maxCount}</div>
+                          </div>
+                          <div className='f2 mt10'>
+                            <div>Network</div>
+                            <div className='c_green fw600 mt10 fs24'>{chainTxtObj[item.chainType]}</div>
+                          </div>
+                        </div>
+                        <MintBtn>
+                          <Button className={`w200 h40 btn_multicolour`} onClick={() => { goToMint(item.id) }}>View</Button>
+                        </MintBtn>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={12} sm={12} md={8} lg={8} className={`pl40`}>
-                      <NftName className={`c_green mt10 text_hidden_1`}>{item.name}</NftName>
-                      <NftDes className={`text_hidden_3`}>{item.description}</NftDes>
-                      <div className='df_h5 mt30'>
-                        <div className='f3 mt10'>
-                          <div>{item?.status === 'soon' ? 'Start at' : 'Close at'}</div>
-                          <div className='c_green fw600 mt10 fs24'>{item?.statusTxt}</div>
-                        </div>
-                        <div className='f2 mt10'>
-                          <div>Minted</div>
-                          <div className='c_green fw600 mt10 fs24'>{item.mintedCount} / {item.maxCount}</div>
-                        </div>
-                        <div className='f2 mt10'>
-                          <div>Network</div>
-                          <div className='c_green fw600 mt10 fs24'>{chainTxtObj[item.chainType]}</div>
-                        </div>
-                      </div>
-                      <MintBtn>
-                        <Button className={`w200 h40 btn_multicolour`} onClick={() => { goToMint(item.id) }}>Free Mint</Button>
-                      </MintBtn>
-                    </Grid>
-                  </Grid>
-                </SwiperSlide>
-              ))
-            }
-          </Swiper>
-        </HomeSwiper>
-        <HomeSwiperH5>
-          <SwiperCover>
-            <img src={swiperList[0]?.image}></img>
-          </SwiperCover>
-          <SwiperInfo>
-            <NftName className={`c_green mt10 ell`}>{list[0]?.name}</NftName>
-            <NftDes className={`text_hidden_3`}>{list[0]?.description}</NftDes>
-            <div className='df_h5 mt30'>
-              <div className='f3 mt10'>
-                <div>{list[0]?.status === 'soon' ? 'Start at' : 'Close at'}</div>
-                <div className='c_green fw600 mt10 fs24'>{list[0]?.statusTxt}</div>
+                  </SwiperSlide>
+                ))
+              }
+            </Swiper>
+          </HomeSwiper>
+        }
+        {
+          swiperList.length > 0 &&
+          <HomeSwiperH5>
+            <SwiperCover>
+              <img src={swiperList[0]?.image}></img>
+            </SwiperCover>
+            <SwiperInfo>
+              <NftName className={`c_green mt10 ell`}>{swiperList[0]?.name}</NftName>
+              <NftDes className={`text_hidden_3`}>{swiperList[0]?.description}</NftDes>
+              <div className='df_h5 mt30'>
+                <div className='f3 mt10'>
+                  <div>{swiperList[0]?.status === 'soon' ? 'Start at' : 'Close at'}</div>
+                  <div className='c_green fw600 mt10 fs24'>{swiperList[0]?.statusTxt}</div>
+                </div>
+                <div className='f2 mt10'>
+                  <div>Minted</div>
+                  <div className='c_green fw600 mt10 fs24'>{swiperList[0]?.mintedCount} / {swiperList[0]?.maxCount}</div>
+                </div>
+                <div className='f1 mt10'>
+                  <div>Network</div>
+                  <div className='c_green fw600 mt10 fs24'>{chainTxtObj[swiperList[0]?.chainType]}</div>
+                </div>
               </div>
-              <div className='f2 mt10'>
-                <div>Minted</div>
-                <div className='c_green fw600 mt10 fs24'>{list[0]?.mintedCount} / {list[0]?.maxCount}</div>
+              <MintBtn>
+                <Button className={`w200 h40 btn_multicolour`} onClick={() => { goToMint(swiperList[0]?.id) }}>View</Button>
+              </MintBtn>
+            </SwiperInfo>
+          </HomeSwiperH5>
+        }
+        {
+          recentList.length > 0 &&
+          <PageContent>
+            <div className='space-between-center'>
+              <div className='df_align_center'>
+                <img width={44} src={recent}></img>
+                <PageContentTitle>Recent Claims</PageContentTitle>
               </div>
-              <div className='f1 mt10'>
-                <div>Network</div>
-                <div className='c_green fw600 mt10 fs24'>{chainTxtObj[list[0]?.chainType]}</div>
-              </div>
+              {
+                listTotal > 5 &&
+                <ViewAll className={`c_green fw600 cp`} onClick={goToExplore}>
+                  view all &gt;
+                </ViewAll>
+              }
             </div>
-            <MintBtn>
-              <Button className={`w200 h40 btn_multicolour`} onClick={() => { goToMint(list[0]?.id) }}>Free Mint</Button>
-            </MintBtn>
-          </SwiperInfo>
-        </HomeSwiperH5>
-        <PageContent>
-          <div className='space-between-center'>
-            <div className='df_align_center'>
-              <img width={44} src={recent}></img>
-              <PageContentTitle>Recent Claims</PageContentTitle>
-            </div>
-            <ViewAll className={`c_green fw600`}>
-              view all &gt;
-            </ViewAll>
-          </div>
-          <Content>
+            <Content>
+              {
+                recentList.map(item => (
+                  <BadgeCard key={item.project} item={item} type="explore" />
+                ))
+              }
+            </Content>
             {
-              list.map(item => (
-                <BadgeCard key={item.project} item={item} type="explore" />
-              ))
+              listTotal > 4 &&
+              <ViewAllH5 className={`c_green fw600 cp`} onClick={goToExplore}>
+                view all &gt;
+              </ViewAllH5>
             }
-          </Content>
-          <ViewAllH5 className={`c_green fw600`}>
-            view all &gt;
-          </ViewAllH5>
-        </PageContent>
+          </PageContent>
+        }
         <PageFoot style={{ backgroundImage: `url(${footBg})` }}>
           <FootContent>
             <FootTitle>Shaping the <span className='c_green'>future</span> of the on-chain art industry</FootTitle>

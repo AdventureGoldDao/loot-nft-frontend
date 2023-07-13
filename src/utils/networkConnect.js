@@ -206,6 +206,8 @@ export const handleHistoryAddress = (chainType, address) => {
       return 'https://explorer.zksync.io/address/' + address
     case 'zksynceratest':
       return 'https://zksync2-testnet.zkscan.io/address/' + address
+    case 'loottest':
+      return 'https://loot.calderaexplorer.xyz/address/' + address
     default:
       return 'https://etherscan.io/address/' + address
   }

@@ -1,6 +1,9 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import { Button, Backdrop, CircularProgress } from "@mui/material";
+import Snackbar from "components/SnackMessage"
+import copy from 'copy-to-clipboard';
+import { BREAKPOINTS } from 'theme';
 
 import { queryCollectionDetail, useOwnerNFTTypesList } from 'services/createNFTManage'
 import { mainContext } from "../../reducer";
@@ -9,17 +12,18 @@ import { useActiveWeb3React } from "../../web3";
 // import { chainFun } from "../../utils/networkConnect"
 import test2 from 'assets/img/test/test2.png'
 import { abbrTxHash } from "../../utils/format";
-import { chainTxtObj, chainFun } from '../../utils/networkConnect';
+import { chainTxtObj, chainFun, handleHistoryAddress } from '../../utils/networkConnect';
 import { getChainType } from "../../web3/address";
 import { freeMintNFT721 } from "utils/handleContract"
 import { getPoolLeftTime } from "utils/time"
 import styled from 'styled-components/macro';
 import bg from 'assets/img/explore_bg.svg';
+import copyIcon from "assets/img/header/copy.svg";
 
 import {
   HANDLE_SHOW_FAILED_TRANSACTION_MODAL,
   HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
-  HANDLE_SHOW_CONNECT_MODAL,
+  HANDLE_SHOW_TRANSACTION_MODAL,
   waitingForConfirm,
 } from "../../const";
 import moment from 'moment';
@@ -29,23 +33,38 @@ const CollectionInfo = styled.div`
   background-repeat: no-repeat;
   background-position: center top;
   background-image: url(${bg});
+
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    padding: 24px;
+  }
 `
 const InfoMain = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    flex-direction: column;
+  }
+`
+const MainF1 = styled.div`
+  flex: 1;
+  width: 100%;
 `
 const InfoCover = styled.div`
   margin-right: 26px;
   padding: 24px;
-  background: #191D20;
+  background: #111211;
   border: 1px solid #4B5954;
   border-radius: 20px;
   overflow: hidden; 
+
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    margin-right: 0px;
+    margin-bottom: 10px;
+  }
 `
 const CoverBox = styled.div`
   position: relative;
-  /* width: 100%; */
   height: 0px;
   padding-bottom: 100%;
 `
@@ -63,6 +82,7 @@ const Cover = styled.div`
     max-width: 100%;
     max-height: 100%;
     margin: 0 auto;
+    border-radius: 10px;
   }
 `
 const TypesBox = styled.div`
@@ -72,12 +92,17 @@ const TypesBox = styled.div`
   padding: 24px 19px;
   border-radius: 20px;
   border: 1px solid var(--line-color-2, #4B5954);
-  background: #191D20; 
+  background: #111211; 
   overflow: auto;
-  ::-webkit-scrollbar {
-  display: none; /* Chrome Safari */
 
-}
+  ::-webkit-scrollbar {
+    display: none; /* Chrome Safari */
+  }
+
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    margin-right: 0px;
+    margin-bottom: 10px;
+  }
 `
 const TypesCover = styled.div`
   width: 25%;
@@ -87,9 +112,12 @@ const TypesCover = styled.div`
 const BaseInfo = styled.div`
   padding: 25px 30px;
   margin-bottom: 30px;
-  background: #191D20;
+  background: #111211;
   border: 1px solid #4B5954;
   border-radius: 20px;
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    margin-bottom: 10px;
+  }
 `
 const CollectionName = styled.div`
   font-weight: 600;
@@ -111,9 +139,12 @@ const MintBox = styled.div`
 const ContractionInfo = styled.div`
   padding: 25px 30px;
   margin-bottom: 30px;
-  background: #191D20;
+  background: #111211;
   border: 1px solid #4B5954;
   border-radius: 20px;
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    margin-bottom: 10px;
+  }
 `
 const ContractItem = styled.div`
   display: flex;
@@ -121,8 +152,11 @@ const ContractItem = styled.div`
   align-items: center;
   margin-top: 10px;
   padding: 10px 24px;
-  background: #111315;
+  background: #1B1F1C;
   border-radius: 8px;
+`
+const LinkAddress = styled.a`
+  text-decoration: none;
 `
 
 export default function NFTDetail() {
@@ -132,7 +166,10 @@ export default function NFTDetail() {
   const { collectionId } = useParams<any>()
   const [detailInfo, setDetailInfo] = useState<any>({})
   const [loading, setLoading] = useState(false)
-  const { list, total } = useOwnerNFTTypesList(collectionId, 1, 99999, setLoading, false)
+  const { list, total } = useOwnerNFTTypesList(collectionId, 1, 4, setLoading, false)
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false)
+  const [msg, setMsg] = useState('')
+  const [severity, setSeverity] = useState('')
 
   const beforeMint = () => {
     needSign()
@@ -159,6 +196,11 @@ export default function NFTDetail() {
           type: HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
           showWaitingWalletConfirmModal: { show: false }
         });
+        dispatch({
+          type: HANDLE_SHOW_TRANSACTION_MODAL,
+          showTransactionModal: { show: true }
+        })
+        queryDetailInfo()
       },
       _onError: (err) => {
         dispatch({
@@ -203,90 +245,113 @@ export default function NFTDetail() {
   const countStaus = (status, data) => {
     if (status === 'soon') {
       return `${moment(data.mintStartTime).format('DD MMMM HH:mm a')}`
-    } else {
+    } else if (status === 'active') {
       return formatTime(data.mintEndTime)
+    } else if (status === 'ended') {
+      return `${moment(data.mintEndTime).format('YYYY/MM/DD HH:mm')}`
     }
   }
   const handleCloseLoading = () => {
     setLoading(false)
   }
+  const handleCopy = () => {
+    copy(detailInfo.contractAddress);
+    initMsg('Copied!', 'success')
+  }
+  const initMsg = (msg, status) => {
+    setMsg(msg)
+    setSeverity(status)
+    setIsSnackbarOpen(true)
+  }
+  const closeSnackbar = () => {
+    setIsSnackbarOpen(false)
+  }
   useEffect(() => {
     queryDetailInfo()
   }, [collectionId])
   return (
-    <CollectionInfo>
-      <InfoMain>
-        <div className={`f1 `}>
-          <InfoCover >
-            <CoverBox>
-              <Cover>
-                <img src={detailInfo.image}></img>
-              </Cover>
-            </CoverBox>
-          </InfoCover>
-          <TypesBox>
-            {
-              list.map(item => (
-                <TypesCover >
-                  <CoverBox>
-                    <Cover style={{backgroundImage:`url(${item.image})`}}>
-                    </Cover>
-                  </CoverBox>
-                </TypesCover>
-              ))
-            }
-          </TypesBox>
-        </div>
-        <div className={`f1`}>
-          <BaseInfo>
-            <CollectionName className={`c_green mt10 text_hidden_1`}>{detailInfo.name}</CollectionName>
-            <CollectionDes>{detailInfo.description}</CollectionDes>
-            <div className='df_h5 mt30'>
-              <div className='f3 mt10'>
-                <div>{detailInfo.status === 'soon' ? 'Start at' : 'Close at'}</div>
-                <div className='c_green fw600 mt10 fs24'>{countStaus(detailInfo?.status, detailInfo)}</div>
+    <>
+      <CollectionInfo>
+        <InfoMain>
+          <MainF1 className={`f1 `}>
+            <InfoCover >
+              <CoverBox>
+                <Cover>
+                  <img src={detailInfo.image}></img>
+                </Cover>
+              </CoverBox>
+            </InfoCover>
+            <TypesBox>
+              {
+                list.map(item => (
+                  <TypesCover >
+                    <CoverBox>
+                      <Cover style={{ backgroundImage: `url(${item.image})` }}>
+                      </Cover>
+                    </CoverBox>
+                  </TypesCover>
+                ))
+              }
+            </TypesBox>
+          </MainF1>
+          <MainF1 className={`f1`}>
+            <BaseInfo>
+              <CollectionName className={`c_green mt10 text_hidden_1`}>{detailInfo.name}</CollectionName>
+              <CollectionDes>{detailInfo.description}</CollectionDes>
+              <div className='df_h5 mt30'>
+                <div className='f3 mt10'>
+                  <div>{detailInfo.status === 'soon' ? 'Start at' : 'Close at'}</div>
+                  <div className='c_green fw600 mt10 fs22'>{countStaus(detailInfo?.status, detailInfo)}</div>
+                </div>
+                <div className='f2 mt10'>
+                  <div>Minted</div>
+                  <div className='c_green fw600 mt10 fs22'>{detailInfo.mintedCount} / {detailInfo.maxCount}</div>
+                </div>
+                <div className='f2 mt10'>
+                  <div>Network</div>
+                  <div className='c_green fw600 mt10 fs22'>{chainTxtObj[detailInfo.chainType]}</div>
+                </div>
               </div>
-              <div className='f2 mt10'>
-                <div>Minted</div>
-                <div className='c_green fw600 mt10 fs24'>{detailInfo.mintedCount} / {detailInfo.maxCount}</div>
-              </div>
-              <div className='f2 mt10'>
-                <div>Network</div>
-                <div className='c_green fw600 mt10 fs24'>{chainTxtObj[detailInfo.chainType]}</div>
-              </div>
-            </div>
-            <MintBox>
-              <Button disabled={detailInfo.status != 'active'} className={`w200_h5 h40 btn_multicolour`} onClick={freeMint}>Free Mint</Button>
-            </MintBox>
-          </BaseInfo>
-          <ContractionInfo>
-            <div>Contract Details</div>
-            <ContractItem>
-              <span className='lh28'>Release Date</span>
-              <span className='c_green'>{moment(detailInfo.mintStartTime).format('MM/DD/YYYY HH:mm')}</span>
-            </ContractItem>
-            <ContractItem>
-              <span className='lh28'>Blockchain</span>
-              <span className='c_green'>{detailInfo.chainType}</span>
-            </ContractItem>
-            <ContractItem>
-              <span className='lh28'>Contract Address</span>
-              <span className='c_green'>{abbrTxHash(detailInfo.contractAddress)}</span>
-            </ContractItem>
-            <ContractItem>
-              <span className='lh28'>Token Standard</span>
-              <span className='c_green'>ERC-721</span>
-            </ContractItem>
-          </ContractionInfo>
-        </div>
-      </InfoMain>
-      <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loading}
-        onClick={handleCloseLoading}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    </CollectionInfo>
+              <MintBox>
+                <Button disabled={detailInfo.status != 'active'} className={`w200_h5 h40 btn_multicolour`} onClick={freeMint}>Free Mint</Button>
+              </MintBox>
+            </BaseInfo>
+            <ContractionInfo>
+              <div>Contract Details</div>
+              <ContractItem>
+                <span className='lh28'>Release Date</span>
+                <span className='c_green'>{moment(detailInfo.mintStartTime).format('MM/DD/YYYY HH:mm')}</span>
+              </ContractItem>
+              <ContractItem>
+                <span className='lh28'>Blockchain</span>
+                <span className='c_green'>{detailInfo.chainType}</span>
+              </ContractItem>
+              <ContractItem>
+                <span className='lh28'>Contract Address</span>
+                <div className='df_align_center'>
+                  <LinkAddress className={`c_green`} target="_blank" href={handleHistoryAddress(detailInfo.chainType, detailInfo.contractAddress)}>{abbrTxHash(detailInfo.contractAddress)}
+                  </LinkAddress>
+                  <img className='pl8 cp' src={copyIcon} onClick={handleCopy}></img>
+                </div>
+                {/* <span className='c_green'>{abbrTxHash(detailInfo.contractAddress)}</span> */}
+              </ContractItem>
+              <ContractItem>
+                <span className='lh28'>Token Standard</span>
+                <span className='c_green'>ERC-721</span>
+              </ContractItem>
+            </ContractionInfo>
+          </MainF1>
+        </InfoMain>
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+          onClick={handleCloseLoading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      </CollectionInfo>
+      <Snackbar isSnackbarOpen={isSnackbarOpen} msg={msg} closeSnackbar={closeSnackbar} severity={severity}></Snackbar>
+    </>
+
   )
 }
