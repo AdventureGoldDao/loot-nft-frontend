@@ -21,9 +21,22 @@ export const customTheme = createTheme({
     },
     secondary: {
       main: '#85A391',
-    }
+    },
+    background: {
+      paper: 'rgba(0, 0, 0, 1)',
+    },
   },
   components: {
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          color: '#7FB093',
+          '&.Mui-selected': {
+            color: '#fff'
+          }
+        }
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {

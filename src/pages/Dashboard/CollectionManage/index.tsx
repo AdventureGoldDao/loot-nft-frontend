@@ -4,7 +4,6 @@ import { Button, Modal, Box, TextField, Switch, Pagination } from "@mui/material
 import LoadingButton from '@mui/lab/LoadingButton';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import CollectionModal from '../CollectionModal';
 import PushModal from '../PushModal';
@@ -35,16 +34,6 @@ const style = {
   padding: '20px 24px'
 };
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#A5FFBE',
-    },
-    error: {
-      main: '#FF7D7D',
-    },
-  },
-});
 const PrimaryTextDiv = styled.div`
   color: #A5FFBE;
 `
@@ -70,8 +59,8 @@ const CollectionTitle = styled.div`
   font-weight: 600;
 `
 const CollectionFunc = styled.div`
-  .css-15pnunx-MuiButtonBase-root-MuiButton-root.Mui-disabled{
-    background-color: #a5ffbefa;
+  .MuiButton-root.Mui-disabled{
+    background-color: #a5ffbe;
   }
 `
 const BtnMr = styled(Button)`
@@ -720,11 +709,9 @@ export default function CollectionManageIndex() {
               <CollectionItem>
                 <CollectionTitle>{collectionInfo.name ? collectionInfo.name : '--'}</CollectionTitle>
                 <CollectionFunc>
-                  <ThemeProvider theme={theme}>
-                    <BtnMr variant="outlined" color="error" onClick={openDelModal}>Delete Collection</BtnMr>
-                    <BtnMr variant="outlined" color="primary" onClick={openEdit}><IconEdit /> &nbsp;Edit</BtnMr>
-                    <Button disabled={collectionInfo.maxCount === 0 || badList.length > 0} variant="contained" className='w160' color="primary" onClick={openDeploy}>Launch</Button>
-                  </ThemeProvider>
+                  <BtnMr variant="outlined" color="error" onClick={openDelModal}>Delete Collection</BtnMr>
+                  <BtnMr variant="outlined" color="primary" onClick={openEdit}><IconEdit /> &nbsp;Edit</BtnMr>
+                  <Button disabled={collectionInfo.maxCount === 0 || badList.length > 0} variant="contained" className='w160' color="primary" onClick={openDeploy}>Launch</Button>
                 </CollectionFunc>
               </CollectionItem>
               <CollectionDes>{collectionInfo.description}</CollectionDes>

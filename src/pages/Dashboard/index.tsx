@@ -255,7 +255,7 @@ export default function NFTManage() {
             {
               !loading && list.map(item => (
                 <CardItem onClick={() => { goToDetail(item.id) }}>
-                  <div className='c_green fs20'>{item.name}</div>
+                  <div className='c_green fs20 text_hidden_1'>{item.name}</div>
                   <ItemDes className='lh20 mt10 text_hidden_3'>{item.description ? item.description : '--'}</ItemDes>
                   <ItemInfo>
                     <div><span className='c_green'>{item.typeCount}</span><ColorGreenLight className={`pl4`}>NFTs</ColorGreenLight></div>
