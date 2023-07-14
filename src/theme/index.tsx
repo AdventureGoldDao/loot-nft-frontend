@@ -32,6 +32,16 @@ export const customTheme = createTheme({
         },
       },
     },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          '& input[type="number"]::-webkit-inner-spin-button, & input[type="number"]::-webkit-outer-spin-button': {
+            '-webkit-appearance': 'none',
+            margin: 0,
+          },
+        },
+      },
+    },
     MuiSelect: {
       styleOverrides: {
         // @ts-ignore

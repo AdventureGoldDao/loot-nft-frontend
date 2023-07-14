@@ -226,6 +226,11 @@ export default function NFTManage() {
   const handleCloseLoading = () => {
     setLoading(false)
   }
+  useEffect(() => {
+    if(!account){
+      needSign()
+    }
+  },[])
 
   return (
     <>

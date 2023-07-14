@@ -98,6 +98,7 @@ export const useOwnerCollectionList = (pageNo, pageSize, setLoading, status,refr
   const [total, setTotal] = useState(0)
 
   const queryData = () => {
+    
     if(pageNo===1){
       setLoading(true)
     }
@@ -108,6 +109,8 @@ export const useOwnerCollectionList = (pageNo, pageSize, setLoading, status,refr
         setList(oldList => [...oldList, ...res.list])
       }
       setTotal(res.totalCount)
+      setLoading(false)
+    }).catch(err => {
       setLoading(false)
     })
   }

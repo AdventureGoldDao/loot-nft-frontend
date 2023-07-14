@@ -9,13 +9,10 @@ import { queryCollectionDetail, useOwnerNFTTypesList } from 'services/createNFTM
 import { mainContext } from "../../reducer";
 import { useNeedSign } from "hooks/account"
 import { useActiveWeb3React } from "../../web3";
-// import { chainFun } from "../../utils/networkConnect"
-import test2 from 'assets/img/test/test2.png'
 import { abbrTxHash } from "../../utils/format";
 import { chainTxtObj, chainFun, handleHistoryAddress } from '../../utils/networkConnect';
 import { getChainType } from "../../web3/address";
 import { freeMintNFT721 } from "utils/handleContract"
-import { getPoolLeftTime } from "utils/time"
 import styled from 'styled-components/macro';
 import bg from 'assets/img/explore_bg.svg';
 import copyIcon from "assets/img/header/copy.svg";

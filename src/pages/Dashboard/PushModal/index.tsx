@@ -3,8 +3,6 @@ import { useHistory } from 'react-router-dom';
 import { Button, Modal, Box, TextField } from "@mui/material";
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
-import dayjs, { Dayjs } from 'dayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 import Snackbar from "components/SnackMessage"
@@ -38,7 +36,7 @@ const TextInput = styled(TextField)`
     color: #7A9283 !important;
   }
   .MuiInput-input {
-    margin-top: 8px;
+    /* margin-top: 8px; */
     padding: 18px;
     border: none;
     border-radius: 8px;
@@ -81,7 +79,7 @@ const ImgBox = styled.img`
   height: 38px;
   border-radius: 50%;
 `
-export default function CollectionModal({ visiblePush, closePushModal, collectionId }) {
+export default function CollectionModal({ visiblePush=false, closePushModal, collectionId }) {
   const { library, account, chainId } = useActiveWeb3React()
   const { dispatch } = useContext(mainContext);
   const history = useHistory()
@@ -122,9 +120,20 @@ export default function CollectionModal({ visiblePush, closePushModal, collectio
 
   const handelSubmit = async () => {
     // @ts-ignore
-    console.log(beforeDeploy());
-    // @ts-ignore
     if (!beforeDeploy()) return false
+    
+    if (!startTime) {
+      initMsg("start time is required", 'error')
+      return false
+    }
+    if (!endTime) {
+      initMsg("End time is required", 'error')
+      return false
+    }
+    if (!mintLimit) {
+      initMsg("Pre-wallet mint limit is required", 'error')
+      return false
+    }
     dispatch({
       type: HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
       showWaitingWalletConfirmModal: true
@@ -135,9 +144,9 @@ export default function CollectionModal({ visiblePush, closePushModal, collectio
     let userLimit = mintLimit
     let acceptCurrency = '0x0000000000000000000000000000000000000000'
     let mintPrice = 0
-    
-    let res = await deployFreeMintNFT721(library, account, publishForm.name, publishForm.tokenSymbol, selectChainType, publishForm.maxCount, mintStartTime / 1000, mintEndTime / 1000, userLimit, acceptCurrency, mintPrice)
-    console.log(res);
+    // @ts-ignore
+    let res = await deployFreeMintNFT721(library, account, publishForm.name, publishForm.tokenSymbol, selectChainType, publishForm.maxCount, parseInt(mintStartTime / 1000) , parseInt(mintEndTime / 1000), userLimit, acceptCurrency, mintPrice)
+    // console.log(res);
     pushcollection(mintStartTime, mintEndTime, selectChainType, res)
     dispatch({
       type: HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
@@ -146,37 +155,24 @@ export default function CollectionModal({ visiblePush, closePushModal, collectio
   }
   const pushcollection = async (mintStartTime, mintEndTime, chainType, contractInfo) => {
     let res = publishCollection(collectionId, mintStartTime, mintEndTime, chainType, contractInfo.address, contractInfo.transactionHash, contractInfo.blockNumber)
-    console.log(res);
-    initMsg("Success!")
+    initMsg("Success!",'success')
     closePushModal()
     history.push(`/collectionDetail/${collectionId}`)
   }
-  const initMsg = (msg) => {
+  const initMsg = (msg,status) => {
     setMsg(msg)
-    setSeverity('success')
+    setSeverity(status)
     setIsSnackbarOpen(true)
   }
   const queryInfo = async (collectionId) => {
     let res = await queryCollectionDetail(collectionId)
-    console.log(res);
     setPublishForm(res)
-    console.log(publishForm);
   }
   const selectChain = (type) => {
     setSelectChainType(type)
   }
   const closeSnackbar = () => {
     setIsSnackbarOpen(false)
-  }
-  const changeTime = (e) => {
-    console.log(e);
-    
-    console.log(moment(e));
-    console.log(moment(e).format("YYYY-MM-DD HH:mm:ss"));
-    console.log();
-    
-    console.log(new Date(e).getTime());
-    
   }
   
   useEffect(() => {
@@ -245,6 +241,7 @@ export default function CollectionModal({ visiblePush, closePushModal, collectio
               value={mintLimit}
               onChange={handleChange}
               variant="standard"
+              type='number'
               InputLabelProps={{
                 shrink: true,
               }}

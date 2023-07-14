@@ -231,7 +231,6 @@ export default function Home() {
     try {
       setLoading(true)
       let res = await queryCollectionData(1, recentListNum, '')
-      console.log(res);
       setLoading(false)
       // @ts-ignore
       if (res) {
