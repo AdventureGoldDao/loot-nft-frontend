@@ -47,7 +47,7 @@ const TextInput = styled(TextField)`
   }
 `
 const BlackBox = styled.div<{ isDate: boolean }>`
-  height: 86px;
+  /* height: 86px; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -199,7 +199,7 @@ export default function CollectionModal({ visiblePush, closePushModal, collectio
           <div className='df mb14'>
             <BlackBox isDate={false} className='mr6 f1'>
               <ColorGreenLight className='lh28'>NFTs</ColorGreenLight>
-              <div className='c_green fs20 lh24 mb10'>{publishForm.typeCount}</div>
+              <div className='c_green fs20 lh24 mb10'>{publishForm.maxCount}</div>
             </BlackBox>
             <BlackBox isDate={false} className='f1'>
               <ColorGreenLight className='lh28'>Total supply</ColorGreenLight>

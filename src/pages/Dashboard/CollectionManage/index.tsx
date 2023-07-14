@@ -13,7 +13,7 @@ import Snackbar from "components/SnackMessage"
 import { useActiveWeb3React } from '../../../web3';
 import {
   delCollection, queryCollectionDetail, saveNFT, putNftImg, getOneMetadata, putOneMetadata,
-  useOwnerNFTTypesList, queryNFTTypeDetail, putFullMetadata, getMetadataList, delOneMetadata
+  useOwnerNFTTypesList, queryNFTTypeDetail, putFullMetadata, getMetadataList, delOneMetadata, delNFT
 } from "../../../services/createNFTManage"
 import { dataURLtoBlob } from 'utils/dataURLtoBlob';
 import { ReactComponent as IconEdit } from "assets/img/nftManage/icon_edit.svg";
@@ -388,6 +388,7 @@ export default function CollectionManageIndex() {
   const [hadImgUpload, setHadImgUpload] = useState(false);
   const [hadJsonUpload, setHadJsonUpload] = useState(false);
   const [visibleJsonReload, setVisibleJsonReload] = useState(false);
+  const [visibleDelNFT, setVisibleDelNFT] = useState(false);
   const [arrts, setAttrs] = useState([
     {
       name: '',
@@ -692,6 +693,16 @@ export default function CollectionManageIndex() {
       setList(res.list);
     })
   }
+  const handelDelNFT = () => {
+    setVisibleDelNFT(true)
+  }
+  const toDelNFT = () => {
+    setVisibleDelNFT(false)
+    setVisibleNFT(false)
+    delOneMetadata(collectionId, nftForm.nftId).then(res => {
+      getNftList()
+    })
+  }
 
   useEffect(() => {
     queryInfo()
@@ -712,7 +723,7 @@ export default function CollectionManageIndex() {
                   <ThemeProvider theme={theme}>
                     <BtnMr variant="outlined" color="error" onClick={openDelModal}>Delete Collection</BtnMr>
                     <BtnMr variant="outlined" color="primary" onClick={openEdit}><IconEdit /> &nbsp;Edit</BtnMr>
-                    <Button disabled={collectionInfo.maxCount === 0} variant="contained" color="primary" onClick={openDeploy}>Deploy & Push</Button>
+                    <Button disabled={collectionInfo.maxCount === 0 || badList.length > 0} variant="contained" className='w160' color="primary" onClick={openDeploy}>Launch</Button>
                   </ThemeProvider>
                 </CollectionFunc>
               </CollectionItem>
@@ -898,6 +909,9 @@ export default function CollectionManageIndex() {
       {
         <DeleteModal visible={visibleDel} closeDel={handelDel} delFunc={deleteCollection}></DeleteModal>
       }
+      {
+        <DeleteModal visible={visibleDelNFT} closeDel={() => { setVisibleDelNFT(false) }} delFunc={toDelNFT} text='NFT'></DeleteModal>
+      }
 
       <Modal
         open={visibleJsonReload}
@@ -931,14 +945,17 @@ export default function CollectionManageIndex() {
           <div className='mb20'>Edit NFT</div>
           <CreateNftBaseBox>
             <UploadBox className='df_column_center cp' onClick={openFile}>
-              <div className='df_column_center'>
-                <IconCreate>+</IconCreate>
-                <div className='c_green mt20'>Upload Item</div>
-                <ColorGreenLight className='mt10'>Supported file types</ColorGreenLight>
-                <ColorGreenLight className='mt8'>include JPEG, PNG, and GIF.</ColorGreenLight>
-              </div>
-              <ShowImg src={selectedImage && typeof selectedImage === 'object' ? window.URL.createObjectURL(selectedImage) : selectedImage}></ShowImg>
-              {/* <img ></img> */}
+              {
+                selectedImage ?
+                  <ShowImg src={selectedImage && typeof selectedImage === 'object' ? window.URL.createObjectURL(selectedImage) : selectedImage}></ShowImg>
+                  :
+                  <div className='df_column_center'>
+                    <IconCreate>+</IconCreate>
+                    <div className='c_green mt20'>Upload Item</div>
+                    <ColorGreenLight className='mt10'>Supported file types</ColorGreenLight>
+                    <ColorGreenLight className='mt8'>include JPEG, PNG, and GIF.</ColorGreenLight>
+                  </div>
+              }
               <UploadInput ref={chooseImg} type='file' accept='image/*' onChange={changeFile}></UploadInput>
             </UploadBox>
             <div className='f1'>
@@ -1022,7 +1039,7 @@ export default function CollectionManageIndex() {
           <div style={{ flexDirection: 'row-reverse' }} className='mt20 mb20 space-between-center'>
             <LoadingButton loading={loading} className='w180 btn_themeColor' onClick={handelSubmit}>{loading ? 'Loading' : 'Save'}</LoadingButton>
             {
-              !hadJsonUpload && <Button className='w180' variant="outlined" color='error'>Delete</Button>
+              !hadJsonUpload && <Button onClick={handelDelNFT} className='w180' variant="outlined" color='error'>Delete</Button>
             }
           </div>
         </Box>

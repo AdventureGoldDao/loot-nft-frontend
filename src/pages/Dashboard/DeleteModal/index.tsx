@@ -25,7 +25,7 @@ const style = {
   textAlign: 'center'
 };
 
-export default function DeleteModal ({ visible, closeDel,delFunc }) {
+export default function DeleteModal ({ visible, closeDel,delFunc, text = 'collection' }) {
 
   const handleCancel = () => {
     closeDel()
@@ -38,7 +38,7 @@ export default function DeleteModal ({ visible, closeDel,delFunc }) {
     >
       <Box sx={{ ...style }}>
         <WarnIcon />
-        <Title style={{ color: '#FF7D7D' }}>Do you want to delete this collection?</Title>
+        <Title style={{ color: '#FF7D7D' }}>Do you want to delete this {text}?</Title>
         <div style={{ color: '#975D5D' }} className="mb20">It cannot be restored after being deleted</div>
         <Button variant="contained" color="error" onClick={delFunc}>Delete now</Button>
       </Box>
