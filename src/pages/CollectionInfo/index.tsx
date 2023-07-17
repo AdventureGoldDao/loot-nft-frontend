@@ -229,14 +229,14 @@ export default function NFTDetail() {
     if (timeDiff >= oneDay) {
       const days = Math.floor(timeDiff / oneDay);
       const hours = Math.floor((timeDiff % oneDay) / oneHour);
-      return `${days}${days > 1 ? 'ds' : 'd'} ${hours}${hours > 1 ? 'hs' : 'h'}`;
+      return `${days}d ${hours}h`;
     } else if (timeDiff >= oneHour) {
       const hours = Math.floor(timeDiff / oneHour);
       const minutes = Math.floor((timeDiff % oneHour) / oneMinute);
-      return `${hours}${hours > 1 ? 'hs' : 'h'} ${minutes}${hours > 1 ? 'mins' : 'min'}`;
+      return `${hours}h ${minutes}m`;
     } else if (timeDiff >= oneMinute) {
       const minutes = Math.floor(timeDiff / oneMinute);
-      return `${minutes}${minutes > 1 ? 'mins' : 'min'}`;
+      return `${minutes}m`;
     } else {
       return 'Less than 1min';
     }

@@ -258,7 +258,7 @@ export default function NFTManage() {
                   <div className='c_green fs20 text_hidden_1'>{item.name}</div>
                   <ItemDes className='lh20 mt10 text_hidden_3'>{item.description ? item.description : '--'}</ItemDes>
                   <ItemInfo>
-                    <div><span className='c_green'>{item.typeCount}</span><ColorGreenLight className={`pl4`}>NFTs</ColorGreenLight></div>
+                    {/* <div><span className='c_green'>{item.typeCount}</span><ColorGreenLight className={`pl4`}>NFTs</ColorGreenLight></div> */}
                     <div><ColorGreenLight>Total supply</ColorGreenLight><span className='pl4 c_green'>{item.maxCount}</span></div>
                   </ItemInfo>
                   {

@@ -741,6 +741,9 @@ button {
     left: 30px;
   }
 }
+.MuiPickersPopper-paper{
+  background-color: #FFF !important;
+}
 
 @media #{$smWidth} {
   .MuiModal-root {

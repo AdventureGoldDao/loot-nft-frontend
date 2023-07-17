@@ -44,7 +44,7 @@ export const TransactionModal = ({ visible }) => {
       <Box sx={{ ...style }}>
         <SuccessIcon />
         <Title style={{ color: '#A5FFBE' }}>{showTransactionModal.title? showTransactionModal.title: 'SUCCESS'}</Title>
-        <div style={{ color: '#76AB8B' }}>{showTransactionModal.content? showTransactionModal.content : 'You have successfully claim NFT'}</div>
+        <div style={{ color: '#76AB8B' }}>{showTransactionModal.content? showTransactionModal.content : 'NFT minted successfully'}</div>
       </Box>
     </Modal>
   );

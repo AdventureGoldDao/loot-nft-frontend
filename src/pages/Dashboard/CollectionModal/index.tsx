@@ -136,7 +136,7 @@ export default function CollectionModal({ visible, closeModal,collectionInfo }) 
             error={errors.name}
             helperText={errors.name ? 'Collection name is required' : ''}
           />
-          <TextInput fullWidth id="standard-helperText" label="Description (Optional)" name={'description'}
+          <TextInput fullWidth id="standard-helperText" label="Description" name={'description'}
             placeholder=""
             defaultValue={collectionForm.description}
             value={collectionForm.description}

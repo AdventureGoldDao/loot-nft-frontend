@@ -213,6 +213,37 @@ export default function Home() {
   const goToMint = (collectionId) => {
     history.push(`/collectionDetail/${collectionId}`)
   }
+  const formatTime = (timestamp) => {
+    const currentTimestamp = Date.now();
+    const timeDiff = Math.abs(currentTimestamp - timestamp);
+  
+    const oneMinute = 60 * 1000;
+    const oneHour = 60 * oneMinute;
+    const oneDay = 24 * oneHour;
+  
+    if (timeDiff >= oneDay) {
+      const days = Math.floor(timeDiff / oneDay);
+      const hours = Math.floor((timeDiff % oneDay) / oneHour);
+      return `${days}d ${hours}h`;
+    } else if (timeDiff >= oneHour) {
+      const hours = Math.floor(timeDiff / oneHour);
+      const minutes = Math.floor((timeDiff % oneHour) / oneMinute);
+      return `${hours}h ${minutes}m`;
+    } else if (timeDiff >= oneMinute) {
+      const minutes = Math.floor(timeDiff / oneMinute);
+      return `${minutes}m`;
+    } else {
+      return 'Less than 1min';
+    }
+  }
+  const countStaus = (status, data) => {
+    // console.log(data);
+    if (status === 'soon') {
+      return `${moment(data?.mintStartTime).format('DD MMMM HH:mm a')}`
+    } else {
+      return formatTime(data?.mintEndTime)
+    }
+  }
   const queryActiveList = async () => {
     try {
       setLoading(true)
@@ -220,6 +251,10 @@ export default function Home() {
       setLoading(false)
       // @ts-ignore
       if (res) {
+        // @ts-ignore
+        res.list.forEach(item => {
+          item.statusTxt = countStaus(item.status, item)
+        })
         // @ts-ignore
         setSwiperList(res?.list)
       }
