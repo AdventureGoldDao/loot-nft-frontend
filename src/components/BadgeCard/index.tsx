@@ -76,6 +76,7 @@ const NftName = styled.div<{ collector: boolean }>`
   display: ${props => props.collector ? 'block' : 'none'};
   color: #A5FFBE;
   line-height: 2;
+  width: 100%;
 `
 const CollectionName = styled.div`
   color: #ebebeb;

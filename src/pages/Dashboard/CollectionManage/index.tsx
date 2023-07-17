@@ -955,7 +955,7 @@ export default function CollectionManageIndex() {
                   shrink: true,
                 }} />
               <TextInput fullWidth id="standard-helperText" name={'description'}
-                label="Description (Optional)"
+                label="Description"
                 placeholder="Description"
                 rows={6}
                 multiline

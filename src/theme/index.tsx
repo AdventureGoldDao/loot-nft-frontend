@@ -63,7 +63,10 @@ export const customTheme = createTheme({
           borderRadius: '50px',
           color: '#fff',
           height: '28px',
-          lineHeight: '28px'
+          lineHeight: '28px',
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderWidth: '1px !important'
+          }
         },
         select: {
           display: 'flex',

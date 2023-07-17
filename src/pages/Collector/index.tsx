@@ -10,6 +10,7 @@ import { ReactComponent as DisconnectIcon } from 'assets/img/disconnect.svg'
 import { abbrTxHash } from "../../utils/format";
 import { BREAKPOINTS } from 'theme';
 import bg from 'assets/img/explore_bg.svg'
+import NoData from "../../components/NoData";
 
 const Main = styled.div`
   min-height: 100vh;
@@ -68,12 +69,19 @@ const Text = styled.span`
   font-size: 14px;
   margin-right: 9px;
 `
+const NoDataBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 400px;
+`
 
 export default function Collector() {
   const [pageNo, setPageNo] = useState(1)
   const [loading, setLoading] = useState(false)
   const { account } = useActiveWeb3React()
-  const { list, total } = useNFTList(account,'',pageNo, 50, setLoading)
+  const { list, total } = useNFTList(account, '', pageNo, 50, setLoading)
   const history = useHistory()
 
   const clearStorage = () => {
@@ -109,6 +117,11 @@ export default function Collector() {
           list.map(item => (
             <BadgeCard key={item.project} item={item} type="collector" />
           ))
+        }
+        {
+          list.length === 0 && <NoDataBox>
+            <NoData></NoData>
+          </NoDataBox>
         }
       </Content>
     </Main>

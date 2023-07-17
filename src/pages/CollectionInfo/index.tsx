@@ -5,7 +5,7 @@ import Snackbar from "components/SnackMessage"
 import copy from 'copy-to-clipboard';
 import { BREAKPOINTS } from 'theme';
 
-import { queryCollectionDetail, useOwnerNFTTypesList } from 'services/createNFTManage'
+import { queryCollectionDetail, getMetadataList } from 'services/createNFTManage'
 import { mainContext } from "../../reducer";
 import { useNeedSign } from "hooks/account"
 import { useActiveWeb3React } from "../../web3";
@@ -163,7 +163,7 @@ export default function NFTDetail() {
   const { collectionId } = useParams<any>()
   const [detailInfo, setDetailInfo] = useState<any>({})
   const [loading, setLoading] = useState(false)
-  const { list, total } = useOwnerNFTTypesList(collectionId, 1, 4, setLoading, false)
+  const [list, setList] = useState([])
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false)
   const [msg, setMsg] = useState('')
   const [severity, setSeverity] = useState('')
@@ -214,6 +214,8 @@ export default function NFTDetail() {
   const queryDetailInfo = async () => {
     await queryCollectionDetail(collectionId).then(res => {
       setDetailInfo(res)
+      /* @ts-expect-error */
+      setList(res.sampleNfts || [])
     })
   }
   const formatTime = (timestamp) => {
