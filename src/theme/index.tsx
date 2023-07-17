@@ -41,7 +41,11 @@ export const customTheme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: '10px',
-          textTransform: 'none'
+          textTransform: 'none',
+          '&.Mui-disabled': {
+            backgroundColor: '#333A33 !important',
+            color: '#556659 !important'
+          }
         },
       },
     },

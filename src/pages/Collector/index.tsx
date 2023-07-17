@@ -69,12 +69,14 @@ const Text = styled.span`
   font-size: 14px;
   margin-right: 9px;
 `
-const NoDataBox = styled.div`
+export const NoDataBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 400px;
+  background-color: #111211;
+  border-radius: 10px;
 `
 
 export default function Collector() {

@@ -37,6 +37,14 @@ const style = {
 const PrimaryTextDiv = styled.div`
   color: #A5FFBE;
 `
+const ErrorTextDiv = styled.div`
+  color: #ff7d7d;
+  font-size: 15px;
+  text-align: center;
+  line-height: 1.2;
+  max-width: 380px;
+  margin: 20px auto 0;
+`
 const CollectionManage = styled.div`
   min-height: 100vh;
   padding: 120px 100px;
@@ -59,9 +67,6 @@ const CollectionTitle = styled.div`
   font-weight: 600;
 `
 const CollectionFunc = styled.div`
-  .MuiButton-root.Mui-disabled{
-    background-color: #a5ffbe;
-  }
 `
 const BtnMr = styled(Button)`
   margin-right: 10px !important;
@@ -378,6 +383,7 @@ export default function CollectionManageIndex() {
   const [hadJsonUpload, setHadJsonUpload] = useState(false);
   const [visibleJsonReload, setVisibleJsonReload] = useState(false);
   const [visibleDelNFT, setVisibleDelNFT] = useState(false);
+  const [jsonError, setJsonError] = useState(false);
   const [arrts, setAttrs] = useState([
     {
       name: '',
@@ -419,7 +425,6 @@ export default function CollectionManageIndex() {
       value: ''
     }
     setAttrs([...arrts, obj])
-    console.log(arrts);
 
   }
   const removeItem = (index) => {
@@ -432,7 +437,6 @@ export default function CollectionManageIndex() {
     handelDel()
     initMsg("Success!", 'success')
     history.push('/dashboard')
-    console.log(res);
   }
   const openDelModal = () => {
     setVisibleDel(true)
@@ -562,28 +566,34 @@ export default function CollectionManageIndex() {
 
     setJsonLoading(true)
     let reader = new FileReader();
-    reader.readAsText(fileText, "UTF-8");
     reader.onload = () => {
       /* @ts-expect-error */
       const content = JSON.parse(reader.result);
       setJsonName(fileText.name)
-      setJsonDataLength(content.collection?.length);
-      reader = null;
+      if (content.collection && content.collection.length > 0) {
+        setJsonError(false)
+        setJsonDataLength(content.collection.length);
+
+        const formData = new FormData()
+        formData.append('metadata', fileText)
+        putFullMetadata(collectionId, formData).then(res => {
+          if (res) {
+            setMsg('success')
+            setSeverity('success')
+            setIsSnackbarOpen(true)
+            setJsonLoading(false)
+            setJsonUploaded(true)
+            setCurrentStep(2)
+            setImgsUploaded(false)
+          }
+        })
+      } else {
+        setJsonError(true)
+        setJsonLoading(false)
+      }
     }
 
-    const formData = new FormData()
-    formData.append('metadata', fileText)
-    putFullMetadata(collectionId, formData).then(res => {
-      if (res) {
-        setMsg('success')
-        setSeverity('success')
-        setIsSnackbarOpen(true)
-        setJsonLoading(false)
-        setJsonUploaded(true)
-        setCurrentStep(2)
-        setImgsUploaded(false)
-      }
-    })
+    reader.readAsText(fileText, "UTF-8");
   }
   const uploadImgs = (e) => {
     let imgs = [...e.target.files]
@@ -816,6 +826,9 @@ export default function CollectionManageIndex() {
                         currentStep === 1 && !jsonUploaded && <Button onClick={skipJson} style={{ marginLeft: 20 }} className='w180' variant="outlined" color='secondary'>Skip</Button>
                       }
                     </div>
+                    {
+                      jsonError && <ErrorTextDiv>Incorrect format, please refer to the template and re-upload it.</ErrorTextDiv>
+                    }
                   </div>
                 </StepBox>
                 <StepBox active={currentStep === 2}>
@@ -825,7 +838,7 @@ export default function CollectionManageIndex() {
                       {
                         (imgsUploaded || imgLoading) ?
                           <>
-                            <PrimaryTextDiv style={{ marginTop: 47, marginBottom: 16 }}>Upload Success!</PrimaryTextDiv>
+                            <PrimaryTextDiv style={{ marginTop: 47, marginBottom: 16 }}>{imgsUploaded ? 'Upload Success!' : ''}</PrimaryTextDiv>
                             <div className='df_center'>
                               {
                                 imgsSowArr.map(item => {
@@ -869,6 +882,7 @@ export default function CollectionManageIndex() {
                       id="img-upload-input"
                       style={{ display: 'none' }}
                       onChange={uploadImgs}
+                      disabled={imgLoading}
                       type="file"
                       multiple
                       accept="image/png, image/jpg, image/jpeg, image/webp, image/gif"

@@ -105,6 +105,11 @@ const PopMyItem = styled.div`
   line-height: 50px;
   font-size: 16px;
 `
+export const WrongNetwork = styled.div`
+  color: #ff7d7d;
+  font-size: 14px;
+  font-weight: 700;
+`
 
 const Header = ({ currentRoute }) => {
   const [showBox, setShowBox] = useState('');
@@ -168,6 +173,17 @@ const Header = ({ currentRoute }) => {
                 onChange={handleSwitchChain}
                 value={chainName}
                 className={`mr16`}
+                renderValue={val => {
+                  const item = chainArr.find(res => res.value === val)
+                  if (item) {
+                    return <>
+                      <OptionImg src={item.icon} alt={item.name} />
+                      <OptionName>{item.name}</OptionName>
+                    </>
+                  } else {
+                    return <WrongNetwork>Wrong Network</WrongNetwork>
+                  }
+                }}
               >
                 {
                   chainArr.map(item => (
@@ -227,6 +243,17 @@ const Header = ({ currentRoute }) => {
               <Select
                 onChange={handleSwitchChain}
                 value={chainName}
+                renderValue={val => {
+                  const item = chainArr.find(res => res.value === val)
+                  if (item) {
+                    return <>
+                      <OptionImg src={item.icon} alt={item.name} />
+                      <OptionName>{item.name}</OptionName>
+                    </>
+                  } else {
+                    return <WrongNetwork>Wrong Network</WrongNetwork>
+                  }
+                }}
               >
                 {
                   chainArr.map(item => (

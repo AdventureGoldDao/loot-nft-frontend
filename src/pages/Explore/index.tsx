@@ -4,6 +4,8 @@ import styled from 'styled-components/macro';
 
 import { useCollectionList } from "../../services/createNFTManage"
 import BadgeCard from "components/BadgeCard";
+import NoData from "../../components/NoData";
+import { NoDataBox } from "../Collector";
 import bg from 'assets/img/explore_bg.svg'
 import { BREAKPOINTS } from 'theme';
 
@@ -52,6 +54,11 @@ export default function Explore() {
           list.map(item => (
             <BadgeCard key={item.project} item={item} type="explore" />
           ))
+        }
+        {
+          list.length === 0 && <NoDataBox>
+            <NoData></NoData>
+          </NoDataBox>
         }
       </Content>
     </Main>

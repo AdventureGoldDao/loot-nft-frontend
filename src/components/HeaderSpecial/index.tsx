@@ -15,6 +15,7 @@ import logoFull from "assets/img/logoFull.svg";
 import more from "assets/img/header/more.svg";
 import moreG from "assets/img/header/more_g.svg";
 import { BREAKPOINTS } from 'theme';
+import { WrongNetwork } from '../Header'
 
 const Main = styled.div`
   position: fixed;
@@ -179,6 +180,17 @@ const HeaderSpecial = () => {
                 onChange={handleSwitchChain}
                 value={chainName}
                 className={`mr16`}
+                renderValue={val => {
+                  const item = chainArr.find(res => res.value === val)
+                  if (item) {
+                    return <>
+                      <OptionImg src={item.icon} alt={item.name} />
+                      <OptionName>{item.name}</OptionName>
+                    </>
+                  } else {
+                    return <WrongNetwork>Wrong Network</WrongNetwork>
+                  }
+                }}
               >
                 {
                   chainArr.map(item => (
@@ -224,6 +236,17 @@ const HeaderSpecial = () => {
               <Select
                 onChange={handleSwitchChain}
                 value={chainName}
+                renderValue={val => {
+                  const item = chainArr.find(res => res.value === val)
+                  if (item) {
+                    return <>
+                      <OptionImg src={item.icon} alt={item.name} />
+                      <OptionName>{item.name}</OptionName>
+                    </>
+                  } else {
+                    return <WrongNetwork>Wrong Network</WrongNetwork>
+                  }
+                }}
               >
                 {
                   chainArr.map(item => (
