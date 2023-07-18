@@ -261,10 +261,7 @@ export default function NFTManage() {
                     {/* <div><span className='c_green'>{item.typeCount}</span><ColorGreenLight className={`pl4`}>NFTs</ColorGreenLight></div> */}
                     <div><ColorGreenLight>Total supply</ColorGreenLight><span className='pl4 c_green'>{item.maxCount}</span></div>
                   </ItemInfo>
-                  {
-                    item.maxCount > 0 &&
-                    <Button className='wp100 h40 btn_themeColor' onClick={($event) => { openPush($event, item.id) }}>Launch</Button>
-                  }
+                  <Button disabled={item.maxCount == 0 || !item.allNftHaveImage} className='wp100 h40 btn_themeColor' onClick={($event) => { openPush($event, item.id) }}>Launch</Button>
                 </CardItem>
               ))
             }

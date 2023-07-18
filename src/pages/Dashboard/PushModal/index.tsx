@@ -189,7 +189,7 @@ export default function CollectionModal({ visiblePush=false, closePushModal, col
         <Box sx={{ ...style }}>
           <div>Deploy & Push</div>
           <BlackBox isDate={false} >
-            <ColorGreenLight className='lh28'>{publishForm.name}</ColorGreenLight>
+            <ColorGreenLight className='lh28'>Collection name</ColorGreenLight>
             <div className='c_green fs20 lh24 mb10'>{publishForm.name}</div>
           </BlackBox>
           <div className='df mb14'>
