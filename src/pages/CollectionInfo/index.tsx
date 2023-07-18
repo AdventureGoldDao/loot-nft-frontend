@@ -322,6 +322,10 @@ export default function NFTDetail() {
                 <span className='c_green'>{moment(detailInfo.mintStartTime).format('MM/DD/YYYY HH:mm')}</span>
               </ContractItem>
               <ContractItem>
+                <span className='lh28'>Per-wallet Mint Limit</span>
+                <span className='c_green'>{detailInfo.maxCountPerAddress}</span>
+              </ContractItem>
+              <ContractItem>
                 <span className='lh28'>Blockchain</span>
                 <span className='c_green'>{detailInfo.chainType}</span>
               </ContractItem>

@@ -721,7 +721,7 @@ export default function CollectionManageIndex() {
                 <CollectionFunc>
                   <BtnMr variant="outlined" color="error" onClick={openDelModal}>Delete Collection</BtnMr>
                   <BtnMr variant="outlined" color="primary" onClick={openEdit}><IconEdit /> &nbsp;Edit</BtnMr>
-                  <Button disabled={collectionInfo.maxCount === 0 || badList.length > 0} variant="contained" className='w160' color="primary" onClick={openDeploy}>Launch</Button>
+                  <Button disabled={list.length === 0 || badList.length > 0} variant="contained" className='w160' color="primary" onClick={openDeploy}>Launch</Button>
                 </CollectionFunc>
               </CollectionItem>
               <CollectionDes>{collectionInfo.description}</CollectionDes>

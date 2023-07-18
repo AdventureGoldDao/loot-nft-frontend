@@ -263,7 +263,7 @@ export default function NFTManage() {
                   </ItemInfo>
                   {
                     item.maxCount > 0 &&
-                    <Button className='wp100 h40 btn_themeColor' onClick={($event) => { openPush($event, item.id) }}>Push</Button>
+                    <Button className='wp100 h40 btn_themeColor' onClick={($event) => { openPush($event, item.id) }}>Launch</Button>
                   }
                 </CardItem>
               ))

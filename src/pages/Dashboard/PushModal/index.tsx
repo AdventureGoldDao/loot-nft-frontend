@@ -154,7 +154,7 @@ export default function CollectionModal({ visiblePush=false, closePushModal, col
     })
   }
   const pushcollection = async (mintStartTime, mintEndTime, chainType, contractInfo) => {
-    let res = publishCollection(collectionId, mintStartTime, mintEndTime, chainType, contractInfo.address, contractInfo.transactionHash, contractInfo.blockNumber)
+    let res = await publishCollection(collectionId, mintStartTime, mintEndTime, chainType, contractInfo.address, contractInfo.transactionHash, contractInfo.blockNumber, mintLimit)
     initMsg("Success!",'success')
     closePushModal()
     history.push(`/collectionDetail/${collectionId}`)
@@ -193,10 +193,10 @@ export default function CollectionModal({ visiblePush=false, closePushModal, col
             <div className='c_green fs20 lh24 mb10'>{publishForm.name}</div>
           </BlackBox>
           <div className='df mb14'>
-            <BlackBox isDate={false} className='mr6 f1'>
+            {/* <BlackBox isDate={false} className='mr6 f1'>
               <ColorGreenLight className='lh28'>NFTs</ColorGreenLight>
               <div className='c_green fs20 lh24 mb10'>{publishForm.maxCount}</div>
-            </BlackBox>
+            </BlackBox> */}
             <BlackBox isDate={false} className='f1'>
               <ColorGreenLight className='lh28'>Total supply</ColorGreenLight>
               <div className='c_green fs20 lh24 mb10'>{publishForm.maxCount}</div>

@@ -14,8 +14,8 @@ export const queryCollectionDetail = async (collectionId) => {
   let res = await http.get(`/collections/${collectionId}`)
   return res
 }
-export const publishCollection = async (collectionId,mintStartTime,mintEndTime,chainType,contractAddress,txHash,blockNumber) => {
-  let res = await http.put(`/collections/${collectionId}/publish?mintStartTime=${mintStartTime}&mintEndTime=${mintEndTime}&chainType=${chainType}&contractAddress=${contractAddress}&txHash=${txHash}&blockNumber=${blockNumber}`)
+export const publishCollection = async (collectionId,mintStartTime,mintEndTime,chainType,contractAddress,txHash,blockNumber,maxCountPerAddress) => {
+  let res = await http.put(`/collections/${collectionId}/publish?mintStartTime=${mintStartTime}&mintEndTime=${mintEndTime}&chainType=${chainType}&contractAddress=${contractAddress}&txHash=${txHash}&blockNumber=${blockNumber}&maxCountPerAddress=${maxCountPerAddress}`)
   return res
 }
 const formatTime = (timestamp) => {
