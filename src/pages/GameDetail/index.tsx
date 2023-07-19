@@ -300,7 +300,7 @@ const tabArr = ['Overview', 'Collections', 'Leaderboard', 'Play']
 export default function GameDetail() {
   // @ts-ignore
   const { id } = useParams();
-  const [gameInfo, setGameInfo] = useState(gamesArr[0]);
+  const [gameInfo, setGameInfo] = useState<any>({});
   const [currentTab, setCurrentTab] = useState(tabArr[0]);
 
   const goPlay = () => {
@@ -325,7 +325,7 @@ export default function GameDetail() {
               <ChainBox className="df_align_center">
                 <span>Support Chain</span>
                 {
-                  gameInfo.supportChains.map(item => (
+                  gameInfo.supportChains?.map(item => (
                     <ChainImg src={chainTypeImgObj[item]} />
                   ))
                 }
@@ -333,7 +333,7 @@ export default function GameDetail() {
               <div className="df_align_center">
                 <span className="mr17">Genres</span>
                 {
-                  gameInfo.tags.map(item => <Tag>{item}</Tag>)
+                  gameInfo.tags?.map(item => <Tag>{item}</Tag>)
                 }
               </div>
             </div>
@@ -369,7 +369,7 @@ export default function GameDetail() {
           currentTab === tabArr[0] && <div key={id} data-aos="fade-up" data-aos-duration={500}>
             <ScreenBox >
               {
-                gameInfo.screenshots.map(item => {
+                gameInfo.screenshots?.map(item => {
                   if (item.type === 'img') {
                     return <img className='screen-item' src={item.url} />
                   } else if (item.type === 'youtube') {
@@ -384,12 +384,12 @@ export default function GameDetail() {
         {
           currentTab === tabArr[1] && <CollectionBox>
             {
-              gameInfo.collections.map(item => (
+              gameInfo.collections?.map(item => (
                 <BadgeCard key={item.name} item={item} type='game' />
               ))
             }
             {
-              gameInfo.collections.length === 0 && <NoData></NoData>
+              gameInfo.collections?.length === 0 && <NoData></NoData>
             }
           </CollectionBox>
         }
