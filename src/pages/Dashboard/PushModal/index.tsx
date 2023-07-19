@@ -100,8 +100,13 @@ export default function CollectionModal({ visiblePush = false, closePushModal, c
     closePushModal(refresh)
   }
   const handleChange = (event) => {
-    console.log(event.target.value);
-    setMintLimit(event.target.value)
+    const inputValue = event.target.value;
+    if (/^[1-9][0-9]*$/.test(inputValue) || inputValue === '') {
+      setMintLimit(inputValue);
+    }else {
+      setMintLimit('');
+
+    }
   };
 
   const beforeDeploy = () => {
@@ -266,6 +271,10 @@ export default function CollectionModal({ visiblePush = false, closePushModal, c
               type='number'
               InputLabelProps={{
                 shrink: true,
+              }}
+              inputProps={{
+                pattern: '[0-9]*',
+                inputMode: 'numeric',
               }}
             />
           </BlackBox>

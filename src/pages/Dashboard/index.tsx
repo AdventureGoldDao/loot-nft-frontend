@@ -8,7 +8,7 @@ import CollectionModal from './CollectionModal';
 import PushModal from './PushModal'
 import { useActiveWeb3React } from "../../web3";
 import { saveCollection, queryCollectionDetail, useOwnerCollectionList } from "../../services/createNFTManage"
-import { chainTypeComImgObj } from "utils/networkConnect"
+import { chainTxtObj, chainTypeComImgObj } from "utils/networkConnect"
 import eth from "assets/img/chain/com_eth.svg"
 import bg from 'assets/img/explore_bg.svg'
 import styled from 'styled-components/macro';
@@ -153,6 +153,7 @@ const ListItem = styled.div`
   border-radius: 10px;
   border: 1px solid #4B5954;
   background: #111211;
+  cursor: pointer;
 `
 const ColH5 = styled.div`
   @media screen and (max-width: ${BREAKPOINTS.md}px) {
@@ -232,6 +233,9 @@ export default function NFTManage() {
   const handleCloseLoading = () => {
     setLoading(false)
   }
+  const goToCollection = (collectionId) => {
+    history.push(`/collectionDetail/${collectionId}`)
+  }
   useEffect(() => {
     if(!account){
       needSign()
@@ -285,12 +289,12 @@ export default function NFTManage() {
             </ListHeader>
             {
               list.length > 0 && list.map(item => (
-                <ListItem>
+                <ListItem onClick={()=>{goToCollection(item.id)}}>
                   <ImgBox>
                     <img src={item.image}></img>
                   </ImgBox>
                   <div className='f3 c_green pl10'>{item.name}</div>
-                  <ColH5 className='f1 df_align_center'><img className='mr8' width={24} src={chainTypeComImgObj[item.chainType]}></img>{item.chainType}</ColH5>
+                  <ColH5 className='f1 df_align_center'><img className='mr8' width={24} src={chainTypeComImgObj[item.chainType]}></img>{chainTxtObj[item.chainType]}</ColH5>
                   <div className='f1'>{item.mintedCount} /{item.maxCount}</div>
                   <ColH5 className='f2'>{moment(item.mintStartTime).format('MM/DD/YYYY HH:mm')}</ColH5>
                 </ListItem>

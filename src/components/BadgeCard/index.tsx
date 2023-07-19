@@ -185,7 +185,7 @@ export default function BadgeCard({ item, type = '', clickEvent = (a) => { } }) 
         </BadgeItem>
         <ItemFooter>
           <NftName className={`ell`} collector={type === 'collector'}>{item.collectionName}</NftName>
-          <CollectionName>{item.name}</CollectionName>
+          <CollectionName className={`text_hidden_1`}>{item.name}</CollectionName>
           {
             type === 'game' && <ChainName>
               <img src={chainTypeImgObj[item.chainType]} />

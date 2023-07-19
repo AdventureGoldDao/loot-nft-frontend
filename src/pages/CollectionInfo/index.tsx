@@ -316,7 +316,7 @@ export default function NFTDetail() {
                 </div>
               </div>
               <MintBox>
-                <Button disabled={detailInfo.status != 'active'} className={`w200_h5 h40 btn_multicolour`} onClick={freeMint}>Free Mint</Button>
+                <Button disabled={detailInfo.status != 'active' ||mintNum===detailInfo.maxCount} className={`w200_h5 h40 btn_multicolour`} onClick={freeMint}>Free Mint</Button>
               </MintBox>
             </BaseInfo>
             <ContractionInfo>

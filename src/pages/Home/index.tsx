@@ -410,7 +410,7 @@ export default function Home() {
             <FootTitle>Shaping the <span className='c_green'>future</span> of the on-chain art industry</FootTitle>
             <div className='c_green tac mt10 lh28'>Join this revolution with over 300 other pioneering artists</div>
             <div className='tac mt30'>
-              <Button variant="contained" color='primary' onClick={joinDiscord}>Learn More</Button>
+              <Button variant="contained" color='primary' onClick={joinDiscord}>Join Discord</Button>
             </div>
           </FootContent>
           <ViewAll className='pt40 tac'>

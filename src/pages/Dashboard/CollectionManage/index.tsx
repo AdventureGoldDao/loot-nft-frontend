@@ -68,6 +68,7 @@ const CollectionTitle = styled.div`
   font-weight: 600;
 `
 const CollectionFunc = styled.div`
+  min-width: 400px;
 `
 const BtnMr = styled(Button)`
   margin-right: 10px !important;
@@ -386,12 +387,8 @@ export default function CollectionManageIndex() {
   const [visibleDelNFT, setVisibleDelNFT] = useState(false);
   const [jsonError, setJsonError] = useState(false);
   const [pageNo, setPageNo] = useState(1);
-  const [arrts, setAttrs] = useState([
-    {
-      name: '',
-      value: ''
-    }
-  ])
+  const [switchCheck, setSwitchCheck] = useState(false)
+  const [arrts, setAttrs] = useState([])
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false)
   const [msg, setMsg] = useState('')
   const [severity, setSeverity] = useState('success')
@@ -413,7 +410,8 @@ export default function CollectionManageIndex() {
     // @ts-ignore
     setSelectedImage(null)
     // @ts-ignore
-    setAttrs([{ name: '', value: '' }])
+    setAttrs([])
+    setSwitchCheck(false)
   }
   const handelDel = () => {
     setVisibleDel(false)
@@ -450,16 +448,19 @@ export default function CollectionManageIndex() {
     setVisiblePush(true)
   }
   const queryInfo = async () => {
-    let res = await queryCollectionDetail(collectionId)
-    setCollectionInfo(res)
-    /* @ts-expect-error */
-    if (res?.metadataUploaded) {
-      setHadJsonUpload(true)
+    try {
+      let res = await queryCollectionDetail(collectionId)
+      setCollectionInfo(res)
+      /* @ts-expect-error */
+      if (res?.metadataUploaded) {
+        setHadJsonUpload(true)
+      }
+    } catch (error) {
+      history.push('/dashboard')
     }
   }
   const changeFile = (event) => {
     const file = event.target.files[0];
-
     if (file) {
       setSelectedImage(file);
     }
@@ -509,10 +510,10 @@ export default function CollectionManageIndex() {
       return false
     }
     setLoading(true)
-    if(arrts.length>0){
+    if (arrts.length > 0) {
       let obj = Object.fromEntries(arrts.map(item => [item.name, item.value]));
       formData.append('attributes', JSON.stringify(obj))
-    }else{
+    } else {
       formData.append('attributes', JSON.stringify({}))
     }
 
@@ -543,11 +544,13 @@ export default function CollectionManageIndex() {
   const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.checked) {
       setAttrs([])
+      setSwitchCheck(false)
     } else {
       setAttrs([{
         name: '',
         value: ''
       }])
+      setSwitchCheck(true)
     }
   }
   const openNFTEdit = (item) => {
@@ -561,7 +564,14 @@ export default function CollectionManageIndex() {
     // @ts-ignore
     setSelectedImage(res.image)
     // @ts-ignore
-    setAttrs(res.attributes || [{ name: '', value: '' }])
+    if (!res.attributes) {
+      setSwitchCheck(false)
+      setAttrs([])
+    } else {
+      setSwitchCheck(true)
+      // @ts-ignore
+      setAttrs(res.attributes)
+    }
   }
 
   const uploadJson = (e) => {
@@ -1001,7 +1011,7 @@ export default function CollectionManageIndex() {
             </div>
           </CreateNftBaseBox>
           <SwitchGroup >
-            <FormControlLabel control={<GreenSwitch defaultChecked onChange={handleSwitchChange} />} label="Properties" labelPlacement="start" />
+            <FormControlLabel control={<GreenSwitch checked={switchCheck} defaultChecked onChange={handleSwitchChange} />} label="Properties" labelPlacement="start" />
           </SwitchGroup>
           <ArrtList>
             {
