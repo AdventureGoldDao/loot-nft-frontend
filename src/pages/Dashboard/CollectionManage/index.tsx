@@ -389,6 +389,8 @@ export default function CollectionManageIndex() {
   const [pageNo, setPageNo] = useState(1);
   const [switchCheck, setSwitchCheck] = useState(false)
   const [arrts, setAttrs] = useState([])
+  const [needRefresh, setNeedRefresh] = useState(null);
+  const [needRefreshTime, setNeedRefreshTime] = useState(0);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false)
   const [msg, setMsg] = useState('')
   const [severity, setSeverity] = useState('success')
@@ -523,6 +525,8 @@ export default function CollectionManageIndex() {
       handleCancelNFT()
       setLoading(false)
       getNftList(pageNo)
+      setNeedRefresh(nftForm.nftId)
+      setNeedRefreshTime(Date.now())
     } catch (error) {
       setLoading(false)
       initMsg(error, 'error')
@@ -768,7 +772,7 @@ export default function CollectionManageIndex() {
               </CreateBox>
               {
                 list.map(item => (
-                  <BadgeCard key={item.nftId} item={item} clickEvent={openNFTEdit} />
+                  <BadgeCard refresh={needRefresh === item.nftId} refreshTime={needRefreshTime} key={item.nftId} item={item} clickEvent={openNFTEdit} />
                 ))
               }
             </ManageMain>
@@ -967,7 +971,7 @@ export default function CollectionManageIndex() {
             <UploadBox className='df_column_center cp' onClick={openFile}>
               {
                 selectedImage ?
-                  <ShowImg src={selectedImage && typeof selectedImage === 'object' ? window.URL.createObjectURL(selectedImage) : selectedImage}></ShowImg>
+                  <ShowImg src={typeof selectedImage === 'object' ? window.URL.createObjectURL(selectedImage) : (selectedImage + '?t=' + needRefreshTime)}></ShowImg>
                   :
                   <div className='df_column_center'>
                     <IconCreate>+</IconCreate>

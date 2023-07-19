@@ -18,6 +18,9 @@ import banner3 from 'assets/img/games/banner3.jpg'
 import banner4 from 'assets/img/games/banner4.jpg'
 import banner5 from 'assets/img/games/banner5.jpg'
 import collection from 'assets/img/games/collection.jpg'
+import archlootCollection1 from 'assets/img/games/archloot_collection1.png'
+import archlootCollection2 from 'assets/img/games/archloot_collection2.png'
+import archlootCollection3 from 'assets/img/games/archloot_collection3.png'
 import screen1 from 'assets/img/games/screen1.jpg'
 import screen2 from 'assets/img/games/screen2.jpg'
 import land1 from 'assets/img/games/land1.png'
@@ -25,6 +28,7 @@ import land2 from 'assets/img/games/land2.png'
 import { ReactComponent as ShareIcon } from 'assets/img/games/share.svg'
 import { ReactComponent as WebsiteIcon } from 'assets/img/games/website.svg'
 import { ReactComponent as TwitterIcon } from 'assets/img/games/twitter.svg'
+import { ReactComponent as DiscordIcon } from 'assets/img/games/discord.svg'
 import { Tag } from 'pages/Games'
 import BadgeCard from "components/BadgeCard";
 import NoData from "../../components/NoData";
@@ -176,16 +180,16 @@ const ScreenBox = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin: -8px -8px 32px;
+  .screen-item {
+    width: calc(50% - 16px);
+    margin: 8px;
+    border-radius: 10px;
+  }
   @media screen and (max-width: ${BREAKPOINTS.md}px) {
     margin-bottom: 8px;
-  }
-`
-const ScreenImg = styled.img`
-  width: calc(50% - 16px);
-  margin: 8px;
-  border-radius: 10px;
-  @media screen and (max-width: ${BREAKPOINTS.md}px) {
-    width: calc(100% - 16px);
+    .screen-item {
+      width: calc(100% - 16px);
+    }
   }
 `
 const CollectionBox = styled.div`
@@ -210,7 +214,8 @@ export const gamesArr = [
     playLink: 'https://mighty-magic-dao.vercel.app/',
     website: 'https://mighty-magic-dao.vercel.app/',
     twitter: '',
-    screenshots: [screen1, screen2],
+    discord: '',
+    screenshots: [{ type: 'img', url: screen1 }, { type: 'img', url: screen2 }],
     leaderboardLink: 'https://mighty-magic-dao.vercel.app/leaderboard',
     collections: [
       {
@@ -234,34 +239,52 @@ export const gamesArr = [
     playLink: 'https://llcgame.io/',
     website: 'https://llcgame.io/',
     twitter: 'https://twitter.com/0xNetherGames',
-    screenshots: [land1, land2],
+    discord: 'http://discord.gg/PGdtwjqjuJ',
+    screenshots: [{ type: 'img', url: land1 }, { type: 'img', url: land2 }],
     leaderboardLink: '',
     collections: []
   },
-  // {
-  //   id: '2',
-  //   name: 'Game Name 2',
-  //   description: 'Embark on this thrilling journey with "Mighty Magic" as you explore the realm of NFTs and engage in epic battles where only the mightiest heroes prevail. Sharpen your strategy, unleash the magic within, and let your heroes claim victory and glory!',
-  //   logo: logo2,
-  //   banner: banner2,
-  //   tags: ['AVG', 'Free Mint'],
-  //   supportChains: ['loottest', 'zksynceratest'],
-  //   playLink: 'https://mighty-magic-dao.vercel.app/mint',
-  //   website: 'https://mighty-magic-dao.vercel.app/',
-  //   twitter: 'https://twitter.com/home',
-  //   screenshots: [screen1, screen2],
-  //   leaderboardLink: 'https://mighty-magic-dao.vercel.app/leaderboard',
-  //   collections: [
-  //     {
-  //       name: 'Hero',
-  //       image: collection,
-  //       collectionLink: 'https://mighty-magic-dao.vercel.app/mint',
-  //       mintStartTime: 1688376305000 + 3600000 * 24 * 2,
-  //       mintEndTime: 1688376305000 + 3600000 * 24 * 3,
-  //       chainType: 'loottest'
-  //     }
-  //   ]
-  // },
+  {
+    id: 'archloot',
+    name: 'Archloot',
+    description: `UGC-NFT game. The 1st interactive NFT gameplay that frees your imagination.`,
+    logo: logo3,
+    banner: banner3,
+    tags: ['UGC'],
+    supportChains: ['bsc'],
+    playLink: 'https://archloot.com/',
+    website: 'https://archloot.com/',
+    twitter: 'https://twitter.com/archlootOS',
+    discord: 'http://discord.gg/gPJwXJSFAc',
+    screenshots: [{ type: 'youtube', url: 'https://www.youtube.com/embed/Q7Wve4bRGHg' }, { type: 'img', url: 'https://archloot.com/static/images/prod/features/mask.png' }, { type: 'img', url: 'https://archloot.com/_nuxt/img/game.8c08ced.png' }, { type: 'img', url: 'https://archloot.com/_nuxt/img/game-video.786f910.png' }],
+    leaderboardLink: '',
+    collections: [
+      {
+        name: 'Collector Pass',
+        image: archlootCollection1,
+        collectionLink: 'https://archloot.com/mint',
+        mintStartTime: 0,
+        mintEndTime: 0,
+        chainType: 'bsc'
+      },
+      {
+        name: 'Goblin Pass',
+        image: archlootCollection2,
+        collectionLink: 'https://archloot.com/mint',
+        mintStartTime: 0,
+        mintEndTime: 0,
+        chainType: 'bsc'
+      },
+      {
+        name: 'Adventurer Pass',
+        image: archlootCollection3,
+        collectionLink: 'https://archloot.com/pass/',
+        mintStartTime: 0,
+        mintEndTime: 0,
+        chainType: 'bsc'
+      },
+    ]
+  },
 ]
 
 const tabArr = ['Overview', 'Collections', 'Leaderboard', 'Play']
@@ -285,7 +308,7 @@ export default function GameDetail() {
   return (
     <Main>
       <BgBox style={{ backgroundImage: `url(${gameInfo.banner})` }} />
-      <PageHeader  key={id} data-aos="ease-out" data-aos-duration={5000}>
+      <PageHeader key={id} data-aos="ease-out" data-aos-duration={5000}>
         <div className="df_align_center_h5">
           <HeaderImg src={gameInfo.logo} />
           <div>
@@ -311,8 +334,18 @@ export default function GameDetail() {
         <div className="df_align_center_h5">
           <LinkBox>
             <LinkA href={gameInfo.website} target='_blank'><WebsiteIcon /></LinkA>
-            <BoxHr />
-            <LinkA href={gameInfo.twitter} target='_blank'><TwitterIcon /></LinkA>
+            {
+              gameInfo.twitter && <>
+                <BoxHr />
+                <LinkA href={gameInfo.twitter} target='_blank'><TwitterIcon /></LinkA>
+              </>
+            }
+            {
+              gameInfo.discord && <>
+                <BoxHr />
+                <LinkA href={gameInfo.discord} target='_blank'><DiscordIcon /></LinkA>
+              </>
+            }
           </LinkBox>
           <Button onClick={goPlay} style={{ height: 40 }} className="w180 btn_multicolour">Play Now<ShareIcon width={9} height={9} style={{ marginLeft: 8 }} /></Button>
         </div>
@@ -328,7 +361,13 @@ export default function GameDetail() {
           currentTab === tabArr[0] && <div key={id} data-aos="fade-up" data-aos-duration={500}>
             <ScreenBox >
               {
-                gameInfo.screenshots.map(item => <ScreenImg src={item} />)
+                gameInfo.screenshots.map(item => {
+                  if (item.type === 'img') {
+                    return <img className='screen-item' src={item.url} />
+                  } else if (item.type === 'youtube') {
+                    return <iframe className='screen-item' src={item.url} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                  }
+                })
               }
             </ScreenBox>
             <div style={{ color: '#ebebeb', fontWeight: 400, lineHeight: 1.8 }}>{gameInfo.description}</div>
@@ -342,13 +381,21 @@ export default function GameDetail() {
               ))
             }
             {
-               gameInfo.collections.length === 0 && <NoData></NoData>
+              gameInfo.collections.length === 0 && <NoData></NoData>
             }
           </CollectionBox>
         }
         {
-          currentTab === tabArr[2] &&
-          <iframe width="100%" height="1000px" src={gameInfo.leaderboardLink} frameBorder="0"></iframe>
+          currentTab === tabArr[2] && <>
+            {
+              gameInfo.leaderboardLink ?
+                <iframe width="100%" height="1000px" src={gameInfo.leaderboardLink} frameBorder="0"></iframe>
+                :
+                <CollectionBox>
+                  <NoData></NoData>
+                </CollectionBox>
+            }
+          </>
         }
         {
           currentTab === tabArr[3] &&

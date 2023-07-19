@@ -273,9 +273,6 @@ export default function Games() {
             )
           }
           <ComingSoonBox>
-            <EnlargementBgBox style={{ backgroundImage: `url(${banner3})` }} />
-          </ComingSoonBox>
-          <ComingSoonBox>
             <EnlargementBgBox style={{ backgroundImage: `url(${banner4})` }} />
           </ComingSoonBox>
         </GamesRightBox>
@@ -299,14 +296,6 @@ export default function Games() {
             </ContentItemBox>
           )
         }
-        <ContentItemBox>
-          <ContentItemComingSoon >
-            <EnlargementBgBox style={{ backgroundImage: `url(${banner3})` }} />
-            <ShadeCard>
-              <NameTag>Coming Soon...</NameTag>
-            </ShadeCard>
-          </ContentItemComingSoon>
-        </ContentItemBox>
         <ContentItemBox>
           <ContentItemComingSoon >
             <EnlargementBgBox style={{ backgroundImage: `url(${banner4})` }} />
