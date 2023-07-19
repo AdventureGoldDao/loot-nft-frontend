@@ -365,7 +365,7 @@ export default function GameDetail() {
                   if (item.type === 'img') {
                     return <img className='screen-item' src={item.url} />
                   } else if (item.type === 'youtube') {
-                    return <iframe className='screen-item' src={item.url} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    return <iframe className='screen-item' src={item.url} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
                   }
                 })
               }
