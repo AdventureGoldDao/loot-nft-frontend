@@ -23,6 +23,7 @@ import { useBadgeProjectList } from "../../../services/badge"
 import bg from 'assets/img/explore_bg.svg'
 import styled from 'styled-components/macro';
 import { abbrTxHash, formatAmount } from "utils/format";
+import { ReactComponent as CloseIcon } from 'assets/img/icon_close.svg'
 
 const style = {
   position: 'absolute',
@@ -508,8 +509,12 @@ export default function CollectionManageIndex() {
       return false
     }
     setLoading(true)
-    let obj = Object.fromEntries(arrts.map(item => [item.name, item.value]));
-    formData.append('attributes', JSON.stringify(obj))
+    if(arrts.length>0){
+      let obj = Object.fromEntries(arrts.map(item => [item.name, item.value]));
+      formData.append('attributes', JSON.stringify(obj))
+    }else{
+      formData.append('attributes', JSON.stringify({}))
+    }
 
     try {
       let res = await putOneMetadata(collectionId, nftForm.nftId, formData)
@@ -945,7 +950,9 @@ export default function CollectionManageIndex() {
         open={visibleNFT}
         onClose={handleCancelNFT}>
         <Box sx={{ ...style }}>
-          <div className='mb20'>Edit NFT</div>
+          <div className='mb20 space-between-center'>Edit NFT
+            <CloseIcon onClick={handleCancelNFT} className='cp'></CloseIcon>
+          </div>
           <CreateNftBaseBox>
             <UploadBox className='df_column_center cp' onClick={openFile}>
               {

@@ -4,8 +4,10 @@ import { Button, Modal, Box, TextField } from "@mui/material";
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import dayjs from 'dayjs';
 
 import Snackbar from "components/SnackMessage"
+import DeploySuccessModal from "../DeploySuccessModal"
 import { useNeedSign } from "hooks/account"
 import { useActiveWeb3React } from "../../../web3";
 import { publishCollection, queryCollectionDetail } from "../../../services/createNFTManage"
@@ -14,9 +16,8 @@ import { chainArr, chainFun } from 'utils/networkConnect';
 import { getChainType } from 'web3/address';
 import { mainContext } from "../../../reducer";
 import styled from 'styled-components/macro';
-import { HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL, HANDLE_SHOW_TRANSACTION_MODAL } from "const";
-import moment from 'moment';
-
+import { HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL, launchForConfirm } from "const";
+import { ReactComponent as CloseIcon } from 'assets/img/icon_close.svg'
 
 const style = {
   position: 'absolute',
@@ -28,6 +29,7 @@ const style = {
   padding: '20px 24px'
 };
 const ColorGreenLight = styled.span`
+  display: inline-block;
   color: #7A9283;
 `
 const TextInput = styled(TextField)`
@@ -68,7 +70,7 @@ const BlackBox = styled.div<{ isDate: boolean }>`
     fill: #4B5954;
   }
 `
-const BlackBoxChain = styled(BlackBox)<{activeChain: boolean}>`
+const BlackBoxChain = styled(BlackBox) <{ activeChain: boolean }>`
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
@@ -79,7 +81,7 @@ const ImgBox = styled.img`
   height: 38px;
   border-radius: 50%;
 `
-export default function CollectionModal({ visiblePush=false, closePushModal, collectionId }) {
+export default function CollectionModal({ visiblePush = false, closePushModal, collectionId }) {
   const { library, account, chainId } = useActiveWeb3React()
   const { dispatch } = useContext(mainContext);
   const history = useHistory()
@@ -89,18 +91,13 @@ export default function CollectionModal({ visiblePush=false, closePushModal, col
   const [selectChainType, setSelectChainType] = useState(chainArr[1].value)
   const [mintLimit, setMintLimit] = useState(null)
   const [publishForm, setPublishForm] = useState<any>({});
-  const [severity,setSeverity] = useState('success')
+  const [severity, setSeverity] = useState('success')
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false)
   const [msg, setMsg] = useState('')
+  const [visible, setVisible] = useState(false)
 
-  // const [errors, setErrors] = useState({
-  //   name: false,
-  //   description: false,
-  //   mintLimit: false,
-  // });
-
-  const handleCancel = () => {
-    closePushModal()
+  const handleCancel = (refresh) => {
+    closePushModal(refresh)
   }
   const handleChange = (event) => {
     console.log(event.target.value);
@@ -121,7 +118,7 @@ export default function CollectionModal({ visiblePush=false, closePushModal, col
   const handelSubmit = async () => {
     // @ts-ignore
     if (!beforeDeploy()) return false
-    
+
     if (!startTime) {
       initMsg("start time is required", 'error')
       return false
@@ -136,30 +133,36 @@ export default function CollectionModal({ visiblePush=false, closePushModal, col
     }
     dispatch({
       type: HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
-      showWaitingWalletConfirmModal: true
+      showWaitingWalletConfirmModal: launchForConfirm
     })
-    
+
     let mintStartTime = startTime.valueOf()
-    let mintEndTime =  endTime.valueOf()
+    let mintEndTime = endTime.valueOf()
     let userLimit = mintLimit
     let acceptCurrency = '0x0000000000000000000000000000000000000000'
     let mintPrice = 0
     // @ts-ignore
-    let res = await deployFreeMintNFT721(library, account, publishForm.name, publishForm.tokenSymbol, selectChainType, publishForm.maxCount, parseInt(mintStartTime / 1000) , parseInt(mintEndTime / 1000), userLimit, acceptCurrency, mintPrice)
+    let res = await deployFreeMintNFT721(library, account, publishForm.name, publishForm.tokenSymbol, selectChainType, publishForm.maxCount, parseInt(mintStartTime / 1000), parseInt(mintEndTime / 1000), userLimit, acceptCurrency, mintPrice)
     // console.log(res);
     pushcollection(mintStartTime, mintEndTime, selectChainType, res)
-    dispatch({
-      type: HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
-      showWaitingWalletConfirmModal: false
-    })
+
   }
   const pushcollection = async (mintStartTime, mintEndTime, chainType, contractInfo) => {
     let res = await publishCollection(collectionId, mintStartTime, mintEndTime, chainType, contractInfo.address, contractInfo.transactionHash, contractInfo.blockNumber, mintLimit)
-    initMsg("Success!",'success')
-    closePushModal()
+    dispatch({
+      type: HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
+      showWaitingWalletConfirmModal: { show: false }
+    })
+    setVisible(true)
+  }
+  const closeDep = () => {
+    setVisible(false)
+    viewCollection()
+  }
+  const viewCollection = () => {
     history.push(`/collectionDetail/${collectionId}`)
   }
-  const initMsg = (msg,status) => {
+  const initMsg = (msg, status) => {
     setMsg(msg)
     setSeverity(status)
     setIsSnackbarOpen(true)
@@ -174,7 +177,23 @@ export default function CollectionModal({ visiblePush=false, closePushModal, col
   const closeSnackbar = () => {
     setIsSnackbarOpen(false)
   }
-  
+  const handleStartDateChange = (date) => {
+    const currentDate = dayjs();
+    if (date.isAfter(currentDate)) {
+      setStartTime(date);
+    }else {
+      setStartTime(currentDate)
+    }
+  }
+  const handleEndDateChange = (date) => {
+    const currentDate = dayjs();
+    if (date.isAfter(currentDate)) {
+      setEndTime(date);
+    }else {
+      setEndTime(currentDate)
+    }
+  }
+
   useEffect(() => {
     collectionId && queryInfo(collectionId)
   }, [collectionId])
@@ -184,10 +203,13 @@ export default function CollectionModal({ visiblePush=false, closePushModal, col
       <Snackbar isSnackbarOpen={isSnackbarOpen} msg={msg} closeSnackbar={closeSnackbar} severity={severity}></Snackbar>
       <Modal
         open={visiblePush}
-        onClose={handleCancel}
+        onClose={() => { handleCancel(false) }}
       >
         <Box sx={{ ...style }}>
-          <div>Deploy & Push</div>
+          <div className='space-between-center'>
+            Deploy & Push
+            <CloseIcon onClick={() => { handleCancel(false) }} className='cp'></CloseIcon>
+          </div>
           <BlackBox isDate={false} >
             <ColorGreenLight className='lh28'>Collection name</ColorGreenLight>
             <div className='c_green fs20 lh24 mb10'>{publishForm.name}</div>
@@ -202,7 +224,7 @@ export default function CollectionModal({ visiblePush=false, closePushModal, col
               <div className='c_green fs20 lh24 mb10'>{publishForm.maxCount}</div>
             </BlackBox>
           </div>
-          <ColorGreenLight className='lh24'>Select a network to deploy your collection. </ColorGreenLight>
+          <ColorGreenLight className='lh24 mt20'>Select a network to deploy your collection. </ColorGreenLight>
           <div className='df'>
             {
               chainArr.map((item, index) => (
@@ -223,14 +245,14 @@ export default function CollectionModal({ visiblePush=false, closePushModal, col
                 <DateTimePicker label={'Start Time'} ampm={false}
                   value={startTime}
                   format='MM/DD/YYYY HH:mm'
-                  onChange={(newValue) => setStartTime(newValue)}
+                  onChange={handleStartDateChange}
                 />
               </BlackBox>
               <BlackBox isDate={true}>
                 <DateTimePicker label={'End Time'} ampm={false}
                   value={endTime}
                   format='MM/DD/YYYY HH:mm'
-                  onChange={(newValue) => setEndTime(newValue)}
+                  onChange={handleEndDateChange}
                 />
               </BlackBox>
             </div>
@@ -252,7 +274,7 @@ export default function CollectionModal({ visiblePush=false, closePushModal, col
           </div>
         </Box>
       </Modal>
-
+      <DeploySuccessModal visible={visible} closeDep={closeDep} viewCollection={viewCollection}></DeploySuccessModal>
     </>
   )
 }

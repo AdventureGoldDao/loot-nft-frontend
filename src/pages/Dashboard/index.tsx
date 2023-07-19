@@ -205,15 +205,21 @@ export default function NFTManage() {
       setVisible(true)
     })
   }
-  const handleCancel = () => {
+  const handleCancel = (refresh) => {
+    console.log(refresh);
+    
     setVisible(false)
-    let a = refreshList + 1
-    setRefreshList(a)
+    if(refresh){
+      let a = refreshList + 1
+      setRefreshList(a)
+    }
   }
-  const handleCancel2 = () => {
+  const handleCancel2 = (refresh) => {
     setVisible2(false)
-    let a = refreshList + 1
-    setRefreshList(a)
+    if(refresh){
+      let a = refreshList + 1
+      setRefreshList(a)
+    }
   }
   const openPush = (event, id) => {
     event.stopPropagation()
@@ -286,7 +292,7 @@ export default function NFTManage() {
                   <div className='f3 c_green pl10'>{item.name}</div>
                   <ColH5 className='f1 df_align_center'><img className='mr8' width={24} src={chainTypeComImgObj[item.chainType]}></img>{item.chainType}</ColH5>
                   <div className='f1'>{item.mintedCount} /{item.maxCount}</div>
-                  <ColH5 className='f2'>{moment(item.mintStartTime).format('MM/DD/YYYY hh:mm')}</ColH5>
+                  <ColH5 className='f2'>{moment(item.mintStartTime).format('MM/DD/YYYY HH:mm')}</ColH5>
                 </ListItem>
               ))
             }

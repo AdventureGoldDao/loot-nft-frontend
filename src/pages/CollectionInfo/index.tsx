@@ -167,6 +167,7 @@ export default function NFTDetail() {
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false)
   const [msg, setMsg] = useState('')
   const [severity, setSeverity] = useState('')
+  const [mintNum, setMintNum] = useState(0)
 
   const beforeMint = () => {
     needSign()
@@ -197,7 +198,8 @@ export default function NFTDetail() {
           type: HANDLE_SHOW_TRANSACTION_MODAL,
           showTransactionModal: { show: true }
         })
-        queryDetailInfo()
+        setMintNum(mintNum+1)
+        // queryDetailInfo()
       },
       _onError: (err) => {
         dispatch({
@@ -214,6 +216,8 @@ export default function NFTDetail() {
   const queryDetailInfo = async () => {
     await queryCollectionDetail(collectionId).then(res => {
       setDetailInfo(res)
+      /* @ts-expect-error */
+      setMintNum(res.mintedCount)
       /* @ts-expect-error */
       setList(res.sampleNfts || [])
     })
@@ -304,7 +308,7 @@ export default function NFTDetail() {
                 </div>
                 <div className='f2 mt10'>
                   <div>Minted</div>
-                  <div className='c_green fw600 mt10 fs22'>{detailInfo.mintedCount} / {detailInfo.maxCount}</div>
+                  <div className='c_green fw600 mt10 fs22'>{mintNum} / {detailInfo.maxCount}</div>
                 </div>
                 <div className='f2 mt10'>
                   <div>Network</div>
@@ -327,7 +331,7 @@ export default function NFTDetail() {
               </ContractItem>
               <ContractItem>
                 <span className='lh28'>Blockchain</span>
-                <span className='c_green'>{detailInfo.chainType}</span>
+                <span className='c_green'>{chainTxtObj[detailInfo.chainType]}</span>
               </ContractItem>
               <ContractItem>
                 <span className='lh28'>Contract Address</span>

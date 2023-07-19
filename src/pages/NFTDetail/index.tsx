@@ -310,7 +310,7 @@ export default function NFTDetail() {
               </ContractItem>
               <ContractItem>
                 <span className='lh28'>Blockchain</span>
-                <span className='c_green'>{detailInfo.chainType}</span>
+                <span className='c_green'>{chainTxtObj[detailInfo.chainType]}</span>
               </ContractItem>
               <ContractItem>
                 <span className='lh28'>Contract Address</span>

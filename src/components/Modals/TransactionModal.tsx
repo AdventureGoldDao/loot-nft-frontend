@@ -6,6 +6,7 @@ import styled from 'styled-components/macro';
 import { HANDLE_SHOW_TRANSACTION_MODAL } from "../../const";
 import { mainContext } from "../../reducer";
 import { ReactComponent as SuccessIcon } from '../../assets/img/success_icon.svg'
+import { ReactComponent as CloseIcon } from 'assets/img/icon_close.svg'
 
 const Title = styled.div`
   margin: 20px 0 10px;
@@ -24,6 +25,11 @@ const style = {
   padding: '50px 15px',
   textAlign: 'center'
 };
+const CloseBox = styled.div`
+  position: absolute;
+  top: 14px;
+  right: 14px;
+`
 
 export const TransactionModal = ({ visible }) => {
   const { dispatch, state } = useContext(mainContext);
@@ -42,9 +48,12 @@ export const TransactionModal = ({ visible }) => {
       onClose={handleCancel}
     >
       <Box sx={{ ...style }}>
+        <CloseBox>
+          <CloseIcon onClick={handleCancel} className='cp'></CloseIcon>
+        </CloseBox>
         <SuccessIcon />
-        <Title style={{ color: '#A5FFBE' }}>{showTransactionModal.title? showTransactionModal.title: 'SUCCESS'}</Title>
-        <div style={{ color: '#76AB8B' }}>{showTransactionModal.content? showTransactionModal.content : 'NFT minted successfully'}</div>
+        <Title style={{ color: '#A5FFBE' }}>{showTransactionModal.title ? showTransactionModal.title : 'SUCCESS'}</Title>
+        <div style={{ color: '#76AB8B' }}>{showTransactionModal.content ? showTransactionModal.content : 'NFT minted successfully'}</div>
       </Box>
     </Modal>
   );

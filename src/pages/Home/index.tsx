@@ -85,6 +85,8 @@ const SwiperCover = styled.div`
   img {
     position: absolute;
     width: 100%;
+    height: 100%;
+    object-fit: cover; 
   }
 `
 const MintBtn = styled.div`
@@ -100,9 +102,11 @@ const NftName = styled.div`
   font-weight: 600;
 `
 const NftDes = styled.div`
+  margin-top: 20px;
   padding-right: 100px;
   font-size: 16px;
   line-height: 24px;
+  color: #EBEBEB;
 `
 const HomeSwiperH5 = styled.div`
   position: relative;
@@ -281,6 +285,9 @@ export default function Home() {
   const goToExplore = () => {
     history.push('/explore')
   }
+  const joinDiscord = () => {
+    window.open('https://discord.com/invite/phSq2EuusS')
+  }
   useEffect(() => {
     queryActiveList()
     queryRecentList()
@@ -298,7 +305,7 @@ export default function Home() {
             <Swiper modules={[Navigation, Autoplay]}
               onSlideChange={slideChange}
               navigation={true}
-              speed={4000}
+              speed={500}
               autoplay={true}
               loop={true}
             >
@@ -311,19 +318,19 @@ export default function Home() {
                           <img src={item.image}></img>
                         </SwiperCover>
                       </Grid>
-                      <Grid item xs={12} sm={12} md={8} lg={8} className={`pl40`}>
+                      <Grid item xs={12} sm={12} md={8} lg={8} className={`pl60`}>
                         <NftName className={`c_green mt10 text_hidden_1`}>{item.name}</NftName>
                         <NftDes className={`text_hidden_3`}>{item.description}</NftDes>
                         <div className='df_h5 mt30'>
-                          <div className='f3 mt10'>
+                          <div className='f1 mt10'>
                             <div>{item?.status === 'soon' ? 'Start at' : 'Close at'}</div>
                             <div className='c_green fw600 mt10 fs24'>{item?.statusTxt}</div>
                           </div>
-                          <div className='f2 mt10'>
+                          <div className='f1 mt10'>
                             <div>Minted</div>
                             <div className='c_green fw600 mt10 fs24'>{item.mintedCount} / {item.maxCount}</div>
                           </div>
-                          <div className='f2 mt10'>
+                          <div className='f1 mt10'>
                             <div>Network</div>
                             <div className='c_green fw600 mt10 fs24'>{chainTxtObj[item.chainType]}</div>
                           </div>
@@ -403,7 +410,7 @@ export default function Home() {
             <FootTitle>Shaping the <span className='c_green'>future</span> of the on-chain art industry</FootTitle>
             <div className='c_green tac mt10 lh28'>Join this revolution with over 300 other pioneering artists</div>
             <div className='tac mt30'>
-              <Button variant="contained" color='primary'>Learn More</Button>
+              <Button variant="contained" color='primary' onClick={joinDiscord}>Learn More</Button>
             </div>
           </FootContent>
           <ViewAll className='pt40 tac'>

@@ -6,6 +6,7 @@ import styled from 'styled-components/macro';
 import { HANDLE_SHOW_FAILED_TRANSACTION_MODAL } from "../../const";
 import { mainContext } from "../../reducer";
 import { ReactComponent as FailedIcon } from '../../assets/img/failed_icon.svg'
+import { ReactComponent as CloseIcon } from 'assets/img/icon_close.svg'
 
 const Title = styled.div`
   margin: 20px 0 10px;
@@ -25,6 +26,11 @@ const style = {
   padding: '50px 15px',
   textAlign: 'center'
 };
+const CloseBox = styled.div`
+  position: absolute;
+  top: 14px;
+  right: 14px;
+`
 
 export const FailedTransactionModal = ({ visible }) => {
   const { dispatch } = useContext(mainContext);
@@ -43,6 +49,9 @@ export const FailedTransactionModal = ({ visible }) => {
       onClose={handleCancel}
     >
       <Box sx={{ ...style }}>
+        <CloseBox>
+          <CloseIcon onClick={handleCancel} className='cp'></CloseIcon>
+        </CloseBox>
         <FailedIcon />
         <Title style={{ color: '#FF7D7D' }}>Failed</Title>
         <div style={{ color: '#975D5D' }}>Transaction failed, please try again</div>

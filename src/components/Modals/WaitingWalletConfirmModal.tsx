@@ -6,6 +6,7 @@ import styled from 'styled-components/macro';
 import { HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL } from "../../const";
 import { mainContext } from "../../reducer";
 import { ReactComponent as LoadingIcon } from '../../assets/img/loading_icon.svg'
+import { ReactComponent as CloseIcon } from 'assets/img/icon_close.svg'
 
 const Title = styled.div`
   margin: 20px 0 10px;
@@ -24,6 +25,11 @@ const style = {
   padding: '50px 15px',
   textAlign: 'center'
 };
+const CloseBox = styled.div`
+  position: absolute;
+  top: 14px;
+  right: 14px;
+`
 
 
 export const WaitingWalletConfirmModal = ({ visible }) => {
@@ -47,9 +53,12 @@ export const WaitingWalletConfirmModal = ({ visible }) => {
       onClose={handleCancel}
     >
       <Box sx={{ ...style }}>
+        <CloseBox>
+          <CloseIcon onClick={handleCancel} className='cp'></CloseIcon>
+        </CloseBox>
         <LoadingIcon />
-        <Title style={{ color: '#A5FFBE' }}>{showWaitingWalletConfirmModal.title? showWaitingWalletConfirmModal.title : 'Minting in progress'}</Title>
-        <div style={{ color: '#76AB8B' }}>{showWaitingWalletConfirmModal.content? showWaitingWalletConfirmModal.content :'Please confirm the transaction with your wallet.'}</div>
+        <Title style={{ color: '#A5FFBE' }}>{showWaitingWalletConfirmModal.title ? showWaitingWalletConfirmModal.title : 'Minting in progress'}</Title>
+        <div style={{ color: '#76AB8B' }}>{showWaitingWalletConfirmModal.content ? showWaitingWalletConfirmModal.content : 'Please confirm the transaction with your wallet.'}</div>
       </Box>
     </Modal>
   );
