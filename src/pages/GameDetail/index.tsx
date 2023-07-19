@@ -226,6 +226,14 @@ export const gamesArr = [
         mintEndTime: 0,
         chainType: 'loot'
       },
+      {
+        name: 'Hero',
+        image: collection,
+        collectionLink: 'https://mighty-magic-dao.vercel.app/mint',
+        mintStartTime: 0,
+        mintEndTime: 0,
+        chainType: 'zksynceratest'
+      },
     ]
   },
   {

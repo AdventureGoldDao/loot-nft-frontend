@@ -691,7 +691,7 @@ export default function CollectionManageIndex() {
     document.getElementById('json-upload-input').click();
   }
   const getNftList = (pageNo = 1) => {
-    getMetadataList(collectionId, true, pageNo, 4).then(res => {
+    getMetadataList(collectionId, true, pageNo, 19).then(res => {
       /* @ts-expect-error */
       setList(res.list);
       /* @ts-expect-error */
@@ -708,7 +708,7 @@ export default function CollectionManageIndex() {
   }
   const pageNoChange = (e, pageNumber) => {
     setPageNo(pageNumber)
-    getMetadataList(collectionId, true, pageNumber, 4).then(res => {
+    getMetadataList(collectionId, true, pageNumber, 19).then(res => {
       /* @ts-expect-error */
       setList(res.list);
     })
