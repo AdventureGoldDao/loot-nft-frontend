@@ -178,7 +178,7 @@ export default function BadgeCard({ item, type = '', clickEvent = (a) => { } }) 
     <CardBox>
       <DefaultBorder active={showCountDown && type !== 'collector'} onClick={() => { goToBadgeDetail(item) }}>
         <BadgeItem>
-          <EnlargementBgBox style={{ backgroundImage: `url(${item.image})` }} />
+          <EnlargementBgBox style={{ backgroundImage: `url(${item.image}?t=${Date.now()})` }} />
           {
             type === 'collector' && <ChainImg src={chainTypeImgObj[item.chainType]} />
           }

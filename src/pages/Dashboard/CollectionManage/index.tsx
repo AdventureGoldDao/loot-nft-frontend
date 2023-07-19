@@ -384,6 +384,7 @@ export default function CollectionManageIndex() {
   const [visibleJsonReload, setVisibleJsonReload] = useState(false);
   const [visibleDelNFT, setVisibleDelNFT] = useState(false);
   const [jsonError, setJsonError] = useState(false);
+  const [pageNo, setPageNo] = useState(1);
   const [arrts, setAttrs] = useState([
     {
       name: '',
@@ -515,7 +516,7 @@ export default function CollectionManageIndex() {
       initMsg('Success!', 'success')
       handleCancelNFT()
       setLoading(false)
-      getNftList()
+      getNftList(pageNo)
     } catch (error) {
       setLoading(false)
       initMsg(error, 'error')
@@ -670,8 +671,8 @@ export default function CollectionManageIndex() {
     setVisibleJsonReload(false)
     document.getElementById('json-upload-input').click();
   }
-  const getNftList = () => {
-    getMetadataList(collectionId, true, 1, 4).then(res => {
+  const getNftList = (pageNo = 1) => {
+    getMetadataList(collectionId, true, pageNo, 4).then(res => {
       /* @ts-expect-error */
       setList(res.list);
       /* @ts-expect-error */
@@ -686,8 +687,9 @@ export default function CollectionManageIndex() {
       setBadList(res.list);
     })
   }
-  const pageNoChange = (e, pageNo) => {
-    getMetadataList(collectionId, true, pageNo, 4).then(res => {
+  const pageNoChange = (e, pageNumber) => {
+    setPageNo(pageNumber)
+    getMetadataList(collectionId, true, pageNumber, 4).then(res => {
       /* @ts-expect-error */
       setList(res.list);
     })
