@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
-import { Button, Backdrop, CircularProgress } from "@mui/material";
+import { Button, Backdrop, CircularProgress, Popover,Typography } from "@mui/material";
 import Snackbar from "components/SnackMessage"
 import copy from 'copy-to-clipboard';
 import { BREAKPOINTS } from 'theme';
@@ -116,7 +116,7 @@ const BaseInfo = styled.div`
     margin-bottom: 10px;
   }
 `
-const CollectionName = styled.div`
+const CollectionName = styled(Typography)`
   font-weight: 600;
   font-size: 40px;
   line-height: 42px;
@@ -198,7 +198,7 @@ export default function NFTDetail() {
           type: HANDLE_SHOW_TRANSACTION_MODAL,
           showTransactionModal: { show: true }
         })
-        setMintNum(mintNum+1)
+        setMintNum(mintNum + 1)
         // queryDetailInfo()
       },
       _onError: (err) => {
@@ -269,6 +269,16 @@ export default function NFTDetail() {
   const closeSnackbar = () => {
     setIsSnackbarOpen(false)
   }
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+
+  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+  const open = Boolean(anchorEl);
   useEffect(() => {
     queryDetailInfo()
   }, [collectionId])
@@ -299,7 +309,33 @@ export default function NFTDetail() {
           </MainF1>
           <MainF1 className={`f1`}>
             <BaseInfo>
-              <CollectionName className={`c_green mt10 text_hidden_1`}>{detailInfo.name}</CollectionName>
+              <CollectionName className={`c_green mt10 text_hidden_1`}
+              aria-owns={open ? 'mouse-over-popover' : undefined}
+              aria-haspopup="true"
+              onMouseEnter={handlePopoverOpen}
+              onMouseLeave={handlePopoverClose}
+              >{detailInfo.name}
+                <Popover
+                  id="mouse-over-popover"
+                  sx={{
+                    pointerEvents: 'none',
+                  }}
+                  open={open}
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                  }}
+                  onClose={handlePopoverClose}
+                  disableRestoreFocus
+                >
+                  <Typography className='c_fff' sx={{ p: 1 }}>{detailInfo.name}</Typography>
+                </Popover>
+              </CollectionName>
               <CollectionDes>{detailInfo.description}</CollectionDes>
               <div className='df_h5 mt30'>
                 <div className='f3 mt10'>
@@ -316,7 +352,7 @@ export default function NFTDetail() {
                 </div>
               </div>
               <MintBox>
-                <Button disabled={detailInfo.status != 'active' ||mintNum===detailInfo.maxCount} className={`w200_h5 h40 btn_multicolour`} onClick={freeMint}>Free Mint</Button>
+                <Button disabled={detailInfo.status != 'active' || mintNum === detailInfo.maxCount} className={`w200_h5 h40 btn_multicolour`} onClick={freeMint}>Free Mint</Button>
               </MintBox>
             </BaseInfo>
             <ContractionInfo>

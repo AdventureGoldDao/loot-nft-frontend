@@ -120,8 +120,11 @@ const CollectionDiv = styled.div`
 `
 const ChainDiv = styled.div`
   width: 1px;
-  margin: 0 28px;
+  margin: 0 24px;
   background: #4B5954;
+`
+const WhiteSpace = styled.div`
+  white-space: nowrap;
 `
 const MintBox = styled.div`
   margin-top: 40px;
@@ -290,14 +293,14 @@ export default function NFTDetail() {
               <NFTName className={`c_green mt10 text_hidden_1`}>{detailInfo.name}</NFTName>
               <CollectionDiv>
                 <div className='df'>
-                  <span className='pr10'>Collection Name</span>
-                  <span className='c_green text_hidden_1'>{detailInfo.collectionName}</span>
+                  <div className='pr10 w200'>Collection</div>
+                  <div className='c_green text_hidden_1'>{detailInfo.collectionName}</div>
                 </div>
                 <ChainDiv>&nbsp;</ChainDiv>
                 <div className='df_align_center'>
                   <span className='pr10'>Network</span>
                   <img width={20} src={chainTypeComImgObj[detailInfo.chainType]}></img>
-                  <span className='c_green pl10 text_hidden_1'>{chainTxtObj[detailInfo.chainType]}</span>
+                  <WhiteSpace className='c_green pl10'>{chainTxtObj[detailInfo.chainType]}</WhiteSpace>
                 </div>
               </CollectionDiv>
               <NFTDes className='mb10'>{detailInfo.description}</NFTDes>
