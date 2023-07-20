@@ -10,7 +10,7 @@ import { chainArr, chainFun, symbolImgObj } from '../../utils/networkConnect';
 import { abbrTxHash } from "../../utils/format";
 import { getSymbol } from "../../utils/symbol";
 import { mainContext } from "../../reducer";
-import { HANDLE_SHOW_CONNECT_MODAL } from "../../const";
+import { HANDLE_SHOW_CONNECT_MODAL, HANDLE_WRONG_NETWORK } from "../../const";
 import logoFull from "assets/img/logoFull.svg";
 import more from "assets/img/header/more.svg";
 import moreG from "assets/img/header/more_g.svg";
@@ -127,6 +127,7 @@ const Header = ({ currentRoute }) => {
 
     if (chainFun[chain]) {
       chainFun[chain]()
+      setChainName(chain);
     }
   }
 
@@ -151,8 +152,16 @@ const Header = ({ currentRoute }) => {
   useEffect(() => {
     if (active && chainId) {
       setChainName(getChainType(chainId));
+      dispatch({
+        type: HANDLE_WRONG_NETWORK, isWrongNetwork: false
+      });
     }
   }, [active])
+  useEffect(() => {
+    if (state.isWrongNetwork) {
+      setChainName('wrongNetwork');
+    }
+  }, [state.isWrongNetwork])
 
   return (
     <>
@@ -168,11 +177,10 @@ const Header = ({ currentRoute }) => {
 
           <div className="df aic">
             {
-              (active) &&
+              (active || state.isWrongNetwork) &&
               <Select
                 onChange={handleSwitchChain}
                 value={chainName}
-                className={`mr16`}
                 renderValue={val => {
                   const item = chainArr.find(res => res.value === val)
                   if (item) {
@@ -197,7 +205,7 @@ const Header = ({ currentRoute }) => {
             }
 
             {
-              !(active)
+              !(active || state.isWrongNetwork)
                 ? <Button
                   onClick={() => {
                     dispatch({
@@ -206,7 +214,9 @@ const Header = ({ currentRoute }) => {
                   }}
                   className="btn_multicolour h40 w200"
                 >Connect Wallet</Button>
-                : <AccountBox to="/collector">{abbrTxHash(account, 5, 4)}</AccountBox>
+                :
+                state.isWrongNetwork ? '' :
+                <AccountBox className="ml16" to="/collector">{abbrTxHash(account, 5, 4)}</AccountBox>
             }
           </div>
         </Box>
@@ -238,7 +248,7 @@ const Header = ({ currentRoute }) => {
             </PopMyItem>
           </PopMyBox>
           {
-            (active) &&
+            (active || state.isWrongNetwork) &&
             <PopMyBox>
               <Select
                 onChange={handleSwitchChain}
@@ -268,7 +278,7 @@ const Header = ({ currentRoute }) => {
           }
           <PopMyBox>
             {
-              !(active) ?
+              !(active || state.isWrongNetwork) ?
                 <Button
                   onClick={() => {
                     dispatch({
@@ -276,7 +286,9 @@ const Header = ({ currentRoute }) => {
                     });
                   }}
                   className="btn_multicolour"
-                >Connect Wallet</Button> :
+                >Connect Wallet</Button>
+                :
+                state.isWrongNetwork ? '' :
                 <AccountBox onClick={cancel} to="/collector">{abbrTxHash(account, 5, 4)}</AccountBox>
             }
           </PopMyBox>

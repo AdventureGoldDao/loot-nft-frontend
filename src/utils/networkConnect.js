@@ -335,7 +335,7 @@ export const setupEthGoerli = async (chainId) => {
           chainId: `0x5`
         }]
       }).catch(err => {
-        if (err.code !== 4902) {
+        if (!/Unrecognized chain ID/i.test(err.message)) {
           return;
         }
         provider.request({
@@ -375,23 +375,23 @@ export const setupLootTest = async (chainId) => {
           chainId: `0x8aaf90`
         }]
       }).catch(err => {
-        if (err.code !== 4902) {
+        if (!/Unrecognized chain ID/i.test(err.message)) {
           return;
         }
         provider.request({
           method: 'wallet_addEthereumChain',
           params: [{
             chainId: `0x8aaf90`,
-            chainName: 'loot test',
+            chainName: 'Loot Chain Testnet',
             nativeCurrency: {
               name: 'AGLD',
               symbol: 'AGLD',
               decimals: 18,
             },
             rpcUrls: [
-              "https://loot.calderachain.xyz/http"
+              "https://testnet.rpc.lootchain.com/http"
             ],
-            blockExplorerUrls: ['https://loot.calderaexplorer.xyz/']
+            blockExplorerUrls: ['https://testnet.explorer.lootchain.com/']
           }]
         })
       })
@@ -415,23 +415,23 @@ export const setupLootMainnet = async (chainId) => {
           chainId: `0x4e9bda`
         }]
       }).catch(err => {
-        if (err.code !== 4902) {
+        if (!/Unrecognized chain ID/i.test(err.message)) {
           return;
         }
         provider.request({
           method: 'wallet_addEthereumChain',
           params: [{
             chainId: `0x4e9bda`,
-            chainName: 'Loot',
+            chainName: 'Loot Mainnet',
             nativeCurrency: {
               name: 'AGLD',
               symbol: 'AGLD',
               decimals: 18,
             },
             rpcUrls: [
-              "https://loot-mainnet.calderachain.xyz/http"
+              "https://rpc.lootchain.com/http"
             ],
-            blockExplorerUrls: ['https://loot-mainnet.calderaexplorer.xyz/']
+            blockExplorerUrls: ['https://explorer.lootchain.com/']
           }]
         })
       })
@@ -487,7 +487,7 @@ export const setupPolygonMainnet = async (chainId) => {
           chainId: `0x89`
         }]
       }).catch(err => {
-        if (err.code !== 4902) {
+        if (!/Unrecognized chain ID/i.test(err.message)) {
           return;
         }
         provider.request({
@@ -528,7 +528,7 @@ export const setupMumbai = async (chainId) => {
           chainId: `0x13881`
         }]
       }).catch(err => {
-        if (err.code !== 4902) {
+        if (!/Unrecognized chain ID/i.test(err.message)) {
           return;
         }
         provider.request({
@@ -624,7 +624,7 @@ export const setupOptimismMainnet = async (chainId) => {
           chainId: `0xa`
         }]
       }).catch(err => {
-        if (err.code !== 4902) {
+        if (!/Unrecognized chain ID/i.test(err.message)) {
           return;
         }
         provider.request({
@@ -662,7 +662,7 @@ export const setupArbitrumMainnet = async (chainId) => {
           chainId: `0xa4b1`
         }]
       }).catch(err => {
-        if (err.code !== 4902) {
+        if (!/Unrecognized chain ID/i.test(err.message)) {
           return;
         }
         provider.request({
@@ -700,7 +700,7 @@ export const setupZkSyncEraMainnet = async (chainId) => {
           chainId: `0x144`
         }]
       }).catch(err => {
-        if (err.code !== 4902) {
+        if (!/Unrecognized chain ID/i.test(err.message)) {
           return;
         }
         provider.request({

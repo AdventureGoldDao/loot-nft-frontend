@@ -9,7 +9,7 @@ import { useActiveWeb3React } from "../../web3";
 import { useActiveTronWeb } from "hooks/activeTronWeb";
 import { getSign, handleIsSignExpired, clearLocalStorage } from '../../utils/txSign'
 import { mainContext } from '../../reducer'
-import { HANDLE_SHOW_CONNECT_MODAL } from "../../const";
+import { HANDLE_SHOW_CONNECT_MODAL, HANDLE_WRONG_NETWORK } from "../../const";
 import { injected } from "../../utils/networkConnect";
 import imTokenIcon from '../../assets/img/modal/imToken.png'
 import metaMaskIcon from '../../assets/img/modal/MetaMask.png'
@@ -139,44 +139,54 @@ export const WalletConnect = ({ visible }) => {
   }
 
   const activeWeb3 = (name) => {
+    if (window.ethereum && window.ethereum.on) {
+      window.ethereum.on('accountsChanged', (accounts) => {
+        if (accounts.length === 0) {
+          deactivate()
+        }
+      })
+
+      window.ethereum.on('disconnect', () => {
+        deactivate()
+      })
+
+      window.ethereum.on('close', () => {
+        deactivate()
+      })
+
+      window.ethereum.on('message', message => {
+        console.log('message', message)
+      })
+
+      window.ethereum.on('chainChanged', message => {
+        const wallet_type = window.localStorage.getItem('wallet_type')
+        if (wallet_type) {
+          onConnect(wallet_type)
+        }
+        console.log('chainChanged', message)
+      })
+
+    }
     tronDeactivate();
     activate(wallets[name], undefined, true)
       .then((e) => {
         dispatch({
           type: HANDLE_SHOW_CONNECT_MODAL, showConnectModal: false
         });
-        if (window.ethereum && window.ethereum.on) {
-          window.ethereum.on('accountsChanged', (accounts) => {
-            if (accounts.length === 0) {
-              deactivate()
-            }
-          })
-
-          window.ethereum.on('disconnect', () => {
-            deactivate()
-          })
-
-          window.ethereum.on('close', () => {
-            deactivate()
-          })
-
-          window.ethereum.on('message', message => {
-            console.log('message', message)
-          })
-
-          window.ethereum.on('chainChanged', message => {
-            const wallet_type = window.localStorage.getItem('wallet_type')
-            if (wallet_type) {
-              onConnect(wallet_type)
-            }
-            console.log('chainChanged', message)
-          })
-
-        }
+        dispatch({
+          type: HANDLE_WRONG_NETWORK, isWrongNetwork: false
+        });
       })
       .catch((error) => {
         console.log(error)
-        // console.log(error.name === 'UnsupportedChainIdError')
+        if (error.name === 'UnsupportedChainIdError') {
+          dispatch({
+            type: HANDLE_SHOW_CONNECT_MODAL, showConnectModal: false
+          });
+          dispatch({
+            type: HANDLE_WRONG_NETWORK, isWrongNetwork: true
+          });
+        }
       });
   }
 

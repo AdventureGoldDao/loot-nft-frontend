@@ -5,6 +5,7 @@ import {
   HANDLE_SHOW_CONNECT_MODAL,
   HANDLE_SHOW_CHANGE_CURRENCY_MODAL,
   SWITCH_PROMPT,
+  HANDLE_WRONG_NETWORK,
   HANDLE_SHOW_FAILED_TRANSACTION_MODAL,
   HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
   HANDLE_SHOW_TRANSACTION_MODAL,
@@ -24,6 +25,8 @@ const reducer = (state, action) => {
       return {...state, hideEventModal: action.hideEventModal}
     case HANDLE_CHANGE_USER_INFO:
       return {...state, userInfo: {...action.userInfo}}
+    case HANDLE_WRONG_NETWORK:
+      return {...state, isWrongNetwork: action.isWrongNetwork}
     case HANDLE_TRON_WEB_INFO:
       return {...state, tronWebInfo: {...state.tronWebInfo, ...action.tronWebInfo}}
     case HANDLE_SHOW_CONNECT_MODAL:
@@ -59,6 +62,7 @@ const ContextProvider = props => {
   const [state, dispatch] = useReducer(reducer, {
     userInfo: {},
     tronWebInfo: {},
+    isWrongNetwork: false,
     hideEventModal: true,
     showConnectModal: false,
     showChangeCurrencyModal: false,
