@@ -30,12 +30,12 @@ const routeArr = [
   {
     component: Home, path: '/', parent: 'home'
   },
-  {
-    component: Games, path: '/games', special: 'game'
-  },
-  {
-    component: GameDetail, path: '/games/:id', special: 'game'
-  },
+  // {
+  //   component: Games, path: '/games', special: 'game'
+  // },
+  // {
+  //   component: GameDetail, path: '/games/:id', special: 'game'
+  // },
   {
     component: Explore, path: '/explore', parent: 'explore'
   },
