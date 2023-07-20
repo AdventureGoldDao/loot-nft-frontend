@@ -12,99 +12,101 @@ import {findNFT, RichBridgeMessage, statusToString} from "./index";
 import {useActiveWeb3React} from "../../web3";
 import {useMessage} from "../../constants";
 import moment from "moment/moment";
+import {HistoryField} from "../../pages/Bridge";
 
 
 const DetailHome = styled('div')({
-  backgroundRepeat: 'no-repeat',
-  backgroundPosition: 'center top',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center top',
+    marginTop: 27
 })
 
 const DetailBox = styled('div')({
-  margin: '0 auto',
-  borderRadius: '20px',
-  background: '#242926',
-  textAlign: 'center',
-  fontWeight: 600,
+    margin: '0 auto',
+    borderRadius: '20px',
+    background: '#242926',
+    textAlign: 'center',
+    fontWeight: 600,
 })
 
 const TopContent = styled('div')({
-  display: 'flex',
-  alignItems: 'center',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  position: 'relative'
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    position: 'relative'
 })
 
 const Left = styled('div')({
-  width: 247,
-  height: 131,
-  borderRadius: '12px',
-  backgroundColor: '#1A1E1B',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexDirection: 'column'
+    width: 247,
+    height: 131,
+    borderRadius: '12px',
+    backgroundColor: '#1A1E1B',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column'
 })
 
 const Right = styled('div')({
-  width: 247,
-  height: 131,
-  borderRadius: '12px',
-  backgroundColor: '#1A1E1B',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexDirection: 'column'
+    width: 247,
+    height: 131,
+    borderRadius: '12px',
+    backgroundColor: '#1A1E1B',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column'
 })
 
 const Title = styled('p')({
-  width: '100%',
-  marginLeft: 36,
-  fontSize: 16,
-  fontWeight: 400,
-  lineHeight: '22px',
-  letterSpacing: 0,
-  textAlign: 'left',
-  color: '#7A9283'
+    width: '100%',
+    marginLeft: 36,
+    fontSize: 16,
+    fontWeight: 400,
+    lineHeight: '22px',
+    letterSpacing: 0,
+    textAlign: 'left',
+    color: '#7A9283'
 })
 
 const ChainName = styled('div')({
-  fontFamily: 'Inconsolata',
-  fontSize: 16,
-  fontWeight: 500,
-  lineHeight: '24px',
-  letterSpacing: 0,
-  textAlign: 'center',
-  color: '#EBEBEB'
+    fontFamily: 'Inconsolata',
+    fontSize: 16,
+    fontWeight: 500,
+    lineHeight: '24px',
+    letterSpacing: 0,
+    textAlign: 'center',
+    color: '#EBEBEB'
 })
 
 const Id = styled('p')({
-  fontSize: 14,
-  '& span:first-child': {
-    color: '#7A9283',
-    fontWeight: 400
-  },
-  '& span:last-child': {
-    fontWeight: 700,
-    color: '#A5FFBE'
-  }
+    fontSize: 14,
+    '& span:first-child': {
+        color: '#7A9283',
+        fontWeight: 400
+    },
+    '& span:last-child': {
+        fontWeight: 700,
+        color: '#A5FFBE'
+    }
 })
 
 const Time = styled('div')({
-  textAlign: 'left',
-  fontFamily: 'Inconsolata',
-  fontSize: 16,
-  fontWeight: 400,
-  lineHeight: '22px',
-  color: '#7A9283',
-  marginTop: 20,
-  '& .content': {
+    textAlign: 'left',
+    fontFamily: 'Inconsolata',
     fontSize: 16,
-    fontWeight: 500,
-    lineHeight: '17px',
-    color: '#EBEBEB',
-    marginTop: 12,
-  }
+    fontWeight: 400,
+    lineHeight: '22px',
+    color: '#7A9283',
+    marginTop: 20,
+    '& .content': {
+        fontSize: 16,
+        fontWeight: 500,
+        lineHeight: '17px',
+        color: '#EBEBEB',
+        marginTop: 12,
+    }
 })
 
 const NftContent = styled('div')`
@@ -117,17 +119,29 @@ const NftContent = styled('div')`
   justify-content: flex-start;
   align-items: center;
   margin-top: 20px;
+<<<<<<< HEAD
+
+=======
+>>>>>>> refs/remotes/origin/main
   img {
     width: 76px;
     height: 76px;
     border-radius: 7px;
   }
+<<<<<<< HEAD
+
+=======
+>>>>>>> refs/remotes/origin/main
   .name {
     width: 236px;
     color: #EBEBEB;
     font-size: 16px;
     text-align: left;
     margin-left: 30px;
+<<<<<<< HEAD
+
+=======
+>>>>>>> refs/remotes/origin/main
     p:last-child {
       width: 100%;
       overflow: hidden;
@@ -152,85 +166,86 @@ const NftContent = styled('div')`
 `
 
 
-export default function HistoryDetail({ message }: { message: RichBridgeMessage|undefined; setAction: Dispatch<SetStateAction<boolean>>}) {
+export default function HistoryDetail({message}: { message: RichBridgeMessage | undefined; setAction: Dispatch<SetStateAction<HistoryField>> }) {
 
-  const {library} = useActiveWeb3React()
+    const {library} = useActiveWeb3React()
 
-  const messenger = useMessage()
+    const messenger = useMessage()
 
-  return (
-    <>
-      <DetailHome>
-        <DetailBox>
-          <TopContent>
-            <Left>
-              <Title>From</Title>
-              {message.message.direction === MessageDirection.L1_TO_L2? (
-                  <>
-                    <img width={48} src={FromLogo} alt=''/>
-                    <ChainName>Ethereum</ChainName>
-                    <Id>
-                      <span>TxID: </span>
-                      <span>0x3...2214</span>
-                    </Id>
-                  </>
-              ):(
-                  <>
-                    <img width={48} src={ToLogo} alt=''/>
-                    <ChainName>Loot Chain</ChainName>
-                    <Id>
-                      <span>TxID: </span>
-                      <span>0x3...2214</span>
-                    </Id>
-                  </>
-              )}
-            </Left>
-            <img width={50} style={{
-              position: 'absolute',
-              left: 'calc(50% - 25px)',
-              top: 'calc(50% - 25px)'
-            }} src={arrow} alt=''/>
-            <Right>
-              <Title>To</Title>
-              {message.message.direction === MessageDirection.L2_TO_L1? (
-                  <>
-                    <img width={48} src={FromLogo} alt=''/>
-                    <ChainName>Ethereum</ChainName>
-                    <Id>
-                      <span>TxID: </span>
-                      <span>0x3...2214</span>
-                    </Id>
-                  </>
-              ):(
-                  <>
-                    <img width={48} src={ToLogo} alt=''/>
-                    <ChainName>Loot Chain</ChainName>
-                    <Id>
-                      <span>TxID: </span>
-                      <span>0x3...2214</span>
-                    </Id>
-                  </>
-              )}
-            </Right>
-          </TopContent>
-          <NftContent>
-            <img src={nft} alt=''/>
-            <div className={'name'}>
-              <p>{findNFT(message.message).name}</p>
-              <p>#{message.message.tokenId.toString()}</p>
-            </div>
-            {message.status === MessageStatus.READY_FOR_RELAY ? (<Button onClick={(e)=>{
-              e.stopPropagation()
-              messenger.finalizeMessage(message.message, {signer: library.getSigner()})
-            }
-            }>Claim</Button>):statusToString(message.status)}
-          </NftContent>
-          <Time>
-          <Typography className={'title'}>Timestamp</Typography>
-          <Typography className={'content'}>{moment.unix(message?.block?.timestamp).format('YYYY-MM-DD HH:mm:ss').toString()}</Typography>
-          </Time>
-        </DetailBox>
-      </DetailHome>
-    </>
-  )
+    return (
+        <>
+            <DetailHome>
+                <DetailBox>
+                    <TopContent>
+                        <Left>
+                            <Title>From</Title>
+                            {message.message.direction === MessageDirection.L1_TO_L2 ? (
+                                <>
+                                    <img width={48} src={FromLogo} alt=''/>
+                                    <ChainName>Ethereum Goerli</ChainName>
+                                    <Id>
+                                        <span>TxID: </span>
+                                        <a target="_blank" style={{textDecoration: 'none'}}
+                                           href={`https://goerli.etherscan.io/tx/${message.message.transactionHash}`}><span>{message.message.transactionHash.slice(0, 6) + '...' + message.message.transactionHash.slice(-4)}</span></a>
+                                    </Id>
+                                </>
+                            ) : (
+                                <>
+                                    <img width={48} src={ToLogo} alt=''/>
+                                    <ChainName>Loot Chain Testnet</ChainName>
+                                    <Id>
+                                        <span>TxID: </span>
+                                        <a target="_blank" style={{textDecoration: 'none'}}
+                                           href={`https://testnet.explorer.lootchain.com/tx/${message.message.transactionHash}`}><span>{message.message.transactionHash.slice(0, 6) + '...' + message.message.transactionHash.slice(-4)}</span></a>
+                                    </Id>
+                                </>
+                            )}
+                        </Left>
+                        <img width={50} style={{
+                            position: 'absolute',
+                            left: 'calc(50% - 25px)',
+                            top: 'calc(50% - 25px)'
+                        }} src={arrow} alt=''/>
+                        <Right>
+                            <Title>To</Title>
+                            {message.message.direction === MessageDirection.L2_TO_L1 ? (
+                                <>
+                                    <img width={48} src={FromLogo} alt=''/>
+                                    <ChainName>Ethereum Goerli</ChainName>
+                                    <Id>
+                                        <span>TxID: </span>
+                                    </Id>
+                                </>
+                            ) : (
+                                <>
+                                    <img width={48} src={ToLogo} alt=''/>
+                                    <ChainName>Loot Chain Testnet</ChainName>
+                                    <Id>
+                                        <span>TxID: </span>
+                                    </Id>
+                                </>
+                            )}
+                        </Right>
+                    </TopContent>
+                    <NftContent>
+                        <img src={nft} alt=''/>
+                        <div className={'name'}>
+                            <p>{findNFT(message.message)?.name}</p>
+                            <p>#{message.message.tokenId.toString()}</p>
+                        </div>
+                        {message.status === MessageStatus.READY_FOR_RELAY ? (<Button onClick={(e) => {
+                            e.stopPropagation()
+                            messenger.finalizeMessage(message.message, {signer: library.getSigner()})
+                        }
+                        }>Claim</Button>) : statusToString(message.status)}
+                    </NftContent>
+                    <Time>
+                        <Typography className={'title'}>Time stamp</Typography>
+                        <Typography
+                            className={'content'}>{moment.unix(message?.block?.timestamp).format('YYYY-MM-DD HH:mm:ss').toString()}</Typography>
+                    </Time>
+                </DetailBox>
+            </DetailHome>
+        </>
+    )
 }

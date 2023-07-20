@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import {Typography} from "@mui/material";
+import {BASE_IMG, MultiChainNFT} from "../../pages/Bridge";
+
 
 const CardFrame = styled.div`
   border-radius: 12px;
@@ -24,13 +26,13 @@ const Cover = styled.img`
   margin-right: 40px;
 `
 
-export const NFTCard = ({onClick}: { onClick: () => void }) => {
+export const NFTCard = ({nft, tokenId, onClick}: {nft:MultiChainNFT|undefined; tokenId: string|undefined ,onClick: () => void }) => {
     return (
         <CardFrame onClick={onClick}>
             <Cover
-                src='https://define-art-static-prod.s3-ap-northeast-1.amazonaws.com/test/token/image/mumbai/0x34e91Bbcd9591D0Fe275f9B7a737D4b42617fa4c/5.png'/>
+                src={BASE_IMG}/>
             <div>
-                <Typography color={'#EBEBEB'} fontSize={18} fontWeight={600}>NFT #100</Typography>
+                <Typography color={'#EBEBEB'} fontSize={18} fontWeight={600}>${nft.name} #${tokenId}</Typography>
             </div>
         </CardFrame>
     )

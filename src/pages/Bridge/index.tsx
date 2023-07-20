@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext, useMemo} from 'react'
-import {Button, Stack, Typography} from "@mui/material";
+import {Box, Button, Stack, Typography} from "@mui/material";
 
 import {useNeedSign} from "hooks/account"
 import {useActiveWeb3React} from "../../web3";
@@ -16,7 +16,7 @@ import styled from "styled-components/macro";
 import bg from '../../assets/img/explore_bg.svg'
 import {NFTSelect} from "../../components/Select/NFTSelect";
 import {NFTCard} from "../../components/NFT";
-import NFTSelectModal from "../../components/Modals/NFTSelectModal";
+import NFTSelectView from "../../components/Modals/NFTSelectView";
 import {approvedForAll, getIsApprovedForAll} from "../../utils/handleContract";
 import {CrossChainMessenger, NFTBridgeAdapter} from "@constellation-labs/sdk";
 import {getContractFactory, predeploys} from "@constellation-labs/contracts";
@@ -86,48 +86,44 @@ export interface MultiChainNFT {
     l2: BaseNFT
 }
 
-export const nft: {tokens: MultiChainNFT[]} = {
+export const nft: { tokens: MultiChainNFT[] } = {
     tokens: [{
-        name: 'NFT1',
+        name: 'Loot',
         l1: {
             chainId: 5,
-            address: '0x33e93eeabd5ac35830b35024fe34185bdb487a44',
-            name: 'NFT1',
-            symbol: 'NFT1',
+            address: '0x7093b806Df66c4E4c535eA522EAE3CBa3EAD8337',
+            name: 'Loot',
+            symbol: 'LOOT',
             baseUrl: ''
         },
         l2: {
             chainId: 9088912,
-            address: '0x7E25eb56a8A7c0fa8514dF2d39faf3aF783Ff807',
-            name: 'NFT1',
-            symbol: 'NFT1',
+            address: '0xA4016C81976E6db51DC756c664c630acE8b041CD',
+            name: 'Loot',
+            symbol: 'LOOT',
             baseUrl: ''
         }
-    },
-        {
-            name: 'NFT2',
-            l1: {
-                chainId: 5,
-                address: '0x97bB866F735f53D6C9F2E1a75FF16FA90B8EA017',
-                name: 'NFT2',
-                symbol: 'NFT2',
-                baseUrl: ''
-            },
-            l2: {
-                chainId: 9088912,
-                address: '0x6aea0e56660f78363ba831d4514a5ed8d3357ed5',
-                name: 'NFT2',
-                symbol: 'NFT2',
-                baseUrl: ''
-            }
-        }]
+    }]
 }
+
+export const BASE_IMG = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaW5ZTWluIG1lZXQiIHZpZXdCb3g9IjAgMCAzNTAgMzUwIj48c3R5bGU+LmJhc2UgeyBmaWxsOiB3aGl0ZTsgZm9udC1mYW1pbHk6IHNlcmlmOyBmb250LXNpemU6IDE0cHg7IH08L3N0eWxlPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9ImJsYWNrIiAvPjx0ZXh0IHg9IjEwIiB5PSIyMCIgY2xhc3M9ImJhc2UiPiJHcmltIFNob3V0IiBHcmF2ZSBXYW5kIG9mIFNraWxsICsxPC90ZXh0Pjx0ZXh0IHg9IjEwIiB5PSI0MCIgY2xhc3M9ImJhc2UiPkhhcmQgTGVhdGhlciBBcm1vcjwvdGV4dD48dGV4dCB4PSIxMCIgeT0iNjAiIGNsYXNzPSJiYXNlIj5EaXZpbmUgSG9vZDwvdGV4dD48dGV4dCB4PSIxMCIgeT0iODAiIGNsYXNzPSJiYXNlIj5IYXJkIExlYXRoZXIgQmVsdDwvdGV4dD48dGV4dCB4PSIxMCIgeT0iMTAwIiBjbGFzcz0iYmFzZSI+IkRlYXRoIFJvb3QiIE9ybmF0ZSBHcmVhdmVzIG9mIFNraWxsPC90ZXh0Pjx0ZXh0IHg9IjEwIiB5PSIxMjAiIGNsYXNzPSJiYXNlIj5TdHVkZGVkIExlYXRoZXIgR2xvdmVzPC90ZXh0Pjx0ZXh0IHg9IjEwIiB5PSIxNDAiIGNsYXNzPSJiYXNlIj5OZWNrbGFjZSBvZiBFbmxpZ2h0ZW5tZW50PC90ZXh0Pjx0ZXh0IHg9IjEwIiB5PSIxNjAiIGNsYXNzPSJiYXNlIj5Hb2xkIFJpbmc8L3RleHQ+PC9zdmc+'
 
 
 export enum BrightField {
     DEPOSIT,
     WITHDRAW
 }
+
+enum ViewField {
+    BRIDGE,
+    SELECT
+}
+
+export enum HistoryField {
+    LIST,
+    DETAIL
+}
+
 
 export default function Bridge() {
     const {library, account} = useActiveWeb3React()
@@ -137,7 +133,8 @@ export default function Bridge() {
     const [selectTokenId, setSelectTokenId] = useState<string | undefined>()
     const [approved, setApproved] = useState(true)
     const [auction, setAuction] = useState(BrightField.DEPOSIT)
-    const [visible, setVisible] = useState(false)
+    const [view, setView] = useState(ViewField.BRIDGE)
+    const [historyView, setHistoryView] = useState(HistoryField.LIST)
     const [showHistory, setShowHistory] = useState(false)
 
     const {dispatch} = useContext(mainContext);
@@ -152,15 +149,15 @@ export default function Bridge() {
             account,
             auction === BrightField.DEPOSIT ? '0x7822B26Fb728D63e57b939c6a2124DB64EC4bB6F' : predeploys.L2ERC721Bridge)
             .then((value) => {
-            setApproved(value)
-        })
+                setApproved(value)
+            })
     }, [account, auction, library, selectedNFT])
 
     const messenger = useMemo(() => {
         if (!library || !account) return undefined
         return new CrossChainMessenger({
-            l1SignerOrProvider: auction === BrightField.DEPOSIT? library.getSigner(): new ethers.providers.JsonRpcProvider('https://eth-goerli.g.alchemy.com/v2/R-2IK-_U4uoJKpr3zO9VqUl3upMmZsPh'),
-            l2SignerOrProvider: auction === BrightField.WITHDRAW? library.getSigner() :new ethers.providers.JsonRpcProvider('https://testnet.rpc.lootchain.com/http'),
+            l1SignerOrProvider: auction === BrightField.DEPOSIT ? library.getSigner() : new ethers.providers.JsonRpcProvider('https://eth-goerli.g.alchemy.com/v2/R-2IK-_U4uoJKpr3zO9VqUl3upMmZsPh'),
+            l2SignerOrProvider: auction === BrightField.WITHDRAW ? library.getSigner() : new ethers.providers.JsonRpcProvider('https://testnet.rpc.lootchain.com/http'),
             l1ChainId: 5,
             l2ChainId: 9088912,
             contracts: {
@@ -206,7 +203,7 @@ export default function Bridge() {
         setAuction(auction === BrightField.DEPOSIT ? BrightField.WITHDRAW : BrightField.DEPOSIT)
     }
 
-    const showSuccessModal = () =>{
+    const showSuccessModal = () => {
         dispatch({
             type: HANDLE_SHOW_TRANSACTION_MODAL,
             showTransactionModal: {
@@ -223,7 +220,7 @@ export default function Bridge() {
         });
     }
 
-    const showFailedModal = () =>{
+    const showFailedModal = () => {
         dispatch({
             type: HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
             showWaitingWalletConfirmModal: {
@@ -238,12 +235,12 @@ export default function Bridge() {
         });
     }
 
-    const deployMintableContract = async () =>{
+    const deployMintableContract = async () => {
         const l2Factory = getContractFactory('OptimismMintableERC721', library.getSigner())
         const l2Address = await l2Factory.deploy(
             predeploys.L2ERC721Bridge,
-            '0x33e93eeabd5ac35830b35024fe34185bdb487a44',
-            'LOOT NFT',
+            '0x7093b806Df66c4E4c535eA522EAE3CBa3EAD8337',
+            'Loot',
             'LOOT'
         )
         console.log('l2Address', l2Address)
@@ -269,39 +266,39 @@ export default function Bridge() {
                         library,
                         auction === BrightField.DEPOSIT ? selectedNFT.l1.address : selectedNFT.l2.address,
                         account,
-                        auction === BrightField.DEPOSIT? '0x7822B26Fb728D63e57b939c6a2124DB64EC4bB6F': predeploys.L2ERC721Bridge)
-                        .then((transaction)=>{
+                        auction === BrightField.DEPOSIT ? '0x7822B26Fb728D63e57b939c6a2124DB64EC4bB6F' : predeploys.L2ERC721Bridge)
+                        .then((transaction) => {
                             showSuccessModal()
                             setApproved(true)
                         })
-                        .catch((error)=>{
-                           showFailedModal()
+                        .catch((error) => {
+                            showFailedModal()
                         })
                 } else {
                     dispatch({
                         type: HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
                         showWaitingWalletConfirmModal: {
                             show: true,
-                            title: `${auction === BrightField.DEPOSIT? 'DEPOSITING' : 'WITHDRAWING'} IN progress`,
+                            title: `${auction === BrightField.DEPOSIT ? 'DEPOSITING' : 'WITHDRAWING'} IN progress`,
                             content: ''
                         }
                     });
-                    if(auction === BrightField.DEPOSIT) {
+                    if (auction === BrightField.DEPOSIT) {
                         messenger.depositERC721(selectedNFT.l1.address, selectedNFT.l2.address, selectTokenId)
-                            .then((result)=>{
+                            .then((result) => {
                                 setSelectNFT(undefined)
                                 setSelectTokenId(undefined)
                                 showSuccessModal()
-                            }).catch((error)=>{
+                            }).catch((error) => {
                             showFailedModal()
                         })
-                    }else {
+                    } else {
                         messenger.withdrawERC721(selectedNFT.l1.address, selectedNFT.l2.address, selectTokenId)
-                            .then((result)=>{
+                            .then((result) => {
                                 setSelectNFT(undefined)
                                 setSelectTokenId(undefined)
                                 showSuccessModal()
-                            }).catch((error)=>{
+                            }).catch((error) => {
                             showFailedModal()
                         })
                     }
@@ -311,15 +308,12 @@ export default function Bridge() {
         })
     }
 
-    const handleCancel = () => {
-        setVisible(false)
-    }
     const openNFTModal = () => {
-        setVisible(true)
+        setView(ViewField.SELECT)
     }
     const onSelectNFT = (tokenId: string) => {
         setSelectTokenId(tokenId)
-        setVisible(false)
+        setView(ViewField.BRIDGE)
     }
 
     const RightNav = styled(Typography)`
@@ -349,6 +343,7 @@ export default function Bridge() {
       color: #7A9283;
       position: absolute;
       left: 14px;
+
       ::after {
         display: inline-block;
         content: " ";
@@ -368,53 +363,61 @@ export default function Bridge() {
         <>
             <PageWrapper>
                 <BridgerFrame>
-                    <Stack direction="column" justifyContent="center" position="relative">
-                        {showHistory && <LeftNav onClick={()=>{setShowHistory(false)}} fontSize={12}>BACK</LeftNav>}
-                        <Typography fontSize={24} color={'#A5FFBE'} margin={'27px'}>{showHistory? 'History': 'NFT Bright'}</Typography>
-                        {!showHistory && <RightNav onClick={()=>{setShowHistory(true)}} fontWeight={300} fontSize={12} margin={'12px'}>HISTORY</RightNav>}
-                    </Stack>
-                    {showHistory? <History setAction={()=>{}} ></History>: <>
-                        <NFTSelect
-                            onChange={handleSwitchFrom}
-                            value={fromChainType}
-                        />
-                        <SwitchButton onClick={switchChain}><DownIcon/></SwitchButton>
-                        <NFTSelect
-                            onChange={handleSwitchTo}
-                            value={toChainType}
-                        />
-                        {
-                            selectTokenId ?
-                                <NFTCard onClick={openNFTModal}/> :
-                                <SelectFrame onClick={openNFTModal}>+ Select NFT</SelectFrame>
-                        }
-                        <Button
-                          sx={{
-                            width: '100%',
-                            height: 50,
-                            borderRadius: '8px',
-                            fontSize: '20px'
-                          }}
-                          onClick={confirmBridge}
-                          className={`btn_multicolour`}
-                        >
-                            {fromChainType !== getChainType(chainId) ? `Connect to ${fromChainType}` : approved ? 'Bright' : 'Approve'}
-                        </Button>
-                        {/*<Button onClick={deployMintableContract}>deploy</Button>*/}
-                    </>}
-
+                    {view === ViewField.BRIDGE ? (
+                        <>
+                            <Stack direction="column" justifyContent="center" position="relative">
+                                {showHistory && <LeftNav onClick={() => {
+                                    historyView === HistoryField.LIST? setShowHistory(false) : setHistoryView(HistoryField.LIST)
+                                }} fontSize={12}>BACK</LeftNav>}
+                                <Typography fontSize={24}
+                                            color={'#A5FFBE'}>{showHistory ? 'History' : 'NFT Bright'}</Typography>
+                                {!showHistory && <RightNav onClick={() => {
+                                    setShowHistory(true)
+                                }} fontWeight={300} fontSize={12} margin={'12px'}>HISTORY</RightNav>}
+                            </Stack>
+                            {showHistory ? <History view={historyView} setView={() => {
+                                setHistoryView(HistoryField.DETAIL)
+                            }}></History> : <>
+                                <Box mt={'27px'}>
+                                    <NFTSelect
+                                        onChange={handleSwitchFrom}
+                                        value={fromChainType}
+                                    />
+                                    <SwitchButton onClick={switchChain}><DownIcon/></SwitchButton>
+                                    <NFTSelect
+                                        onChange={handleSwitchTo}
+                                        value={toChainType}
+                                    />
+                                    {
+                                        selectTokenId ?
+                                            <NFTCard nft={selectedNFT} tokenId={selectTokenId} onClick={openNFTModal}/> :
+                                            <SelectFrame onClick={openNFTModal}>+ Select NFT</SelectFrame>
+                                    }
+                                    <Button sx={{
+                                        width: '100%',
+                                        height: 50,
+                                        borderRadius: '8px',
+                                        fontSize: '20px'
+                                    }} onClick={confirmBridge}>
+                                        {fromChainType !== getChainType(chainId) ? `Connect to ${fromChainType}` : approved ? 'Bright' : 'Approve'}
+                                    </Button>
+                                    {/*<Button onClick={deployMintableContract}>deploy</Button>*/}
+                                </Box>
+                            </>}
+                        </>
+                    ) : (
+                        <NFTSelectView
+                            onSetView={() => {
+                                setView(ViewField.BRIDGE)
+                            }}
+                            onMultiNFTSelect={setSelectNFT}
+                            auction={auction}
+                            onSelectTokenId={onSelectNFT}
+                            list={nft.tokens}
+                            selectedTokenId={selectTokenId}/>
+                    )}
                 </BridgerFrame>
             </PageWrapper>
-
-            <NFTSelectModal
-                isOpen={visible}
-                onDismiss={handleCancel}
-                selectedMultiNFT={selectedNFT}
-                onMultiNFTSelect={setSelectNFT}
-                auction={auction}
-                onSelectTokenId={onSelectNFT}
-                list={nft.tokens}
-                selectedTokenId={selectTokenId}/>
         </>
     )
 }

@@ -1,6 +1,5 @@
-import React, {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import {
-  Box,
   Button,
   styled,
   Table,
@@ -15,18 +14,13 @@ import {
 import FromLogo from 'assets/img/chain/com_eth.svg'
 import ToLogo from 'assets/img/chain/com_loot.svg'
 import HistoryDetail from './Detail';
-import {
-  MessageDirection,
-  MessageStatus,
-  NFTBridgeMessage
-} from "@constellation-labs/sdk";
+import {MessageDirection, MessageStatus, NFTBridgeMessage} from "@constellation-labs/sdk";
 import {ethers} from "ethers";
 import {useActiveWeb3React} from "../../web3";
-import {nft} from "../../pages/Bridge";
+import {HistoryField, nft} from "../../pages/Bridge";
 import moment from "moment";
 import {defaultL1Provider, defaultL2Provider, useMessage} from "../../constants";
 import {ReactComponent as Loading} from '../../assets/img/loading_icon.svg'
-import NoData from "../NoData";
 
 const StyledTableCell = styled(TableCell)(({small}:{small?:boolean}) => ({
     color: '#7A9283 !important',
@@ -88,10 +82,11 @@ const StyledTableRow = styled(TableRow)(() => ({
 const HistoryHome = styled('div')({
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'center top',
+  marginTop: 27
 })
 
 const HistoryBox = styled('div')({
-  margin: '0 auto',
+  margin: '27px auto 2px auto',
   borderRadius: '20px',
   background: '#242926',
   textAlign: 'center',
@@ -152,7 +147,7 @@ export const findNFT = (message:NFTBridgeMessage) =>{
   })
 }
 
-export default function History({ setAction }: {setAction: Dispatch<SetStateAction<boolean>>}) {
+export default function History({ view, setView }: {view: HistoryField, setView: (view: HistoryField)=> void}) {
   const {library, account} = useActiveWeb3React()
   const [isHistoryDetailVisible, setIsHistoryDetailVisible] = useState(false)
   const [message, setMessage] = useState<RichBridgeMessage|undefined>()
@@ -160,8 +155,6 @@ export default function History({ setAction }: {setAction: Dispatch<SetStateActi
   const [withdrawList, setWithdrawList] = useState<Array<RichBridgeMessage>>([])
   const [depositLoading, setDepositLoading] = useState(false)
   const [withdrawLoading, setWithdrawLoading] = useState(false)
-
-  const back = useCallback(() => setAction(false),[setAction])
 
   const messenger = useMessage()
 
@@ -203,7 +196,9 @@ export default function History({ setAction }: {setAction: Dispatch<SetStateActi
 
   return (
     <>
-    {isHistoryDetailVisible ? <HistoryDetail message={message} setAction={setIsHistoryDetailVisible}/> :
+    {isHistoryDetailVisible && view === HistoryField.DETAIL ? <HistoryDetail message={message} setAction={()=>{
+      setView(HistoryField.LIST)
+        }}/> :
       <HistoryHome>
         <HistoryBox>
           <TableContainer sx={{ borderRadius: '12px', width: '100%', backgroundColor: '#1A1E1B',height: 465 }}>
@@ -224,6 +219,7 @@ export default function History({ setAction }: {setAction: Dispatch<SetStateActi
                         {histories.map((row, index)=>{
                           return (
                               <StyledTableRow key={index} onClick={() => {
+                                setView(HistoryField.DETAIL)
                                 setMessage(row)
                                 setIsHistoryDetailVisible(true)
                               }}>

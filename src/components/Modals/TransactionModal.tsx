@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { useTranslation } from "react-i18next";
 import { Modal, Box } from "@mui/material";
 import styled from 'styled-components/macro';
 
@@ -29,6 +28,13 @@ const CloseBox = styled.div`
   position: absolute;
   top: 14px;
   right: 14px;
+`
+
+const Close = styled(CloseIcon)`
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  cursor: pointer;
 `
 
 export const TransactionModal = ({ visible }) => {

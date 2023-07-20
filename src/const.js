@@ -46,5 +46,5 @@ export const waitingPending = {show: true, title: 'Transaction submitted' ,conte
 
 export const transactionSubmitted = {show: true, title: 'Transaction submitted' ,content: ''}
 
-export const launchForConfirm = {show: true, title: 'Launch in progress' ,content: 'Contracts are being deployed'}
 
+export const launchForConfirm = {show: true, title: 'Launch in progress' ,content: 'Contracts are being deployed'}
