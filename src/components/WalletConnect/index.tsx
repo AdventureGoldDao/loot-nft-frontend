@@ -139,34 +139,6 @@ export const WalletConnect = ({ visible }) => {
   }
 
   const activeWeb3 = (name) => {
-    if (window.ethereum && window.ethereum.on) {
-      window.ethereum.on('accountsChanged', (accounts) => {
-        if (accounts.length === 0) {
-          deactivate()
-        }
-      })
-
-      window.ethereum.on('disconnect', () => {
-        deactivate()
-      })
-
-      window.ethereum.on('close', () => {
-        deactivate()
-      })
-
-      window.ethereum.on('message', message => {
-        console.log('message', message)
-      })
-
-      window.ethereum.on('chainChanged', message => {
-        const wallet_type = window.localStorage.getItem('wallet_type')
-        if (wallet_type) {
-          onConnect(wallet_type)
-        }
-        console.log('chainChanged', message)
-      })
-
-    }
     tronDeactivate();
     activate(wallets[name], undefined, true)
       .then((e) => {
@@ -179,7 +151,7 @@ export const WalletConnect = ({ visible }) => {
       })
       .catch((error) => {
         console.log(error)
-        if (error.name === 'UnsupportedChainIdError') {
+        if (/Unsupported chain id/i.test(error.message)) {
           dispatch({
             type: HANDLE_SHOW_CONNECT_MODAL, showConnectModal: false
           });
@@ -275,6 +247,37 @@ export const WalletConnect = ({ visible }) => {
       }, 20)
     } else if (wallet_type) {
       activeWeb3(wallet_type)
+    }
+
+    if (window.ethereum && window.ethereum.on) {
+      // window.ethereum.on('accountsChanged', (accounts) => {
+      //   if (accounts.length === 0) {
+      //     deactivate()
+      //   }
+      // })
+
+      // window.ethereum.on('disconnect', () => {
+      //   console.log('disconnect')
+      //   deactivate()
+      // })
+
+      // window.ethereum.on('close', () => {
+      //   console.log('close')
+      //   deactivate()
+      // })
+
+      window.ethereum.on('message', message => {
+        console.log('message', message)
+      })
+
+      window.ethereum.on('chainChanged', message => {
+        const wallet_type = window.localStorage.getItem('wallet_type')
+        if (wallet_type) {
+          onConnect(wallet_type)
+        }
+        console.log('chainChanged', message)
+      })
+
     }
 
     return () => {

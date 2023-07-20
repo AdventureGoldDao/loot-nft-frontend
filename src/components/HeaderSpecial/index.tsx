@@ -166,7 +166,7 @@ const HeaderSpecial = () => {
         type: HANDLE_WRONG_NETWORK, isWrongNetwork: false
       });
     }
-  }, [active])
+  }, [active, chainId])
   useEffect(() => {
     if (state.isWrongNetwork) {
       setChainName('wrongNetwork');
