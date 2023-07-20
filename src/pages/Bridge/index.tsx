@@ -40,7 +40,7 @@ const BridgerFrame = styled.div`
   background: #242926;
   text-align: center;
   font-weight: 600;
-  padding: 2px 38px 36px;
+  padding: 27px 38px 36px;
 `
 
 const SwitchButton = styled.div`
@@ -124,6 +124,11 @@ export enum HistoryField {
     DETAIL
 }
 
+const ConfirmButton = styled(Button)`
+  background: linear-gradient(90deg, #A5FFBE 0%, #55DD7B 100%);
+  color: #213425!important;
+  border-radius: 10px;
+`
 
 export default function Bridge() {
     const {library, account} = useActiveWeb3React()
@@ -268,7 +273,20 @@ export default function Bridge() {
                         account,
                         auction === BrightField.DEPOSIT ? '0x7822B26Fb728D63e57b939c6a2124DB64EC4bB6F' : predeploys.L2ERC721Bridge)
                         .then((transaction) => {
-                            showSuccessModal()
+                            dispatch({
+                                type: HANDLE_SHOW_TRANSACTION_MODAL,
+                                showTransactionModal: {
+                                    show: true,
+                                    title: 'APPROVE SUCCESS',
+                                    content: 'you can bridge your NFT now.'
+                                }
+                            });
+                            dispatch({
+                                type: HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
+                                showWaitingWalletConfirmModal: {
+                                    show: false
+                                }
+                            });
                             setApproved(true)
                         })
                         .catch((error) => {
@@ -393,14 +411,14 @@ export default function Bridge() {
                                             <NFTCard nft={selectedNFT} tokenId={selectTokenId} onClick={openNFTModal}/> :
                                             <SelectFrame onClick={openNFTModal}>+ Select NFT</SelectFrame>
                                     }
-                                    <Button sx={{
+                                    <ConfirmButton sx={{
                                         width: '100%',
                                         height: 50,
                                         borderRadius: '8px',
                                         fontSize: '20px'
                                     }} onClick={confirmBridge}>
                                         {fromChainType !== getChainType(chainId) ? `Connect to ${fromChainType}` : approved ? 'Bright' : 'Approve'}
-                                    </Button>
+                                    </ConfirmButton>
                                     {/*<Button onClick={deployMintableContract}>deploy</Button>*/}
                                 </Box>
                             </>}

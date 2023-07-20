@@ -151,7 +151,7 @@ export default function NFTSelectModal({isOpen, auction, onDismiss, list, select
                                   selected={selectedTokenId === item.id}>
                                 <Box style={{border: "none", background: "transparent"}} display={"flex"} alignItems={"center"}>
                                     <Cover
-                                        src={item.icon || 'https://define-art-static-prod.s3-ap-northeast-1.amazonaws.com/test/token/image/mumbai/0x34e91Bbcd9591D0Fe275f9B7a737D4b42617fa4c/5.png'}
+                                        src={item.icon || 'https://openseauserdata.com/files/58a6bd564656896770eb815815928760.svg'}
                                         alt={item.name}/>
                                     <Typography color={'#EBEBEB'} fontSize={18}
                                                 fontWeight={600}>{`${selectedNFT.name} ${item}`}</Typography>

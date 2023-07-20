@@ -1,12 +1,12 @@
 import React, {useEffect, useCallback, Dispatch, SetStateAction, useMemo} from 'react'
-import { Button, Typography, styled } from "@mui/material";
+import {Button, Typography, styled, Box} from "@mui/material";
 import FromLogo from 'assets/img/chain/com_eth.svg'
 import ToLogo from 'assets/img/chain/com_loot.svg'
 import arrow from 'assets/img/right-arrow.png'
 import nft from 'assets/img/test/test3.png'
 import {
-  MessageDirection,
-  MessageStatus
+    MessageDirection,
+    MessageStatus
 } from "@constellation-labs/sdk";
 import {findNFT, RichBridgeMessage, statusToString} from "./index";
 import {useActiveWeb3React} from "../../web3";
@@ -120,6 +120,30 @@ const NftContent = styled('div')`
   align-items: center;
   margin-top: 20px;
 <<<<<<< HEAD
+< < < < < < < HEAD = = = = = = = > > > > > > > refs /remotes/ origin / main img {
+  width: 76px;
+  height: 76px;
+  border-radius: 7px;
+} < < < < < < < HEAD = = = = = = = > > > > > > > refs /remotes/ origin / main . name {
+  width: 236px;
+  color: #EBEBEB;
+  font-size: 16px;
+  text-align: left;
+  margin-left: 30px;
+< < < < < < < HEAD = = = = = = = > > > > > > > refs /remotes/ origin / main p: last-child {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 8px;
+  font-family: Inconsolata;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 25px;
+}
+}
+=======
+<<<<<<< HEAD
 
 =======
 >>>>>>> refs/remotes/origin/main
@@ -154,6 +178,7 @@ const NftContent = styled('div')`
       line-height: 25px;
     }
   }
+>>>>>>> refs/remotes/origin/main
 
   button {
     width: 104px;
@@ -228,16 +253,19 @@ export default function HistoryDetail({message}: { message: RichBridgeMessage | 
                         </Right>
                     </TopContent>
                     <NftContent>
-                        <img src={nft} alt=''/>
+                        <img style={{width: 76, height: 76, borderRadius: 6, marginRight: 32}}
+                             src='https://openseauserdata.com/files/58a6bd564656896770eb815815928760.svg' alt=''/>
                         <div className={'name'}>
-                            <p>{findNFT(message.message)?.name}</p>
-                            <p>#{message.message.tokenId.toString()}</p>
+                            <p style={{textAlign:"left", fontSize: 14}}>LOOT</p>
+                            <p style={{fontSize: 28, marginTop:8}}> {findNFT(message.message)?.name} #{message.message.tokenId.toString()}</p>
                         </div>
-                        {message.status === MessageStatus.READY_FOR_RELAY ? (<Button onClick={(e) => {
-                            e.stopPropagation()
-                            messenger.finalizeMessage(message.message, {signer: library.getSigner()})
-                        }
-                        }>Claim</Button>) : statusToString(message.status)}
+                        <Box sx={{marginLeft: 'auto'}}>
+                            {message.status === MessageStatus.READY_FOR_RELAY ? (<Button onClick={(e) => {
+                                e.stopPropagation()
+                                messenger.finalizeMessage(message.message, {signer: library.getSigner()})
+                            }
+                            }>Claim</Button>) : statusToString(message.status)}
+                        </Box>
                     </NftContent>
                     <Time>
                         <Typography className={'title'}>Time stamp</Typography>
