@@ -3,7 +3,7 @@ import {Box, Button, Stack, Typography} from "@mui/material";
 
 import {useNeedSign} from "hooks/account"
 import {useActiveWeb3React} from "../../web3";
-import {chainFun, SUPPORTED_CHAINS} from '../../utils/networkConnect';
+import {chainFun, chainTxtObj, SUPPORTED_CHAINS} from '../../utils/networkConnect';
 import {ReactComponent as DownIcon} from "assets/img/down.svg";
 import {
     HANDLE_SHOW_FAILED_TRANSACTION_MODAL,
@@ -88,7 +88,7 @@ export interface MultiChainNFT {
 
 export const nft: { tokens: MultiChainNFT[] } = {
     tokens: [{
-        name: 'Loot',
+        name: 'Loot (for Adventurers)',
         l1: {
             chainId: 5,
             address: '0x7093b806Df66c4E4c535eA522EAE3CBa3EAD8337',
@@ -124,10 +124,17 @@ export enum HistoryField {
     DETAIL
 }
 
-const ConfirmButton = styled(Button)`
+export const ConfirmButton = styled(Button)`
   background: linear-gradient(90deg, #A5FFBE 0%, #55DD7B 100%);
   color: #213425!important;
   border-radius: 10px;
+  &:disabled {
+    background: #343a33;
+    color: #333A33;
+  }
+  &:hover {
+    opacity: 0.9;
+  }
 `
 
 export default function Bridge() {
@@ -205,6 +212,8 @@ export default function Bridge() {
         const t = toChainType;
         setFromChainType(t)
         setToChainType(f)
+        setSelectNFT(undefined)
+        setSelectTokenId(undefined)
         setAuction(auction === BrightField.DEPOSIT ? BrightField.WITHDRAW : BrightField.DEPOSIT)
     }
 
@@ -388,7 +397,7 @@ export default function Bridge() {
                                     historyView === HistoryField.LIST? setShowHistory(false) : setHistoryView(HistoryField.LIST)
                                 }} fontSize={12}>BACK</LeftNav>}
                                 <Typography fontSize={24}
-                                            color={'#A5FFBE'}>{showHistory ? 'History' : 'NFT Bright'}</Typography>
+                                            color={'#A5FFBE'}>{showHistory ? 'History' : 'NFT Bridge'}</Typography>
                                 {!showHistory && <RightNav onClick={() => {
                                     setShowHistory(true)
                                 }} fontWeight={300} fontSize={12} margin={'12px'}>HISTORY</RightNav>}
@@ -411,13 +420,15 @@ export default function Bridge() {
                                             <NFTCard nft={selectedNFT} tokenId={selectTokenId} onClick={openNFTModal}/> :
                                             <SelectFrame onClick={openNFTModal}>+ Select NFT</SelectFrame>
                                     }
-                                    <ConfirmButton sx={{
+                                    <ConfirmButton
+                                        disabled={!selectedNFT || !selectTokenId}
+                                        sx={{
                                         width: '100%',
                                         height: 50,
                                         borderRadius: '8px',
                                         fontSize: '20px'
                                     }} onClick={confirmBridge}>
-                                        {fromChainType !== getChainType(chainId) ? `Connect to ${fromChainType}` : approved ? 'Bright' : 'Approve'}
+                                        {fromChainType !== getChainType(chainId) ? `Connect to ${chainTxtObj[fromChainType]}` : approved ? 'Bridge' : 'Approve'}
                                     </ConfirmButton>
                                     {/*<Button onClick={deployMintableContract}>deploy</Button>*/}
                                 </Box>

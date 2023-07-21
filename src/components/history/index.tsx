@@ -17,7 +17,7 @@ import HistoryDetail from './Detail';
 import {MessageDirection, MessageStatus, NFTBridgeMessage} from "@constellation-labs/sdk";
 import {ethers} from "ethers";
 import {useActiveWeb3React} from "../../web3";
-import {HistoryField, nft} from "../../pages/Bridge";
+import {ConfirmButton, HistoryField, nft} from "../../pages/Bridge";
 import moment from "moment";
 import {defaultL1Provider, defaultL2Provider, useMessage} from "../../constants";
 import {ReactComponent as Loading} from '../../assets/img/loading_icon.svg'
@@ -271,11 +271,11 @@ export default function History({ view, setView }: {view: HistoryField, setView:
                                   {moment.unix(row?.block?.timestamp).fromNow()}
                                 </StyledTableCell>
                                 <StyledTableCell>
-                                  {row.status === MessageStatus.READY_FOR_RELAY ? (<Button onClick={(e)=>{
+                                  {row.status === MessageStatus.READY_FOR_RELAY ? (<ConfirmButton onClick={(e)=>{
                                     e.stopPropagation()
                                     messenger.finalizeMessage(row.message, {signer: library.getSigner()})
                                   }
-                                  }>Claim</Button>):statusToString(row.status)}
+                                  }>Claim</ConfirmButton>):statusToString(row.status)}
                                 </StyledTableCell>
                               </StyledTableRow>
                           )

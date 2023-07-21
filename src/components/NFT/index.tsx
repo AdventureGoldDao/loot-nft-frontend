@@ -32,7 +32,7 @@ export const NFTCard = ({nft, tokenId, onClick}: {nft:MultiChainNFT|undefined; t
             <Cover
                 src={BASE_IMG}/>
             <div>
-                <Typography color={'#EBEBEB'} fontSize={18} fontWeight={600}>${nft?.name} ${tokenId}</Typography>
+                <Typography color={'#EBEBEB'} fontSize={18} fontWeight={600}>{nft?.name} {tokenId}</Typography>
             </div>
         </CardFrame>
     )

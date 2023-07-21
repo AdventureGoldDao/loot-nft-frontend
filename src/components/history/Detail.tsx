@@ -256,8 +256,8 @@ export default function HistoryDetail({message}: { message: RichBridgeMessage | 
                         <img style={{width: 76, height: 76, borderRadius: 6, marginRight: 32}}
                              src='https://openseauserdata.com/files/58a6bd564656896770eb815815928760.svg' alt=''/>
                         <div className={'name'}>
-                            <p style={{textAlign:"left", fontSize: 14}}>LOOT</p>
-                            <p style={{fontSize: 28, marginTop:8}}> {findNFT(message.message)?.name} #{message.message.tokenId.toString()}</p>
+                            <p style={{textAlign:"left", fontSize: 14}}>{findNFT(message.message)?.name}</p>
+                            <p style={{fontSize: 28, marginTop:8, textAlign: 'left'}}> {findNFT(message.message)?.l1.name} #{message.message.tokenId.toString()}</p>
                         </div>
                         <Box sx={{marginLeft: 'auto'}}>
                             {message.status === MessageStatus.READY_FOR_RELAY ? (<Button onClick={(e) => {
