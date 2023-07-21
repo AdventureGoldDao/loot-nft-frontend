@@ -33,7 +33,7 @@ const NFTInfo = styled.div`
   background-image: url(${bg});
 
   @media screen and (max-width: ${BREAKPOINTS.md}px) {
-    padding: 24px;
+    padding: 24px 24px 0;
   }
 `
 const InfoMain = styled.div`
@@ -117,11 +117,24 @@ const CollectionDiv = styled.div`
   display: flex;
   align-items: center;
   margin: 20px 0;
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `
 const ChainDiv = styled.div`
   width: 1px;
-  margin: 0 24px;
+  margin: 0 20px;
   background: #4B5954;
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    display: none;
+  }
+`
+const ChainInfo = styled.div`
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    margin-top: 6px;
+    margin-left: 0;
+  }
 `
 const WhiteSpace = styled.div`
   white-space: nowrap;
@@ -171,44 +184,7 @@ export default function NFTDetail() {
   const [msg, setMsg] = useState('')
   const [severity, setSeverity] = useState('')
 
-  const beforeMint = () => {
-    needSign()
-    if (detailInfo.chainType !== getChainType(chainId)) {
-      if (chainFun[detailInfo.chainType]) {
-        chainFun[detailInfo.chainType]()
-      }
-      return false
-    }
-    return true
-  }
-  const freeMint = async () => {
-    if (!beforeMint()) return false
-    dispatch({
-      type: HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
-      showWaitingWalletConfirmModal: waitingForConfirm
-    });
-    await freeMintNFT721(library, account, detailInfo.contractAddress, {
-      _onTranscationHash: (hash) => {
-      },
-      _onReceipt: async (receipt) => {
-        console.log(receipt);
-        dispatch({
-          type: HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
-          showWaitingWalletConfirmModal: { show: false }
-        });
-      },
-      _onError: (err) => {
-        dispatch({
-          type: HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
-          showWaitingWalletConfirmModal: { show: false }
-        });
-        dispatch({
-          type: HANDLE_SHOW_FAILED_TRANSACTION_MODAL,
-          showFailedTransactionModal: true
-        });
-      }
-    })
-  }
+ 
   const queryDetailInfo = async () => {
     await queryNFTDetail(chainType, contractAddress, tokenId).then(res => {
       setDetailInfo(res)
@@ -273,20 +249,23 @@ export default function NFTDetail() {
               </CoverBox>
               {/* <img src={detailInfo.image}></img> */}
             </InfoCover>
-            <PropertiesInfo>
-              <div>Properties</div>
-              {
-                detailInfo?.attributes?.map((item, index) => (
-                  <ContractItem key={index}>
-                    <div>
-                      <ColorGreenLight className='lh28'>{item.name}</ColorGreenLight>
-                      <span className='lh28 pl10'>{item.value}</span>
-                    </div>
-                    <span className='c_green'>{item.rarity}%</span>
-                  </ContractItem>
-                ))
-              }
-            </PropertiesInfo>
+            {
+              detailInfo.attributes?.length >0 &&
+              <PropertiesInfo>
+                <div>Properties</div>
+                {
+                  detailInfo?.attributes?.map((item, index) => (
+                    <ContractItem key={index}>
+                      <div>
+                        <ColorGreenLight className='lh28'>{item.name}</ColorGreenLight>
+                        <span className='lh28 pl10'>{item.value}</span>
+                      </div>
+                      <span className='c_green'>{item.rarity}%</span>
+                    </ContractItem>
+                  ))
+                }
+              </PropertiesInfo>
+            }
           </MainF1>
           <MainF1 className={`f1`}>
             <BaseInfo>
@@ -297,11 +276,11 @@ export default function NFTDetail() {
                   <div className='c_green text_hidden_1'>{detailInfo.collectionName}</div>
                 </div>
                 <ChainDiv>&nbsp;</ChainDiv>
-                <div className='df_align_center'>
+                <ChainInfo className='df_align_center'>
                   <span className='pr10'>Network</span>
                   <img width={20} src={chainTypeComImgObj[detailInfo.chainType]}></img>
-                  <WhiteSpace className='c_green pl10'>{chainTxtObj[detailInfo.chainType]}</WhiteSpace>
-                </div>
+                  <WhiteSpace className='c_green pl2'>{chainTxtObj[detailInfo.chainType]}</WhiteSpace>
+                </ChainInfo>
               </CollectionDiv>
               <NFTDes className='mb10'>{detailInfo.description}</NFTDes>
             </BaseInfo>
