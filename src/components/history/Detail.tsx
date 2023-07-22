@@ -1,9 +1,8 @@
-import React, {useEffect, useCallback, Dispatch, SetStateAction, useMemo} from 'react'
+import React, { Dispatch, SetStateAction} from 'react'
 import {Button, Typography, styled, Box} from "@mui/material";
 import FromLogo from 'assets/img/chain/com_eth.svg'
 import ToLogo from 'assets/img/chain/com_loot.svg'
 import arrow from 'assets/img/right-arrow.png'
-import nft from 'assets/img/test/test3.png'
 import {
     MessageDirection,
     MessageStatus
@@ -119,66 +118,33 @@ const NftContent = styled('div')`
   justify-content: flex-start;
   align-items: center;
   margin-top: 20px;
-<<<<<<< HEAD
-< < < < < < < HEAD = = = = = = = > > > > > > > refs /remotes/ origin / main img {
-  width: 76px;
-  height: 76px;
-  border-radius: 7px;
-} < < < < < < < HEAD = = = = = = = > > > > > > > refs /remotes/ origin / main . name {
-  width: 236px;
-  color: #EBEBEB;
-  font-size: 16px;
-  text-align: left;
-  margin-left: 30px;
-< < < < < < < HEAD = = = = = = = > > > > > > > refs /remotes/ origin / main p: last-child {
-  width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin-top: 8px;
-  font-family: Inconsolata;
-  font-size: 24px;
-  font-weight: 600;
-  line-height: 25px;
-}
-}
-=======
-<<<<<<< HEAD
 
-=======
->>>>>>> refs/remotes/origin/main
   img {
     width: 76px;
     height: 76px;
     border-radius: 7px;
   }
-<<<<<<< HEAD
 
-=======
->>>>>>> refs/remotes/origin/main
   .name {
     width: 236px;
     color: #EBEBEB;
     font-size: 16px;
     text-align: left;
     margin-left: 30px;
-<<<<<<< HEAD
-
-=======
->>>>>>> refs/remotes/origin/main
-    p:last-child {
-      width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      margin-top: 8px;
-      font-family: Inconsolata;
-      font-size: 24px;
-      font-weight: 600;
-      line-height: 25px;
-    }
   }
->>>>>>> refs/remotes/origin/main
+
+
+  p:last-child {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-top: 8px;
+    font-family: Inconsolata;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 25px;
+  }
 
   button {
     width: 104px;
