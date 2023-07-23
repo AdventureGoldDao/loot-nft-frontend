@@ -1,10 +1,10 @@
-import React, { Dispatch, SetStateAction} from 'react'
+import React, {Dispatch, SetStateAction, useEffect, useState} from 'react'
 import {Button, Typography, styled, Box} from "@mui/material";
 import FromLogo from 'assets/img/chain/com_eth.svg'
 import ToLogo from 'assets/img/chain/com_loot.svg'
 import arrow from 'assets/img/right-arrow.png'
 import {
-    MessageDirection,
+    MessageDirection, MessageReceipt,
     MessageStatus
 } from "@constellation-labs/sdk";
 import {findNFT, RichBridgeMessage, statusToString} from "./index";
@@ -130,7 +130,6 @@ const NftContent = styled('div')`
     color: #EBEBEB;
     font-size: 16px;
     text-align: left;
-    margin-left: 30px;
   }
 
 
@@ -162,6 +161,23 @@ export default function HistoryDetail({message}: { message: RichBridgeMessage | 
     const {library} = useActiveWeb3React()
 
     const messenger = useMessage()
+    const [receipt, setReceipt] = useState<MessageReceipt | undefined>()
+    const [claimed, setClaimed] = useState(false)
+
+    const fetchHash = () => {
+        messenger.getMessageReceipt(message.message).then((receipt) => {
+            console.log('receipt', receipt)
+            setReceipt(receipt)
+        })
+    }
+
+    useEffect(() => {
+        fetchHash()
+        const claimed = !!window.localStorage.getItem(message.message.transactionHash)
+        setClaimed(claimed)
+    }, [])
+
+
 
     return (
         <>
@@ -205,6 +221,9 @@ export default function HistoryDetail({message}: { message: RichBridgeMessage | 
                                     <ChainName>Ethereum Goerli</ChainName>
                                     <Id>
                                         <span>TxID: </span>
+                                        {receipt && <a target="_blank" style={{textDecoration: 'none'}}
+                                                       href={`https://goerli.etherscan.io/tx/${receipt.transactionReceipt.transactionHash}`}><span>{receipt.transactionReceipt.transactionHash.slice(0, 6) + '...' + receipt.transactionReceipt.transactionHash.slice(-4)}</span></a>}
+
                                     </Id>
                                 </>
                             ) : (
@@ -213,20 +232,26 @@ export default function HistoryDetail({message}: { message: RichBridgeMessage | 
                                     <ChainName>Loot Chain Testnet</ChainName>
                                     <Id>
                                         <span>TxID: </span>
+                                        {receipt && <a target="_blank" style={{textDecoration: 'none'}}
+                                                       href={`https://testnet.explorer.lootchain.com/tx/${receipt.transactionReceipt.transactionHash}`}><span>{receipt.transactionReceipt.transactionHash.slice(0, 6) + '...' + receipt.transactionReceipt.transactionHash.slice(-4)}</span></a>}
                                     </Id>
                                 </>
                             )}
                         </Right>
                     </TopContent>
                     <NftContent>
-                        <img style={{width: 76, height: 76, borderRadius: 6, marginRight: 32}}
+                        <img style={{width: 76, height: 76, borderRadius: 6, marginRight: 16}}
                              src='https://openseauserdata.com/files/58a6bd564656896770eb815815928760.svg' alt=''/>
                         <div className={'name'}>
-                            <p style={{textAlign:"left", fontSize: 14}}>{findNFT(message.message)?.name}</p>
-                            <p style={{fontSize: 28, marginTop:8, textAlign: 'left'}}> {findNFT(message.message)?.l1.name} #{message.message.tokenId.toString()}</p>
+                            <p style={{textAlign: "left", fontSize: 14}}>{findNFT(message.message)?.name}</p>
+                            <p style={{
+                                fontSize: 28,
+                                marginTop: 8,
+                                textAlign: 'left'
+                            }}> {findNFT(message.message)?.l1.name} #{message.message.tokenId.toString()}</p>
                         </div>
                         <Box sx={{marginLeft: 'auto'}}>
-                            {message.status === MessageStatus.READY_FOR_RELAY ? (<Button onClick={(e) => {
+                            {message.status === MessageStatus.READY_FOR_RELAY ? (<Button disabled={claimed} onClick={(e) => {
                                 e.stopPropagation()
                                 messenger.finalizeMessage(message.message, {signer: library.getSigner()})
                             }
