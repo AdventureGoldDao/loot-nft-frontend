@@ -4,12 +4,12 @@ const development = {
 }
 // const development = {
 //   "ENV": "production",
-//   "API_URL": "http://freemint-api.lootchain.com/api"
+//   "API_URL": "https://freemint-api.lootchain.com/api"
 // }
 
 const production = {
   "ENV": "production",
-  "API_URL": "http://freemint-api.lootchain.com/api"
+  "API_URL": "https://freemint-api.lootchain.com/api"
 }
 
 const env = { development, production }[process.env.NODE_ENV || 'development']
