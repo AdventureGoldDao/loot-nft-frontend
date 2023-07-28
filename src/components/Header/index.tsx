@@ -171,7 +171,7 @@ const Header = ({ currentRoute }) => {
             <Link to="/"><Logo src={logoFull} /></Link>
             <NavLink to="/" active={currentRoute.parent === 'home'} className={`ml60`}>Home</NavLink>
             <NavLink to="/explore" active={currentRoute.parent === 'explore'} className={`ml60`}>Explore</NavLink>
-            <NavLink to="/bridge" active={currentRoute.parent === 'bridge'} className={`ml60`}>Bridge</NavLink>
+            {/* <NavLink to="/bridge" active={currentRoute.parent === 'bridge'} className={`ml60`}>Bridge</NavLink> */}
             <NavLink to="/dashboard" active={currentRoute.parent === 'dashboard'} className={`ml60`}>Dashboard</NavLink>
           </div>
 
@@ -241,9 +241,9 @@ const Header = ({ currentRoute }) => {
             <PopMyItem>
               <NavLink onClick={cancel} to="/explore" active={currentRoute.parent === 'explore'}>Explore</NavLink>
             </PopMyItem>
-            <PopMyItem>
+            {/* <PopMyItem>
               <NavLink onClick={cancel} to="/bridge" active={currentRoute.parent === 'bridge'}>Bridge</NavLink>
-            </PopMyItem>
+            </PopMyItem> */}
             <PopMyItem>
               <NavLink onClick={cancel} to="/dashboard" active={currentRoute.parent === 'dashboard'}>Dashboard</NavLink>
             </PopMyItem>
