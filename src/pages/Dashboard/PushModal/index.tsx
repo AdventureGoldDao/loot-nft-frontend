@@ -191,11 +191,15 @@ export default function CollectionModal({ visiblePush = false, closePushModal, c
     }
   }
   const handleEndDateChange = (date) => {
-    const currentDate = dayjs();
-    if (date.isAfter(currentDate)) {
-      setEndTime(date);
+    if(startTime){
+      const futureDate = startTime.add(24, 'hour');
+      if (date.isAfter(futureDate)) {
+        setEndTime(date);
+      }else {
+        setEndTime(futureDate)
+      }
     }else {
-      setEndTime(currentDate)
+      setEndTime('')
     }
   }
 

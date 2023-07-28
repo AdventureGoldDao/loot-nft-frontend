@@ -216,7 +216,8 @@ const Header = ({ currentRoute }) => {
                 >Connect Wallet</Button>
                 :
                 state.isWrongNetwork ? '' :
-                <AccountBox className="ml16" to="/collector">{abbrTxHash(account, 5, 4)}</AccountBox>
+                // <AccountBox className="ml16" to="/collector">{abbrTxHash(account, 5, 4)}</AccountBox>
+                <AccountBox className="ml16" to="/collector">Account</AccountBox>
             }
           </div>
         </Box>
@@ -289,7 +290,8 @@ const Header = ({ currentRoute }) => {
                 >Connect Wallet</Button>
                 :
                 state.isWrongNetwork ? '' :
-                <AccountBox onClick={cancel} to="/collector">{abbrTxHash(account, 5, 4)}</AccountBox>
+                // <AccountBox onClick={cancel} to="/collector">{abbrTxHash(account, 5, 4)}</AccountBox>
+                <AccountBox onClick={cancel} to="/collector">Account</AccountBox>
             }
           </PopMyBox>
         </NavH5Body>
