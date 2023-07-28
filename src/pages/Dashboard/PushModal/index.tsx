@@ -129,7 +129,7 @@ export default function CollectionModal({ visiblePush = false, closePushModal, c
       return false
     }
     if (!endTime) {
-      initMsg("End time is required", 'error')
+      initMsg("The time interval must exceed 24 hours.", 'error')
       return false
     }
     if (!mintLimit) {
@@ -189,6 +189,8 @@ export default function CollectionModal({ visiblePush = false, closePushModal, c
     }else {
       setStartTime(currentDate)
     }
+    setEndTime('')
+
   }
   const handleEndDateChange = (date) => {
     if(startTime){
@@ -196,9 +198,10 @@ export default function CollectionModal({ visiblePush = false, closePushModal, c
       if (date.isAfter(futureDate)) {
         setEndTime(date);
       }else {
-        setEndTime(futureDate)
+        setEndTime('')
       }
     }else {
+      initMsg("Please select start time first","error")
       setEndTime('')
     }
   }
@@ -262,6 +265,7 @@ export default function CollectionModal({ visiblePush = false, closePushModal, c
                   value={endTime}
                   format='MM/DD/YYYY HH:mm'
                   onChange={handleEndDateChange}
+                  minDateTime={dayjs(startTime).add(1, 'day')} 
                 />
               </BlackBox>
             </div>
