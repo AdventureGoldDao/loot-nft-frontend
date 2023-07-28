@@ -3,7 +3,7 @@ import {Box, Button, Stack, Typography} from "@mui/material";
 
 import {useNeedSign} from "hooks/account"
 import {useActiveWeb3React} from "../../web3";
-import {chainFun, chainTxtObj, SUPPORTED_CHAINS} from '../../utils/networkConnect';
+import {chainFun, chainTxtObj, chainArr} from '../../utils/networkConnect';
 import {ReactComponent as DownIcon} from "assets/img/down.svg";
 import {
     HANDLE_SHOW_FAILED_TRANSACTION_MODAL,
@@ -139,8 +139,8 @@ export const ConfirmButton = styled(Button)`
 
 export default function Bridge() {
     const {library, account} = useActiveWeb3React()
-    const [fromChainType, setFromChainType] = useState(SUPPORTED_CHAINS[5].value)
-    const [toChainType, setToChainType] = useState(SUPPORTED_CHAINS[9088912].value)
+    const [fromChainType, setFromChainType] = useState(chainArr[0].value)
+    const [toChainType, setToChainType] = useState(chainArr[1].value)
     const [selectedNFT, setSelectNFT] = useState<MultiChainNFT | undefined>()
     const [selectTokenId, setSelectTokenId] = useState<string | undefined>()
     const [approved, setApproved] = useState(true)

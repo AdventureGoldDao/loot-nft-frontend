@@ -114,33 +114,15 @@ export const chains = env.ENV === 'development' ? [
   { label: 'Tron', value: 'tron' },
 ]
 
-export const chainArr = [
+export const chainArr = env.ENV === 'development' ? [
   { name: 'Ethereum Goerli', icon: eth, value: 'goerli', chainId: 5 },
   { name: 'Loot Test', icon: loot, value: 'loottest', chainId: 9088912 },
-  // { name: 'Base Goerli', icon: base },
-  // { name: 'Optimism', icon: op },
-  // { name: 'Arbitrum', icon: arb },
-  // { name: 'zkSync Era', icon: zk },
-  // { name: 'BSC', icon: bnb },
-  // { name: 'Polygon', icon: polygon },
-  // { name: 'Klaytn', icon: klaytn },
-  // { name: 'Tron', icon: tron }
+  { name: 'Ethereum', icon: eth, value: 'mainnet', chainId: 1 },
+  { name: 'Loot', icon: loot, value: 'loot', chainId: 5151706 },
+] : [
+  { name: 'Ethereum', icon: eth, value: 'mainnet', chainId: 1 },
+  { name: 'Loot', icon: loot, value: 'loot', chainId: 5151706 },
 ]
-
-export const SUPPORTED_CHAINS = {
-  5: {
-    chainId: 5,
-    name: 'Goerli Ethereum',
-    icon: eth,
-    value: 'goerli'
-  },
-  9088912: {
-    chainId: 9088912,
-    name: 'Loot Chain Testnet',
-    icon: loot,
-    value: 'loottest'
-  }
-}
 
 export const chainTxtObj = {
   mainnet: "Ethereum",
