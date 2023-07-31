@@ -120,7 +120,8 @@ const HomeSwiperH5 = styled.div`
 const SwiperInfo = styled.div`
   margin-top: 20px;
 `
-const PageContent = styled.div`
+const PageContent = styled.div<{ nodata: boolean }>`
+  margin-top: ${props => props.nodata ? '60px' : '0'};
   padding: 20px 100px;
 
   @media screen and (max-width: ${BREAKPOINTS.md}px) {
@@ -150,7 +151,7 @@ const ViewAllH5 = styled.div`
     text-align: center;
   }
 `
-const PageFoot = styled.div<{nodata:boolean}>`
+const PageFoot = styled.div<{ nodata: boolean }>`
   position: relative;
   width: 100%;
   min-height: 500px;
@@ -221,11 +222,11 @@ export default function Home() {
   const formatTime = (timestamp) => {
     const currentTimestamp = Date.now();
     const timeDiff = Math.abs(currentTimestamp - timestamp);
-  
+
     const oneMinute = 60 * 1000;
     const oneHour = 60 * oneMinute;
     const oneDay = 24 * oneHour;
-  
+
     if (timeDiff >= oneDay) {
       const days = Math.floor(timeDiff / oneDay);
       const hours = Math.floor((timeDiff % oneDay) / oneHour);
@@ -378,7 +379,7 @@ export default function Home() {
         }
         {
           recentList.length > 0 &&
-          <PageContent>
+          <PageContent nodata={swiperList.length === 0 ? true : false}>
             <div className='space-between-center'>
               <div className='df_align_center'>
                 <img width={44} src={recent}></img>
@@ -406,7 +407,7 @@ export default function Home() {
             }
           </PageContent>
         }
-        <PageFoot nodata={(recentList.length>0&&swiperList.length>0)?false:true} style={{ backgroundImage: `url(${footBg})` }}>
+        <PageFoot nodata={(recentList.length === 0 && swiperList.length === 0) ? true : false} style={{ backgroundImage: `url(${footBg})` }}>
           <FootContent>
             <FootTitle>Shaping the <span className='c_green'>future</span> of the on-chain art industry</FootTitle>
             <div className='c_green tac mt10 lh28'>Join this revolution with over 300 other pioneering artists</div>
