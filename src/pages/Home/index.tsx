@@ -150,11 +150,11 @@ const ViewAllH5 = styled.div`
     text-align: center;
   }
 `
-const PageFoot = styled.div`
+const PageFoot = styled.div<{nodata:boolean}>`
   position: relative;
   width: 100%;
-  height: 500px;
-  margin-top: 100px;
+  min-height: 500px;
+  margin-top: ${props => props.nodata ? '200px' : '120px'};
   padding: 0px 100px;
   background-position: center center;
   background-size: cover;
@@ -182,6 +182,7 @@ const FootTitle = styled.div`
 `
 const FootShowImg = styled.img`
   width: 90%;
+  margin-top: 20px;
 `
 
 export default function Home() {
@@ -405,7 +406,7 @@ export default function Home() {
             }
           </PageContent>
         }
-        <PageFoot style={{ backgroundImage: `url(${footBg})` }}>
+        <PageFoot nodata={(recentList.length>0&&swiperList.length>0)?false:true} style={{ backgroundImage: `url(${footBg})` }}>
           <FootContent>
             <FootTitle>Shaping the <span className='c_green'>future</span> of the on-chain art industry</FootTitle>
             <div className='c_green tac mt10 lh28'>Join this revolution with over 300 other pioneering artists</div>
@@ -415,11 +416,9 @@ export default function Home() {
           </FootContent>
           <ViewAll className='pt40 tac'>
             <FootShowImg src={footShow}></FootShowImg>
-            {/* <img className={styles.footShow} src={footShow}></img> */}
           </ViewAll>
           <ViewAllH5 className={`tac pt10`}>
             <FootShowImg src={footShowH5}></FootShowImg>
-            {/* <img className={styles.footShow} src={footShowH5}></img> */}
           </ViewAllH5>
         </PageFoot>
         <Backdrop
