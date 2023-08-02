@@ -14,6 +14,7 @@ import { HANDLE_SHOW_CONNECT_MODAL, HANDLE_WRONG_NETWORK } from "../../const";
 import logoFull from "assets/img/logoFull.svg";
 import more from "assets/img/header/more.svg";
 import moreG from "assets/img/header/more_g.svg";
+import accountIcon from "assets/svg/account.svg";
 import { BREAKPOINTS } from 'theme';
 
 const Main = styled.div`
@@ -71,6 +72,10 @@ const AccountBox = styled(Link)`
   line-height: 28px;
   background-color: rgba(165, 255, 190, 0.1);
   border-radius: 50px;
+`
+const AccountIconBox = styled(Link)`
+  display: inline-flex;
+  text-decoration: none;
 `
 const BoxH5 = styled.div`
   display: none;
@@ -217,7 +222,7 @@ const Header = ({ currentRoute }) => {
                 :
                 state.isWrongNetwork ? '' :
                 // <AccountBox className="ml16" to="/collector">{abbrTxHash(account, 5, 4)}</AccountBox>
-                <AccountBox className="ml16" to="/collector">Account</AccountBox>
+                <AccountIconBox className="ml16" to="/collector"><img src={accountIcon} /></AccountIconBox>
             }
           </div>
         </Box>
@@ -291,7 +296,7 @@ const Header = ({ currentRoute }) => {
                 :
                 state.isWrongNetwork ? '' :
                 // <AccountBox onClick={cancel} to="/collector">{abbrTxHash(account, 5, 4)}</AccountBox>
-                <AccountBox onClick={cancel} to="/collector">Account</AccountBox>
+                <AccountIconBox onClick={cancel} to="/collector"><img src={accountIcon} /></AccountIconBox>
             }
           </PopMyBox>
         </NavH5Body>

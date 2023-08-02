@@ -10,7 +10,7 @@ import { useActiveTronWeb } from "hooks/activeTronWeb";
 import { getSign, handleIsSignExpired, clearLocalStorage } from '../../utils/txSign'
 import { mainContext } from '../../reducer'
 import { HANDLE_SHOW_CONNECT_MODAL, HANDLE_WRONG_NETWORK } from "../../const";
-import { injected } from "../../utils/networkConnect";
+import { injected, chainFun } from "../../utils/networkConnect";
 import imTokenIcon from '../../assets/img/modal/imToken.png'
 import metaMaskIcon from '../../assets/img/modal/MetaMask.png'
 import tronLinkIcon from '../../assets/img/modal/TronLink.png'
@@ -278,6 +278,7 @@ export const WalletConnect = ({ visible }) => {
         console.log('chainChanged', message)
       })
 
+      chainFun['loot']();
     }
 
     return () => {
