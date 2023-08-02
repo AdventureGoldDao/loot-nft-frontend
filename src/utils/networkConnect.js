@@ -117,8 +117,6 @@ export const chains = env.ENV === 'development' ? [
 export const chainArr = env.ENV === 'development' ? [
   { name: 'Ethereum Goerli', icon: eth, value: 'goerli', chainId: 5 },
   { name: 'Loot Test', icon: loot, value: 'loottest', chainId: 9088912 },
-  { name: 'Ethereum', icon: eth, value: 'mainnet', chainId: 1 },
-  { name: 'Loot', icon: loot, value: 'loot', chainId: 5151706 },
 ] : [
   { name: 'Ethereum', icon: eth, value: 'mainnet', chainId: 1 },
   { name: 'Loot', icon: loot, value: 'loot', chainId: 5151706 },

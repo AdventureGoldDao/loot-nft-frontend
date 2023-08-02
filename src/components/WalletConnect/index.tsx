@@ -5,6 +5,7 @@ import { BscConnector } from '@binance-chain/bsc-connector';
 import { Modal, Box } from "@mui/material";
 import styled from 'styled-components/macro';
 
+import env from '../../env';
 import { useActiveWeb3React } from "../../web3";
 import { useActiveTronWeb } from "hooks/activeTronWeb";
 import { getSign, handleIsSignExpired, clearLocalStorage } from '../../utils/txSign'
@@ -278,7 +279,7 @@ export const WalletConnect = ({ visible }) => {
         console.log('chainChanged', message)
       })
 
-      chainFun['loot']();
+      chainFun[env.ENV === 'development' ? 'loottest' : 'loot']();
     }
 
     return () => {
