@@ -303,7 +303,7 @@ export default function Home() {
         {
           swiperList.length > 0 &&
           <HomeSwiper >
-            <SwiperBg style={{ backgroundImage: `url(${swiperList[swiperIndex]?.image})` }}></SwiperBg>
+            <SwiperBg style={{ backgroundImage: `url(${window.encodeURI(swiperList[swiperIndex]?.image)})` }}></SwiperBg>
             <Swiper modules={[Navigation, Autoplay]}
               onSlideChange={slideChange}
               navigation={true}

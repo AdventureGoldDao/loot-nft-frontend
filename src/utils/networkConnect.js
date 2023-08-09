@@ -186,8 +186,10 @@ export const handleHistoryAddress = (chainType, address) => {
       return 'https://explorer.zksync.io/address/' + address
     case 'zksynceratest':
       return 'https://zksync2-testnet.zkscan.io/address/' + address
+    case 'loot':
+      return 'https://explorer.lootchain.com/address/' + address
     case 'loottest':
-      return 'https://loot.calderaexplorer.xyz/address/' + address
+      return 'https://testnet.explorer.lootchain.com/address/' + address
     default:
       return 'https://etherscan.io/address/' + address
   }
@@ -233,6 +235,10 @@ export const handleHistoryTx = (chainType, txHash) => {
       return 'https://explorer.zksync.io/tx/' + txHash
     case 'zksynceratest':
       return 'https://zksync2-testnet.zkscan.io/tx/' + txHash
+    case 'loot':
+      return 'https://explorer.lootchain.com/tx/' + txHash
+    case 'loottest':
+      return 'https://testnet.explorer.lootchain.com/tx/' + txHash
     default:
       return 'https://etherscan.io/tx/' + txHash
   }
@@ -278,6 +284,10 @@ export const handleHolders = (chainType, address) => {
       return 'https://explorer.zksync.io/token/' + address + '#balances'
     case 'zksynceratest':
       return 'https://zksync2-testnet.zkscan.io/token/' + address + '#balances'
+    case 'loot':
+      return 'https://explorer.lootchain.com/token/' + address + '#balances'
+    case 'loottest':
+      return 'https://testnet.explorer.lootchain.com/token/' + address + '#balances'
     default:
       return 'https://etherscan.io/token/' + address + '#balances'
   }

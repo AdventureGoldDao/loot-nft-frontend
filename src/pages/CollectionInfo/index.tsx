@@ -299,7 +299,7 @@ export default function NFTDetail() {
                 list.map(item => (
                   <TypesCover >
                     <CoverBox>
-                      <Cover style={{ backgroundImage: `url(${item.image})` }}>
+                      <Cover style={{ backgroundImage: `url(${window.encodeURI(item.image)})` }}>
                       </Cover>
                     </CoverBox>
                   </TypesCover>
