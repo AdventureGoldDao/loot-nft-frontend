@@ -5,14 +5,14 @@ import Snackbar from "components/SnackMessage"
 import copy from 'copy-to-clipboard';
 import { BREAKPOINTS } from 'theme';
 
-import { queryCollectionDetail, getMetadataList } from 'services/createNFTManage'
+import { queryCollectionDetail, getMetadataList, getMintSignature } from 'services/createNFTManage'
 import { mainContext } from "../../reducer";
 import { useNeedSign } from "hooks/account"
 import { useActiveWeb3React } from "../../web3";
 import { abbrTxHash } from "../../utils/format";
 import { chainTxtObj, chainFun, handleHistoryAddress } from '../../utils/networkConnect';
 import { getChainType } from "../../web3/address";
-import { freeMintNFT721 } from "utils/handleContract"
+import { game721NFT } from "utils/handleContract"
 import styled from 'styled-components/macro';
 import bg from 'assets/img/explore_bg.svg';
 import copyIcon from "assets/img/header/copy.svg";
@@ -128,9 +128,30 @@ const CollectionDes = styled.div`
 `
 const MintBox = styled.div`
   margin-top: 40px;
-  text-align: right;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   button {
     border: none;
+  }
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    flex-direction: column;
+  }
+`
+const IneligibleDiv = styled.div<{ show: boolean }>`
+  flex: auto;
+  text-align: center;
+  background-color: #2C2618;
+  color: #AD8E50;
+  border-radius: 10px;
+  height: 36px;
+  line-height: 36px;
+  margin-right: 12px;
+  visibility: ${props => props.show ? 'visible' : 'hidden'};
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    margin: 0 0 12px 0;
+    width: 100%;
+    display: ${props => props.show ? 'block' : 'none'};
   }
 `
 const ContractionInfo = styled.div`
@@ -185,7 +206,12 @@ export default function NFTDetail() {
       type: HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
       showWaitingWalletConfirmModal: waitingForConfirm
     });
-    await freeMintNFT721(library, account, detailInfo.contractAddress, {
+
+    let signatureData;
+    if (detailInfo.eligibility === 'whitelist') {
+      signatureData = await getMintSignature(collectionId)
+    }
+    await game721NFT(library, account, detailInfo.contractAddress, signatureData, {
       _onTranscationHash: (hash) => {
       },
       _onReceipt: async (receipt) => {
@@ -352,7 +378,8 @@ export default function NFTDetail() {
                 </div>
               </div>
               <MintBox>
-                <Button disabled={detailInfo.status != 'active' || mintNum === detailInfo.maxCount} className={`w200_h5 h40 btn_multicolour`} onClick={freeMint}>Free Mint</Button>
+                <IneligibleDiv show={detailInfo.eligibility === 'whitelist' && detailInfo.status == 'active' && !detailInfo.eligibleToMint}>The address ineligible to claim</IneligibleDiv>
+                <Button disabled={!detailInfo.eligibleToMint || mintNum === detailInfo.maxCount} className={`w200_h5 h40 btn_multicolour`} onClick={freeMint}>Free Mint</Button>
               </MintBox>
             </BaseInfo>
             <ContractionInfo>

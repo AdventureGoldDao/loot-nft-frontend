@@ -65,7 +65,7 @@ export const handleIsSignExpired = (type) => {
     return
   }
 
-  const signTime = signatureMessage.split('DeFine Nonce:\n')[1];
+  const signTime = signatureMessage.split('Nonce:')[1];
 
   if (nowTime - signTime > 604800000) {
     clearLocalStorage(type)

@@ -22,6 +22,7 @@ import DeFinePuzzle from "../web3/abi/DeFinePuzzle.json";
 import DeFineSeason from "../web3/abi/DeFineSeason.json";
 import ClaimReward from "../web3/abi/ClaimReward.json";
 import FreeMint721 from "../web3/abi/FreeMint721NFT.json";
+import Game721NFT from "../web3/abi/Game721NFT.json";
 import { abi as VaultRewardAbi } from "../web3/abi/VaultReward.json";
 import { getToken, getTokenTron } from "../utils/tokenList";
 import { getContract } from "../web3";
@@ -32,6 +33,7 @@ import {
 } from "../web3/address";
 import {formatUnits} from "@ethersproject/units";
 import {ContractFactory, Web3Provider} from "zksync-web3";
+import env from '../env';
 
 
 const ERC721Contract = (library, chainId) => {
@@ -788,7 +790,7 @@ export const deployFreeMintNFT721 = (library, address, name, symbol, chainType,m
     arguments: [
       name,
       symbol,
-      `http://13.229.74.96:8080/nftInfo/${chainType}/`,
+      `${env.API_URL.split('/api')[0]}/nftInfo/${chainType}/`,
       maxCount,
       startTime,
       endTime,
@@ -808,6 +810,52 @@ export const deployFreeMintNFT721 = (library, address, name, symbol, chainType,m
     .then(function () {
       return data;
     });
+}
+export const deployGame721NFT = (library, address, name, symbol, chainType,maxCount,startTime,endTime,userLimit,acceptCurrency,mintPrice,needVerify) => {
+  const data = {};
+  
+  const myContract = getContract(library, Game721NFT.abi);
+  return myContract.deploy({
+    data: Game721NFT.bytecode,
+    arguments: [
+      name,
+      symbol,
+      `${env.API_URL.split('/api')[0]}/nftInfo/${chainType}/`,
+      maxCount,
+      startTime,
+      endTime,
+      userLimit,
+      acceptCurrency,
+      mintPrice,
+      env.ENV === 'development' ? '0xf3e04c5717776066101acf4fb9ff5406965f82e5' : '0x8f642652a09e436f20e88c435c1076c382de98a1',
+      needVerify
+    ]
+  }).send({ from: address })
+    .on('error', function (error) {
+      // console.log('error___', error)
+    })
+    .on('receipt', function (receipt) {
+      data.transactionHash = receipt.transactionHash
+      data.address = receipt.contractAddress
+      data.blockNumber = receipt.blockNumber
+    })
+    .then(function () {
+      return data;
+    });
+}
+export const game721NFT = async(library,address,contractAddress,signatureData,params) => {
+  if (signatureData) {
+    return await getContract(library, Game721NFT.abi, contractAddress).methods.mint(signatureData.nonce, signatureData.signature)
+    .send({from: address})
+    .on('transcationHash', params._onTranscationHash)
+    .on('receipt', params._onReceipt)
+    .on('error', params._onError)
+  }
+  return await getContract(library, Game721NFT.abi, contractAddress).methods.mint()
+  .send({from: address})
+  .on('transcationHash', params._onTranscationHash)
+  .on('receipt', params._onReceipt)
+  .on('error', params._onError)
 }
 export const freeMintNFT721 = async(library,address,contractAddress,params) => {
   return await getContract(library, FreeMint721.abi, contractAddress).methods.mint()

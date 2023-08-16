@@ -288,7 +288,7 @@ export default function NFTDetail() {
               <div>Contract Details</div>
               <ContractItem>
                 <span className='lh28'>Release Date</span>
-                <span className='c_green'>{moment(detailInfo.mintStartTime).format('MM/DD/YYYY HH:mm')}</span>
+                <span className='c_green'>{moment(detailInfo.mintTime).format('MM/DD/YYYY HH:mm')}</span>
               </ContractItem>
               <ContractItem>
                 <span className='lh28'>Blockchain</span>

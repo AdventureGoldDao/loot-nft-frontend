@@ -14,8 +14,12 @@ export const queryCollectionDetail = async (collectionId) => {
   let res = await http.get(`/collections/${collectionId}`)
   return res
 }
-export const publishCollection = async (collectionId,mintStartTime,mintEndTime,chainType,contractAddress,txHash,blockNumber,maxCountPerAddress) => {
-  let res = await http.put(`/collections/${collectionId}/publish?mintStartTime=${mintStartTime}&mintEndTime=${mintEndTime}&chainType=${chainType}&contractAddress=${contractAddress}&txHash=${txHash}&blockNumber=${blockNumber}&maxCountPerAddress=${maxCountPerAddress}`)
+export const publishCollection = async (collectionId,mintStartTime,mintEndTime,chainType,contractAddress,txHash,blockNumber,maxCountPerAddress, whitelist) => {
+  let res = await http.put(`/collections/${collectionId}/publish?mintStartTime=${mintStartTime}&mintEndTime=${mintEndTime}&chainType=${chainType}&contractAddress=${contractAddress}&txHash=${txHash}&blockNumber=${blockNumber}&maxCountPerAddress=${maxCountPerAddress}`, whitelist)
+  return res
+}
+export const getMintSignature = async (collectionId) => {
+  let res = await http.get(`/collections/${collectionId}/mintInfo`)
   return res
 }
 const formatTime = (timestamp) => {

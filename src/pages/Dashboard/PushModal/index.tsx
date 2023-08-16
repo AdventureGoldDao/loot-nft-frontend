@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { useHistory } from 'react-router-dom';
-import { Button, Modal, Box, TextField } from "@mui/material";
+import { Button, Modal, Box, TextField, Select, MenuItem } from "@mui/material";
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
@@ -11,7 +11,7 @@ import DeploySuccessModal from "../DeploySuccessModal"
 import { useNeedSign } from "hooks/account"
 import { useActiveWeb3React } from "../../../web3";
 import { publishCollection, queryCollectionDetail } from "../../../services/createNFTManage"
-import { deployFreeMintNFT721 } from "utils/handleContract"
+import { deployGame721NFT } from "utils/handleContract"
 import { chainArr, chainFun } from 'utils/networkConnect';
 import { getChainType } from 'web3/address';
 import { mainContext } from "../../../reducer";
@@ -36,10 +36,11 @@ const TextInput = styled(TextField)`
   margin-top: 10px !important;
   .MuiInputLabel-root {
     color: #7A9283 !important;
+    transform: translate(0, -1.5px) scale(1);
   }
   .MuiInput-input {
     /* margin-top: 8px; */
-    padding: 18px;
+    padding: 18px 0 8px;
     border: none;
     border-radius: 8px;
     background: #242926;
@@ -48,6 +49,7 @@ const TextInput = styled(TextField)`
 `
 const BlackBox = styled.div<{ isDate: boolean }>`
   /* height: 86px; */
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -81,6 +83,29 @@ const ImgBox = styled.img`
   height: 38px;
   border-radius: 50%;
 `
+const WhiteListSelect = styled(Select)`
+  &.MuiOutlinedInput-root {
+    background: none;
+    height: 40px;
+  }
+  .MuiSelect-select {
+    padding: 6px 0;
+  }
+`
+const UploadButton = styled(Button)`
+  &.MuiButtonBase-root {
+    position: absolute;
+    right: 60px;
+    top: 40px;
+  }
+`
+const FileNameDiv = styled.div`
+  height: 40px;
+  line-height: 40px;
+  padding-left: 20px;
+  color: #7A9283;
+`
+
 export default function CollectionModal({ visiblePush = false, closePushModal, collectionId }) {
   const { library, account, chainId } = useActiveWeb3React()
   const { dispatch } = useContext(mainContext);
@@ -95,6 +120,8 @@ export default function CollectionModal({ visiblePush = false, closePushModal, c
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false)
   const [msg, setMsg] = useState('')
   const [visible, setVisible] = useState(false)
+  const [eligibility, setEligibility] = useState('everyone')
+  const [whitelistFile, setWhitelistFile] = useState(null)
 
   const handleCancel = (refresh) => {
     closePushModal(refresh)
@@ -103,7 +130,7 @@ export default function CollectionModal({ visiblePush = false, closePushModal, c
     const inputValue = event.target.value;
     if (/^[1-9][0-9]*$/.test(inputValue) || inputValue === '') {
       setMintLimit(inputValue);
-    }else {
+    } else {
       setMintLimit('');
 
     }
@@ -136,6 +163,10 @@ export default function CollectionModal({ visiblePush = false, closePushModal, c
       initMsg("Pre-wallet mint limit is required", 'error')
       return false
     }
+    if (eligibility === 'whitelist' && !whitelistFile) {
+      initMsg("Please upload file", 'error')
+      return false
+    }
     dispatch({
       type: HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
       showWaitingWalletConfirmModal: launchForConfirm
@@ -147,13 +178,19 @@ export default function CollectionModal({ visiblePush = false, closePushModal, c
     let acceptCurrency = '0x0000000000000000000000000000000000000000'
     let mintPrice = 0
     // @ts-ignore
-    let res = await deployFreeMintNFT721(library, account, publishForm.name, publishForm.tokenSymbol, selectChainType, publishForm.maxCount, parseInt(mintStartTime / 1000), parseInt(mintEndTime / 1000), userLimit, acceptCurrency, mintPrice)
+    let res = await deployGame721NFT(library, account, publishForm.name, publishForm.tokenSymbol, selectChainType, publishForm.maxCount, parseInt(mintStartTime / 1000), parseInt(mintEndTime / 1000), userLimit, acceptCurrency, mintPrice, eligibility === 'whitelist')
     // console.log(res);
-    pushcollection(mintStartTime, mintEndTime, selectChainType, res)
+    if (eligibility === 'whitelist') {
+      const fd = new FormData();
+      fd.append('whitelist', whitelistFile)
+      pushcollection(mintStartTime, mintEndTime, selectChainType, res, fd)
+    } else {
+      pushcollection(mintStartTime, mintEndTime, selectChainType, res)
+    }
 
   }
-  const pushcollection = async (mintStartTime, mintEndTime, chainType, contractInfo) => {
-    let res = await publishCollection(collectionId, mintStartTime, mintEndTime, chainType, contractInfo.address, contractInfo.transactionHash, contractInfo.blockNumber, mintLimit)
+  const pushcollection = async (mintStartTime, mintEndTime, chainType, contractInfo, whitelist?) => {
+    let res = await publishCollection(collectionId, mintStartTime, mintEndTime, chainType, contractInfo.address, contractInfo.transactionHash, contractInfo.blockNumber, mintLimit, whitelist)
     dispatch({
       type: HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
       showWaitingWalletConfirmModal: { show: false }
@@ -186,24 +223,35 @@ export default function CollectionModal({ visiblePush = false, closePushModal, c
     const currentDate = dayjs();
     if (date.isAfter(currentDate)) {
       setStartTime(date);
-    }else {
+    } else {
       setStartTime(currentDate)
     }
     setEndTime('')
 
   }
   const handleEndDateChange = (date) => {
-    if(startTime){
+    if (startTime) {
       const futureDate = startTime.add(24, 'hour');
       if (date.isAfter(futureDate)) {
         setEndTime(date);
-      }else {
+      } else {
         setEndTime('')
       }
-    }else {
-      initMsg("Please select start time first","error")
+    } else {
+      initMsg("Please select start time first", "error")
       setEndTime('')
     }
+  }
+  const handleSelectChange = (e) => {
+    setEligibility(e.target.value)
+  }
+  const handleFileUpload = (e) => {
+    if (e.target.files[0]) {
+      setWhitelistFile(e.target.files[0])
+    }
+  }
+  const handleBtnClick = () => {
+    document.getElementById('white-list-upload').click();
   }
 
   useEffect(() => {
@@ -265,7 +313,7 @@ export default function CollectionModal({ visiblePush = false, closePushModal, c
                   value={endTime}
                   format='MM/DD/YYYY HH:mm'
                   onChange={handleEndDateChange}
-                  minDateTime={dayjs(startTime).add(1, 'day')} 
+                  minDateTime={dayjs(startTime).add(1, 'day')}
                 />
               </BlackBox>
             </div>
@@ -286,8 +334,30 @@ export default function CollectionModal({ visiblePush = false, closePushModal, c
               }}
             />
           </BlackBox>
-          <div className='mt20 mb20'>
-            <Button className='wp100 h36 mt20 mb20 btn_themeColor' onClick={handelSubmit}>Confirm</Button>
+          <BlackBox isDate={false}>
+            <ColorGreenLight className='lh28'>Who can claiming</ColorGreenLight>
+            <WhiteListSelect
+              onChange={handleSelectChange}
+              value={eligibility}
+            >
+              <MenuItem value="everyone">Everyone</MenuItem>
+              <MenuItem value="whitelist">Upload address</MenuItem>
+            </WhiteListSelect>
+            {
+              eligibility === 'whitelist' &&
+              <UploadButton onClick={handleBtnClick} className='w120 btn_themeColor'>Upload file</UploadButton>
+            }
+            <input
+              id="white-list-upload"
+              style={{ display: 'none' }}
+              onChange={handleFileUpload}
+              type="file"
+              accept="text/csv"
+            />
+          </BlackBox>
+          <FileNameDiv>{eligibility === 'whitelist' ? whitelistFile?.name : ''}</FileNameDiv>
+          <div className='mb20'>
+            <Button className='wp100 h36 mt20 mb20 btn_themeColor' onClick={handelSubmit}>Deploy & Push</Button>
           </div>
         </Box>
       </Modal>
