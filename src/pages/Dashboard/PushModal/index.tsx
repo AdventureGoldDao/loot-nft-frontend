@@ -18,6 +18,8 @@ import { mainContext } from "../../../reducer";
 import styled from 'styled-components/macro';
 import { HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL, launchForConfirm } from "const";
 import { ReactComponent as CloseIcon } from 'assets/img/icon_close.svg'
+import { ReactComponent as ArrowsIcon } from 'assets/img/icon_arrows.svg'
+import templateCsv from 'assets/file/Template.csv'
 
 const style = {
   position: 'absolute',
@@ -71,6 +73,11 @@ const BlackBox = styled.div<{ isDate: boolean }>`
   .MuiSvgIcon-root {
     fill: #4B5954;
   }
+  .green-text {
+    color: #A5FFBE;
+    text-decoration: none;
+    cursor: pointer;
+  }
 `
 const BlackBoxChain = styled(BlackBox) <{ activeChain: boolean }>`
   flex-direction: row;
@@ -92,18 +99,24 @@ const WhiteListSelect = styled(Select)`
     padding: 6px 0;
   }
 `
-const UploadButton = styled(Button)`
-  &.MuiButtonBase-root {
-    position: absolute;
-    right: 60px;
-    top: 40px;
-  }
-`
 const FileNameDiv = styled.div`
   height: 40px;
   line-height: 40px;
   padding-left: 20px;
   color: #7A9283;
+`
+const UploadBox = styled.div`
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 20px;
+  top: 15px;
+`
+const LineBetween = styled.div`
+  width: 1px;
+  height: 17px;
+  background-color: #4B5954;
+  margin: 0 15px;
 `
 
 export default function CollectionModal({ visiblePush = false, closePushModal, collectionId }) {
@@ -345,7 +358,11 @@ export default function CollectionModal({ visiblePush = false, closePushModal, c
             </WhiteListSelect>
             {
               eligibility === 'whitelist' &&
-              <UploadButton onClick={handleBtnClick} className='w120 btn_themeColor'>Upload file</UploadButton>
+              <UploadBox>
+                <div onClick={handleBtnClick} className='green-text'>Upload File</div>
+                <LineBetween />
+                <a download href={templateCsv} className='green-text'>Template <ArrowsIcon /></a>
+              </UploadBox>
             }
             <input
               id="white-list-upload"
