@@ -19,6 +19,7 @@ import styled from 'styled-components/macro';
 import { HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL, launchForConfirm } from "const";
 import { ReactComponent as CloseIcon } from 'assets/img/icon_close.svg'
 import { ReactComponent as ArrowsIcon } from 'assets/img/icon_arrows.svg'
+/* @ts-expect-error */
 import templateCsv from 'assets/file/Template.csv'
 
 const style = {
