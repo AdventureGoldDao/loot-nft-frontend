@@ -188,7 +188,7 @@ export default function NFTDetail() {
   const queryDetailInfo = async () => {
     await queryNFTDetail(chainType, contractAddress, tokenId).then(res => {
       // @ts-ignore
-      if (res.collectionName === 'DICE') {
+      if (res.collectionName === 'Dice for Loot') {
         getNFTuri(library, contractAddress, tokenId).then(function (res1) {
           setDetailInfo({...res, image: res1.image})
         }).catch(function (err) {

@@ -178,7 +178,7 @@ export const useNFTList = (owner,collectionId,pageNo, pageSize, setLoading) => {
     http.get(`/nfts/?owner=${owner}&collectionId=${collectionId}&pageNo=${pageNo}&pageSize=${pageSize}`).then(res => {
       if (res.list) {
         res.list.forEach(item => {
-          if (item.collectionName === 'DICE') {
+          if (item.collectionName === 'Dice for Loot') {
             getNFTuri(undefined, item.contractAddress, item.id).then(function (res1) {
               item.image = res1.image;
               setList(oldList => [...oldList])
