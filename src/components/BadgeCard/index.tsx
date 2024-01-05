@@ -53,7 +53,7 @@ const DefaultBorder = styled.div<{ active: boolean }>`
 const ChainImg = styled.img`
   position: absolute;
   top: 12px;
-  left: 12px;
+  right: 12px;
   height: 30px;
   width: 30px;
   border-radius: 50%;

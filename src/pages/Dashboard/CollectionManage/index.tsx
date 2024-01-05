@@ -879,7 +879,7 @@ export default function CollectionManageIndex() {
                           </> :
                           <>
                             <IconImg className='mt60 mb20'></IconImg>
-                            <ColorGreenLight style={{ lineHeight: '27px' }} className='tac'>Supports jpg, png, gif, webp<br />Max size: 10MB</ColorGreenLight>
+                            <ColorGreenLight style={{ lineHeight: '27px' }} className='tac'>Supports jpg, png, gif, webp, svg<br />Max size: 10MB</ColorGreenLight>
                           </>
                       }
                     </CenterBox>

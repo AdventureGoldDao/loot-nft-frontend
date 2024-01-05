@@ -13,7 +13,7 @@ import test2 from 'assets/img/test/test2.png'
 import { abbrTxHash } from "../../utils/format";
 import { chainTxtObj, chainTypeComImgObj, chainFun, handleHistoryAddress } from '../../utils/networkConnect';
 import { getChainType } from "../../web3/address";
-import { freeMintNFT721 } from "utils/handleContract"
+import { freeMintNFT721, getNFTuri } from "utils/handleContract"
 import { getPoolLeftTime } from "utils/time"
 import styled from 'styled-components/macro';
 import bg from 'assets/img/explore_bg.svg';
@@ -187,7 +187,16 @@ export default function NFTDetail() {
  
   const queryDetailInfo = async () => {
     await queryNFTDetail(chainType, contractAddress, tokenId).then(res => {
-      setDetailInfo(res)
+      // @ts-ignore
+      if (res.collectionName === 'DICE') {
+        getNFTuri(library, contractAddress, tokenId).then(function (res1) {
+          setDetailInfo({...res, image: res1.image})
+        }).catch(function (err) {
+          console.log(err);
+        });
+      } else {
+        setDetailInfo(res)
+      }
     })
   }
   const formatTime = (timestamp) => {
@@ -247,7 +256,6 @@ export default function NFTDetail() {
                   <img src={detailInfo.image}></img>
                 </Cover>
               </CoverBox>
-              {/* <img src={detailInfo.image}></img> */}
             </InfoCover>
             {
               detailInfo.attributes?.length >0 &&

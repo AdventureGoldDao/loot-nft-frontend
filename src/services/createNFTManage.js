@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import http from '../utils/http';
 import moment from 'moment';
+import { getNFTuri } from "utils/handleContract"
 
 export const saveCollection = async (formData) => {
   let res = await http.put(`/collections`, formData)
@@ -175,6 +176,19 @@ export const useNFTList = (owner,collectionId,pageNo, pageSize, setLoading) => {
       setLoading(true)
     }
     http.get(`/nfts/?owner=${owner}&collectionId=${collectionId}&pageNo=${pageNo}&pageSize=${pageSize}`).then(res => {
+      if (res.list) {
+        res.list.forEach(item => {
+          if (item.collectionName === 'DICE') {
+            getNFTuri(undefined, item.contractAddress, item.id).then(function (res1) {
+              item.image = res1.image;
+              setList(oldList => [...oldList])
+            }).catch(function (err) {
+              console.log(err);
+            });
+          }
+        })
+      }
+      
       if (pageNo === 1) {
         setList(res.list)
       } else {

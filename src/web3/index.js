@@ -16,7 +16,15 @@ export function getContract(library, abi, address,chainType) {
         const web3 = new Web3(library.provider);
         return  new web3.eth.Contract(abi, address)
     }else {
-        Contract.setProvider(eth[chainType]);
+        if (chainType) {
+          Contract.setProvider(eth[chainType]);
+        } else {
+          if (env.ENV === 'development') {
+            Contract.setProvider("https://testnet.rpc.lootchain.com/http");
+          } else {
+            Contract.setProvider("https://rpc.lootchain.com/http");
+          }
+        }
         return  new Contract(abi, address)
     }
 }

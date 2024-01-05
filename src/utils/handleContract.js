@@ -749,6 +749,19 @@ export const getNFT721 = (library, contractAddress) => {
     return getContract(library, DFA721.abi, contractAddress)
 }
 
+export const getNFTuri = async (library, contractAddress, id) => {
+  const contract = await getNFT721(library, contractAddress)
+  const data = await contract.methods.tokenURI(id).call()
+  return fetch(data).then( res => {
+    if (res.status === 200) {
+      return res.json()
+    } else {
+      return Promise.reject(res.json())
+    }
+  })
+
+}
+
 export const getIsApprovedForAll = async (library, contractAddress, account, spender) => {
     console.log('getIsApprovedForAll', contractAddress, spender)
     const contract = await getNFT721(library, contractAddress)
