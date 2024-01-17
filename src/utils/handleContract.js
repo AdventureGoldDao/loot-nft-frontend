@@ -803,7 +803,7 @@ export const deployFreeMintNFT721 = (library, address, name, symbol, chainType,m
     arguments: [
       name,
       symbol,
-      `${env.API_URL.split('/api')[0]}/nftInfo/${chainType}/`,
+      `${env.API_URL.split('/api')[0]}/api/nftInfo/${chainType}/`,
       maxCount,
       startTime,
       endTime,
